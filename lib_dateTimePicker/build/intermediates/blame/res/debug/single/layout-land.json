@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\res\\merged\\debug\\layout-land\\date_picker_dialog.xml",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\layout-land\\date_picker_dialog.xml"
+    },
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\res\\merged\\debug\\layout-land\\time_picker_dialog.xml",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\layout-land\\time_picker_dialog.xml"
+    }
+]
