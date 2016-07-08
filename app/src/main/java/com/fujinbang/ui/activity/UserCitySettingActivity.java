@@ -1,0 +1,70 @@
+package com.fujinbang.ui.activity;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+
+import com.fujinbang.R;
+import com.fujinbang.setting.Area;
+
+import java.util.List;
+
+public class UserCitySettingActivity extends BaseActivity {
+
+    private static final String PROVINCE_NAME = "province";
+    private static final String CITY_NAME = "city";
+    private static final int resultCode = 100;
+    private ImageView iv_back;
+    private ListView lv_city;
+    private List<String> city;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user_city_setting);
+
+        initView();
+    }
+
+    private final void initView() {
+        iv_back = (ImageView) findViewById(R.id.iv_back);
+        lv_city = (ListView) findViewById(R.id.lv_setting_city);
+        final String province = getIntent().getStringExtra(PROVINCE_NAME);
+        if (province != null) city = Area.getCity(province);
+        lv_city.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, city));
+        lv_city.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String name = city.get(position);
+                Intent intent = new Intent();
+                intent.putExtra(CITY_NAME, province + " " + name);
+                setResult(resultCode, intent);
+                finish();
+            }
+        });
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    public static String getResultCityName(Intent data) {
+        String city = data.getStringExtra(CITY_NAME);
+        if (city != null)
+            return city;
+        return "";
+    }
+
+    public static void startActivityForResult(Activity context, int requestCode, String province) {
+        Intent intent = new Intent(context, UserCitySettingActivity.class);
+        intent.putExtra(PROVINCE_NAME, province);
+        context.startActivityForResult(intent, requestCode);
+    }
+}

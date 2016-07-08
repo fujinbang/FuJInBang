@@ -1,0 +1,67 @@
+package com.fujinbang.ui.view;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.widget.TextView;
+
+import com.fujinbang.global.MissionDetail;
+import com.fujinbang.global.TimeCalculator;
+
+import java.text.DecimalFormat;
+
+/**
+ * Created by VITO on 2016/6/6.
+ *
+ */
+public class TimeView extends TextView implements Runnable {
+    private boolean status;
+    public static boolean isCancel;
+    private int position;
+    DecimalFormat decimalFormat = new DecimalFormat("00");
+
+    public TimeView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        postDelayed(this, 1000);
+        status = true;
+    }
+
+    public TimeView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public TimeView(Context context) {
+        this(context, null);
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    @Override
+    public void run() {
+        long second = TimeCalculator.getRestTime(MissionDetail.getInstance().getMissionList().get(position).get("end_time").toString());
+        String time = second / 3600 + ":" + decimalFormat.format(second % 3600 / 60) + ":" + decimalFormat.format(second % 3600 % 60);
+        setText(time);
+        if(!"0:00:00".equals(time)&&!isCancel){
+            if (second / 3600 < 24){
+                setTextColor(0xffff0000);
+            } else {
+                setTextColor(0xff000000);
+            }
+            postDelayed(this, 1000);
+        } else if (isCancel){
+            status = false;
+        }
+    }
+
+    public boolean getStatus(){
+        return status;
+    }
+
+    public void resume(){
+        postDelayed(this,1000);
+        status = true;
+    }
+
+}

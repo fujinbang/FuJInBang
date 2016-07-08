@@ -1,0 +1,46 @@
+package com.fujinbang.ui.activity;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+
+import com.fujinbang.R;
+
+public class CooperationActivity extends BaseActivity implements View.OnTouchListener {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_cooperation);
+
+        ImageView iv_back = (ImageView) findViewById(R.id.iv_back);
+        iv_back.setOnTouchListener(this);
+    }
+
+    private final void onClick(View v) {
+        finish();
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                v.setBackgroundColor(0xffe8e8e8);
+                break;
+            case MotionEvent.ACTION_UP:
+                v.setBackgroundResource(R.drawable.zy_linearlayout_bg);
+                this.onClick(v);
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    public static void startActivity(Context context) {
+        context.startActivity(new Intent(context, CooperationActivity.class));
+    }
+}

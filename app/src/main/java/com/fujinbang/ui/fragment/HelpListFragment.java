@@ -1,0 +1,212 @@
+package com.fujinbang.ui.fragment;
+
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
+
+import com.baidu.location.BDLocation;
+import com.fujinbang.R;
+import com.fujinbang.ui.activity.GroupHelpActivity;
+import com.fujinbang.ui.activity.iactivity.IHelpListFragment;
+import com.fujinbang.helplist.HelpListAdapter;
+import com.fujinbang.helplist.HelpMsg;
+import com.fujinbang.baidumap.LocationManager;
+import com.fujinbang.presenter.HelpListPresenter;
+import com.fujinbang.presenter.ipresenter.IHelpListPresenter;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
+
+import java.util.List;
+
+public class HelpListFragment extends Fragment implements IHelpListFragment {
+    public final static String TAG = "HelpListFragment";
+    /**
+     * 求助列表
+     */
+    private PullToRefreshListView mHelpList;
+    private HelpListAdapter mAdapter;
+    private int helpMsgNum = 10;//期待的求助的列表的item数目
+    private int visableNum = 0;//加载后显示的列表项的位置
+    /**
+     * 进度条动画
+     */
+    private RelativeLayout rl_progress;
+    /**
+     * 定位器
+     */
+    private LocationManager.OnLocationListener mLocationListener;
+    private LocationManager mLocationManager;
+
+    IHelpListPresenter presenter;
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_help_list, container, false);
+
+        initPresenter();
+        initProgressBar(view);
+        initLocation();
+        initListView(view);//必须在initProgressBar后调用
+        return view;
+    }
+
+    private final void initPresenter() {
+        presenter = new HelpListPresenter(this);
+    }
+
+
+    private final void initLocation() {
+        mLocationManager = LocationManager.getInstance(getContext());
+        mLocationListener = new LocationManager.OnLocationListener() {
+            @Override
+            public void onRecieveLocation(BDLocation location) {
+                mLocationManager.removeOnLocationListener(this);
+                //updateListContent(false);
+            }
+        };
+    }
+
+    private final void initProgressBar(View view) {
+        rl_progress = (RelativeLayout) view.findViewById(R.id.rl_helplist_progress);
+        showProgressBar();
+    }
+
+    private final void initListView(View view) {
+        mAdapter = new HelpListAdapter(getContext(), presenter);
+        mHelpList = (PullToRefreshListView) view.findViewById(R.id.lv_list_for_help);
+        mHelpList.setMode(PullToRefreshBase.Mode.BOTH);
+        mHelpList.setAdapter(mAdapter);
+        mHelpList.requestFocus();
+        mHelpList.setOnItemClickListener(mAdapter);
+
+        mHelpList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
+                Log.i("zy", "HelpListFragment onPullDown");
+                helpMsgNum = 10;
+                visableNum = 0;
+                presenter.getHelpList(helpMsgNum);
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
+                Log.i("zy", "HelpListFragment onPullUp");
+                helpMsgNum += 10;
+                visableNum = mHelpList.getRefreshableView().getCount();
+                mHelpList.getRefreshableView().getSelectedItemPosition();
+                presenter.getHelpList(helpMsgNum);
+            }
+        });
+        /**刷新列表的内容 默认初始的item数目为10*/
+        helpMsgNum = 10;
+        updateListContent(true);
+    }
+
+    @Override
+    public Context getFragmentContext() {
+        return getContext();
+    }
+
+    @Override
+    public Fragment getFragment() {
+        return this;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mLocationManager.addOnLocationListener(mLocationListener);
+        mLocationManager.requestRightNow();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void setHelpList(List<HelpMsg> list) {
+        mAdapter.updateList(list);
+        mAdapter.notifyDataSetChanged();
+    }
+
+
+    @Override
+    public void hideProgressBar() {
+        rl_progress.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showProgressBar() {
+        rl_progress.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void updateListContent(boolean isShowProgress) {
+        if (isShowProgress) {
+            showProgressBar();
+        }
+        presenter.getHelpList(helpMsgNum);
+    }
+
+    @Override
+    public void clearList() {
+        mAdapter.removeAll();
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void updateAvatar(int id, Bitmap avatar) {
+        mAdapter.updateAvatar(id, avatar);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void updatePos(double x, double y) {
+        mAdapter.updatePos(x, y);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showToast(String str) {
+        if (getContext() != null)
+            Toast.makeText(getContext().getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void addHelpMsg(HelpMsg msg) {
+        mAdapter.addHelpMsg(msg);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void completeRefresh() {
+        mHelpList.onRefreshComplete();
+        mHelpList.getRefreshableView().setSelection(visableNum);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("zy", "helpListFragment onActivityResult" + requestCode + " " + resultCode);
+        if (GroupHelpActivity.isJoin(resultCode, data)) {
+            Log.d("zy", "helpListFragment onActivityResult" + requestCode + " " + resultCode);
+            if (GroupHelpActivity.getHelpId(data) != -1) {
+                presenter.getHelpList(helpMsgNum);
+                presenter.joinHelpList(GroupHelpActivity.getHelpId(data));
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+}

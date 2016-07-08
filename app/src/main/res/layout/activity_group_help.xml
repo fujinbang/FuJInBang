@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".ui.activity.GroupHelpActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#FFAF00">
+
+        <ImageView
+            android:id="@+id/group_help_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:clickable="true"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="求助详情"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="18dp"
+                android:text="描述需求"
+                android:textSize="16sp" />
+
+            <RelativeLayout
+                android:layout_width="150dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="20dp">
+
+                <TextView
+                    android:id="@+id/grouphelp_reqdes"
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/edittext"
+                    android:maxHeight="50dp"
+                    android:maxLength="100"
+                    android:scrollbarAlwaysDrawVerticalTrack="true"
+                    android:scrollbars="vertical" />
+
+                <FrameLayout
+                    android:id="@+id/group_help_recoder_lenght"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/chatto_bg_focused"
+                    android:clickable="true"
+                    android:visibility="gone">
+
+                    <View
+                        android:id="@+id/group_help_recoder_anim"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_vertical|start"
+                        android:layout_marginLeft="8dp"
+                        android:background="@drawable/adj" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/group_help_recoder_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="8dp"
+                    android:layout_toRightOf="@+id/group_help_recoder_lenght"
+                    android:text="1'"
+                    android:textColor="#ff777777"
+                    android:visibility="gone" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="18dp"
+                android:text="起止时间"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/group_help_starttime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:layout_marginLeft="16dp"
+                android:text="12-16 15:15" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:text="至"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/group_help_endtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:text="12-16 15:15" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="18dp"
+                android:text="奖励积分"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/group_help_textbonus"
+                android:layout_width="150dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center"
+                android:inputType="number"
+                android:textSize="14sp"
+                android:text="200" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="18dp"
+                android:text="任务人数"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/group_help_num"
+                android:layout_width="150dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:inputType="number"
+                android:text="3" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="18dp"
+                android:text="性别要求"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/group_help_sex"
+                android:layout_width="150dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center"
+                android:inputType="number"
+                android:textSize="14sp"
+                android:text="男" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center">
+
+            <ImageButton
+                android:layout_width="20dp"
+                android:layout_height="25dp"
+                android:background="@drawable/lodark" />
+
+            <TextView
+                android:id="@+id/group_help_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="深圳南山区华侨城生态广场"
+                android:textColor="#3333FF"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/group_help_helpbtn"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/login_btn"
+            android:clickable="false"
+            android:text="接单"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+</LinearLayout>

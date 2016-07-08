@@ -1,0 +1,12 @@
+package com.fujinbang.ui.activity.iactivity;
+
+import android.content.Context;
+
+/**
+ * Created by Administrator on 2016/6/10.
+ */
+public interface ISetActivity {
+    void showToast(String str);
+
+    Context getActivityContext();
+}

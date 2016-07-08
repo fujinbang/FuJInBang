@@ -1,0 +1,67 @@
+package com.fujinbang.presenter;
+
+import com.fujinbang.ui.activity.iactivity.ISetActivity;
+import com.fujinbang.global.SimpleDataBase;
+import com.fujinbang.internet.MD5;
+import com.fujinbang.internet.UserMsgUpload;
+import com.fujinbang.presenter.ipresenter.ISetPresenter;
+
+/**
+ * Created by Administrator on 2016/6/10.
+ */
+public class SetPresenter implements ISetPresenter {
+
+    private ISetActivity view;
+    private SimpleDataBase db;
+    private UserMsgUpload upload;
+
+    public SetPresenter(ISetActivity view) {
+        this.view = view;
+        db = new SimpleDataBase(view.getActivityContext());
+        upload = new UserMsgUpload(view.getActivityContext());
+    }
+
+    @Override
+    public void authenticate(String psd, UserMsgUpload.OnUserUploadListener listener) {
+        String phoneNum = db.getPhoneNum();
+        String password = MD5.getMD5(psd);
+        upload.uploadAuthentication(phoneNum, password, listener);
+    }
+
+    @Override
+    public void uploadPassword(String psd, UserMsgUpload.OnUserUploadListener listener) {
+        String token = db.getToken();
+        String password = MD5.getMD5(psd);
+        upload.uploadPassword(token, password, listener);
+    }
+
+    @Override
+    public void uploadRange(int range) {
+        db.putRange(range);
+    }
+
+    @Override
+    public int getRange() {
+        return db.getRange();
+    }
+
+    @Override
+    public void uploadAlert(boolean isAlert) {
+        db.putAlert(isAlert);
+    }
+
+    @Override
+    public void uploadVibrate(boolean isVibrate) {
+        db.putVibrate(isVibrate);
+    }
+
+    @Override
+    public boolean isAlert() {
+        return db.isAlert();
+    }
+
+    @Override
+    public boolean isVibrate() {
+        return db.isVibrate();
+    }
+}

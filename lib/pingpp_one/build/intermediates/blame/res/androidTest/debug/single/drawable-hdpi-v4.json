@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\tips_bg.9.png",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\exploded-aar\\FuJInBang.lib\\pingpp\\unspecified\\res\\drawable-hdpi-v4\\tips_bg.9.png"
+    },
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\pingpp_back.png",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\exploded-aar\\FuJInBang.lib\\pingpp\\unspecified\\res\\drawable-hdpi-v4\\pingpp_back.png"
+    }
+]

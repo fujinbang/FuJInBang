@@ -1,0 +1,269 @@
+package com.fujinbang.ui.view;
+
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.os.Build;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.View;
+
+/**
+ * Created by Administrator on 2016/3/7.
+ */
+public class SwitchView extends View {
+
+    public static final String TAG = "zy";
+    /**
+     * 按钮滑动的位置 progress <> [0 , mWidth - mBtnWidth]
+     */
+    private float progress;
+
+    private final static String LEFT_TEXT = "帮友";
+    private final static String RIGHT_TEXT = "接单";
+
+    /**
+     * 当前SwitchView的按钮状态
+     */
+    private int BTN = BTN_LEFT;
+    private static final int BTN_LEFT = 0;
+    private static final int BTN_RIGHT = 1;
+
+    /**
+     * 当前按钮是否在滑动中
+     */
+    private int status = STATUS_STOP;
+    private static final int STATUS_STOP = 0;
+    private static final int STATUS_MOVING = 1;
+
+    public SwitchView(Context context) {
+        super(context);
+    }
+
+    public SwitchView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public SwitchView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public SwitchView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+    }
+
+    public void setProgress(float progress) {
+        this.progress = progress;
+        invalidate();
+    }
+
+    public float getProgress() {
+        return progress;
+    }
+
+    private float mWidth, mHeight;//整个View的宽高
+    private float mBtnWidth, mBtnHeight;//可滑动按钮的宽高
+    private float rx, ry;//圆角矩形的圆角弧度
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        mWidth = w;
+        mHeight = h;
+
+        rx = mWidth / 12f;
+        ry = mHeight / 2f;
+
+        mBtnWidth = mWidth / 2f + rx;
+        mBtnHeight = mHeight;
+    }
+
+    private float pressX;
+    private float moveX;
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                onActionDown(event);
+                break;
+            case MotionEvent.ACTION_UP:
+                onActionUp(event);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                onActionMove(event);
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    private final void onActionDown(MotionEvent e) {
+        pressX = e.getX();
+        //如果点击的是可滑动按钮，状态变为按钮滑动中
+        if ((pressX > mWidth - mBtnWidth && BTN == BTN_RIGHT) ||
+                (pressX < mBtnWidth && BTN == BTN_LEFT)) {
+            status = STATUS_MOVING;
+        }
+    }
+
+    private final void onActionMove(MotionEvent e) {
+        moveX = e.getX();
+        if (status == STATUS_MOVING) {
+            if (0 <= moveX - pressX && BTN == BTN_LEFT) {//如果向右滑动
+                if (moveX - pressX <= mWidth - mBtnWidth) {
+                    setProgress(moveX - pressX);
+                } else {
+                    setProgress(mWidth - mBtnWidth);
+                    changeBtn(BTN_RIGHT);
+                    status = STATUS_STOP;
+                }
+            } else if (0 <= pressX - moveX && BTN == BTN_RIGHT) {//如果向左滑动
+                if (pressX - moveX <= mWidth - mBtnWidth) {
+                    setProgress(mWidth - mBtnWidth - pressX + moveX);
+                } else {
+                    setProgress(0f);
+                    changeBtn(BTN_LEFT);
+                    status = STATUS_STOP;
+                }
+            } else {
+                status = STATUS_STOP;
+            }
+        }
+    }
+
+    private final void onActionUp(MotionEvent e) {
+        moveX = e.getX();
+
+        if (status == STATUS_MOVING) {
+            if (progress < (mWidth - mBtnWidth) / 2f) {//弹到左边
+                changeBtn(BTN_LEFT);
+                playAnimator(true);
+            } else {//弹到右边
+                changeBtn(BTN_RIGHT);
+                playAnimator(false);
+            }
+        } else if (status == STATUS_STOP) {
+            if (moveX > mWidth - mBtnWidth && BTN == BTN_LEFT) {
+                changeBtn(BTN_RIGHT);
+                playAnimator(false);
+            } else if (moveX < mBtnWidth && BTN == BTN_RIGHT) {
+                changeBtn(BTN_LEFT);
+                playAnimator(true);
+            }
+        }
+    }
+
+    private final void playAnimator(boolean toLeft) {
+
+        Animator.AnimatorListener listener = new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                status = STATUS_STOP;
+            }
+        };
+        ObjectAnimator animator;
+        if (toLeft) {
+            animator = ObjectAnimator.ofFloat(this, "progress", progress, 0f);
+        } else {
+            animator = ObjectAnimator.ofFloat(this, "progress", progress, mWidth - mBtnWidth);
+        }
+        animator.setDuration(300);
+        animator.addListener(listener);
+        animator.start();
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        //画底框
+        drawPanel(canvas);
+
+        //画可滑动按钮
+        drawButton(canvas);
+
+        //画左右两边的文字
+        drawText(canvas, true);
+        drawText(canvas, false);
+    }
+
+    private final void drawPanel(Canvas canvas) {
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setStrokeWidth(6f);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(Color.WHITE);
+        canvas.drawRoundRect(new RectF(0, 0, mWidth, mHeight),
+                rx, ry, paint);
+    }
+
+    private final void drawButton(Canvas canvas) {
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setStrokeWidth(6f);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        paint.setColor(Color.WHITE);
+        canvas.drawRoundRect(new RectF(progress, 0, progress + mBtnWidth, mBtnHeight),
+                rx, ry, paint);
+    }
+
+    private int LeftColor = Color.rgb(255, 175, 0);
+    private int RightColor = Color.WHITE;
+
+    private void drawText(Canvas canvas, boolean isLeft) {
+        final float len, offset;
+        final String text;
+        Paint p = new Paint();
+        p.setTextSize(mBtnHeight / 2f);
+        p.setFakeBoldText(true);
+        if (isLeft) {
+            p.setColor(LeftColor);
+            len = p.measureText(LEFT_TEXT);
+            offset = (mBtnWidth - len) / 2f;
+            text = LEFT_TEXT;
+        } else {
+            p.setColor(RightColor);
+            len = p.measureText(RIGHT_TEXT);
+            offset = mWidth - (mBtnWidth - len) / 2f - len;
+            text = RIGHT_TEXT;
+        }
+        canvas.drawText(text, offset, 3 * mBtnHeight / 4f, p);
+    }
+
+    private void changeBtn(int btn_direction) {
+        if (BTN != btn_direction) {
+
+            boolean isLeft;
+            if (BTN == BTN_LEFT) isLeft = false;
+            else isLeft = true;
+
+            if (isLeft) {
+                LeftColor = Color.rgb(255, 175, 0);
+                RightColor = Color.WHITE;
+            } else {
+                LeftColor = Color.WHITE;
+                RightColor = Color.rgb(255, 175, 0);
+            }
+
+            if (mOnStatusChangeListener != null) {
+                mOnStatusChangeListener.onStatusChange(isLeft);
+            }
+
+            BTN = btn_direction;
+        }
+    }
+
+    public interface OnStatusChangeListener {
+        void onStatusChange(boolean isLeft);
+    }
+
+    public OnStatusChangeListener mOnStatusChangeListener;
+
+    public void setOnStatusChangeListener(OnStatusChangeListener listener) {
+        mOnStatusChangeListener = listener;
+    }
+}
