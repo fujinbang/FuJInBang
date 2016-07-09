@@ -83,6 +83,7 @@ public class EaseChatFragment extends EaseBaseFragment {
     protected EaseChatMessageList messageList;
     protected EaseChatInputMenu inputMenu;
     protected int memberCount;
+    protected String clientPhoneNum;
 
     protected EMConversation conversation;
     
@@ -118,6 +119,11 @@ public class EaseChatFragment extends EaseBaseFragment {
         myMissionClickListener = mListener;
     }
 
+    // 刷新ui
+    public void refresh() {
+        messageList.refresh();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.ease_fragment_chat, container, false);
@@ -133,6 +139,11 @@ public class EaseChatFragment extends EaseBaseFragment {
         toChatUsername = fragmentArgs.getString(EaseConstant.EXTRA_USER_ID);
         // 会话人数
         memberCount = fragmentArgs.getInt("memberCount");
+        if (fragmentArgs.getString("clientPhoneNum") != null){
+            clientPhoneNum = fragmentArgs.getString("clientPhoneNum");
+        } else {
+            clientPhoneNum = null;
+        }
 
         super.onActivityCreated(savedInstanceState);
     }
@@ -154,6 +165,8 @@ public class EaseChatFragment extends EaseBaseFragment {
         inputMenu = (EaseChatInputMenu) getView().findViewById(R.id.input_menu);
         registerExtendMenuItem();
         // init input menu
+        if (clientPhoneNum != null)
+            inputMenu.setVisibility(View.GONE);
         inputMenu.init(null);
         inputMenu.setChatInputMenuListener(new ChatInputMenuListener() {
 
@@ -198,21 +211,22 @@ public class EaseChatFragment extends EaseBaseFragment {
         titleBar.setTitle("任务会话（"+ memberCount +"）");
         if (chatType == EaseConstant.CHATTYPE_SINGLE) { // 单聊
             // 设置标题
-            if(EaseUserUtils.getUserInfo(toChatUsername) != null){
-                titleBar.setTitle(EaseUserUtils.getUserInfo(toChatUsername).getNick());
-            }
-            titleBar.setRightImageResource(R.drawable.ease_mm_title_remove);
+            titleBar.setTitle("附近帮");
+            //if(EaseUserUtils.getUserInfo(toChatUsername) != null){
+            //    titleBar.setTitle("附近帮");
+            //}
+            titleBar.setRightLayoutVisibility(View.GONE);
             titleBar.setRightTxtVisibility(View.GONE);
         } else {
         	titleBar.setRightImageResource(R.drawable.ease_to_group_details_normal);
             if (chatType == EaseConstant.CHATTYPE_GROUP) {
                 // 群聊 即任务会话
-                EMGroup group = EMClient.getInstance().groupManager().getGroup(toChatUsername);
+                //EMGroup group = EMClient.getInstance().groupManager().getGroup(toChatUsername);
                 titleBar.setRightTxtVisibility(View.VISIBLE);
                 titleBar.setRightLayoutVisibility(View.GONE);
-                if (group != null)
+                //if (group != null)
                     //设置标题为任务会话（人数）之前为group.getGroupName()
-                    titleBar.setTitle("任务会话（"+group.getAffiliationsCount()+"）");
+                    //titleBar.setTitle("任务会话（"+group.getAffiliationsCount()+"）");
                 // 监听当前会话的群聊解散被T事件
                 groupListener = new GroupListener();
                 EMClient.getInstance().groupManager().addGroupChangeListener(groupListener);

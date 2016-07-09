@@ -63,6 +63,7 @@ public class MissionDetail {
                 if (result != null) {
                     mission.clear();
                     invitedMission.clear();
+                    groupChat.clear();
                     try {
                         JSONObject object = new JSONObject(result);
                         JSONArray attend = object.getJSONArray("attend");

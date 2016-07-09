@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
  * SharePreferences类
  */
 public class SimpleDataBase {
+    public static String admin = "15626152164";
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
 

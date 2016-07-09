@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\res\\merged\\release\\values-sw600dp-v13\\values-sw600dp-v13.xml",
+        "outputFile": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\res\\merged\\release\\values-sw600dp-v13\\values-sw600dp-v13.xml",
         "map": [
             {
                 "to": {
@@ -11,7 +11,7 @@
                     "endOffset": 119
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
                     "position": {
                         "startLine": 2,
                         "startColumn": 4,
@@ -30,7 +30,7 @@
                     "endOffset": 189
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,
@@ -49,7 +49,7 @@
                     "endOffset": 263
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,
@@ -68,7 +68,7 @@
                     "endOffset": 339
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
                     "position": {
                         "startLine": 5,
                         "startColumn": 4,
@@ -87,7 +87,7 @@
                     "endOffset": 398
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
                     "position": {
                         "startLine": 6,
                         "startColumn": 4,
@@ -106,7 +106,7 @@
                     "endOffset": 469
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
                     "position": {
                         "startLine": 7,
                         "startColumn": 4,
@@ -125,7 +125,7 @@
                     "endOffset": 537
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
                     "position": {
                         "startLine": 8,
                         "startColumn": 4,
@@ -144,13 +144,13 @@
                     "endOffset": 584
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 43,
                         "startColumn": 4,
-                        "startOffset": 1915,
+                        "startOffset": 1958,
                         "endColumn": 46,
-                        "endOffset": 1957
+                        "endOffset": 2000
                     }
                 }
             },
@@ -163,13 +163,13 @@
                     "endOffset": 633
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 44,
                         "startColumn": 4,
-                        "startOffset": 1962,
+                        "startOffset": 2006,
                         "endColumn": 48,
-                        "endOffset": 2006
+                        "endOffset": 2050
                     }
                 }
             },
@@ -182,13 +182,13 @@
                     "endOffset": 693
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 22,
                         "startColumn": 4,
-                        "startOffset": 797,
+                        "startOffset": 819,
                         "endColumn": 59,
-                        "endOffset": 852
+                        "endOffset": 874
                     }
                 }
             },
@@ -201,13 +201,13 @@
                     "endOffset": 750
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 25,
                         "startColumn": 4,
-                        "startOffset": 986,
+                        "startOffset": 1011,
                         "endColumn": 56,
-                        "endOffset": 1038
+                        "endOffset": 1063
                     }
                 }
             },
@@ -220,13 +220,13 @@
                     "endOffset": 810
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 35,
                         "startColumn": 4,
-                        "startOffset": 1547,
+                        "startOffset": 1582,
                         "endColumn": 59,
-                        "endOffset": 1602
+                        "endOffset": 1637
                     }
                 }
             },
@@ -239,13 +239,13 @@
                     "endOffset": 875
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 23,
                         "startColumn": 4,
-                        "startOffset": 857,
+                        "startOffset": 880,
                         "endColumn": 64,
-                        "endOffset": 917
+                        "endOffset": 940
                     }
                 }
             },
@@ -258,13 +258,13 @@
                     "endOffset": 938
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 28,
                         "startColumn": 4,
-                        "startOffset": 1159,
+                        "startOffset": 1187,
                         "endColumn": 62,
-                        "endOffset": 1217
+                        "endOffset": 1245
                     }
                 }
             },
@@ -277,13 +277,13 @@
                     "endOffset": 985
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 38,
                         "startColumn": 4,
-                        "startOffset": 1707,
+                        "startOffset": 1745,
                         "endColumn": 46,
-                        "endOffset": 1749
+                        "endOffset": 1787
                     }
                 }
             },
@@ -296,13 +296,13 @@
                     "endOffset": 1041
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 42,
                         "startColumn": 4,
-                        "startOffset": 1859,
+                        "startOffset": 1901,
                         "endColumn": 55,
-                        "endOffset": 1910
+                        "endOffset": 1952
                     }
                 }
             },
@@ -315,13 +315,13 @@
                     "endOffset": 1087
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 47,
                         "startColumn": 4,
-                        "startOffset": 2107,
+                        "startOffset": 2154,
                         "endColumn": 45,
-                        "endOffset": 2148
+                        "endOffset": 2195
                     }
                 }
             },
@@ -334,13 +334,13 @@
                     "endOffset": 1134
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 46,
                         "startColumn": 4,
-                        "startOffset": 2060,
+                        "startOffset": 2106,
                         "endColumn": 46,
-                        "endOffset": 2102
+                        "endOffset": 2148
                     }
                 }
             },
@@ -353,13 +353,13 @@
                     "endOffset": 1187
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 48,
                         "startColumn": 4,
-                        "startOffset": 2153,
+                        "startOffset": 2201,
                         "endColumn": 52,
-                        "endOffset": 2201
+                        "endOffset": 2249
                     }
                 }
             },
@@ -372,13 +372,13 @@
                     "endOffset": 1245
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 49,
                         "startColumn": 4,
-                        "startOffset": 2206,
+                        "startOffset": 2255,
                         "endColumn": 57,
-                        "endOffset": 2259
+                        "endOffset": 2308
                     }
                 }
             },
@@ -391,13 +391,13 @@
                     "endOffset": 1302
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 39,
                         "startColumn": 4,
-                        "startOffset": 1754,
+                        "startOffset": 1793,
                         "endColumn": 56,
-                        "endOffset": 1806
+                        "endOffset": 1845
                     }
                 }
             },
@@ -410,13 +410,13 @@
                     "endOffset": 1350
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 37,
                         "startColumn": 4,
-                        "startOffset": 1659,
+                        "startOffset": 1696,
                         "endColumn": 47,
-                        "endOffset": 1702
+                        "endOffset": 1739
                     }
                 }
             },
@@ -429,13 +429,13 @@
                     "endOffset": 1411
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 26,
                         "startColumn": 4,
-                        "startOffset": 1043,
+                        "startOffset": 1069,
                         "endColumn": 60,
-                        "endOffset": 1099
+                        "endOffset": 1125
                     }
                 }
             },
@@ -448,13 +448,13 @@
                     "endOffset": 1466
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 27,
                         "startColumn": 4,
-                        "startOffset": 1104,
+                        "startOffset": 1131,
                         "endColumn": 54,
-                        "endOffset": 1154
+                        "endOffset": 1181
                     }
                 }
             },
@@ -467,13 +467,13 @@
                     "endOffset": 1518
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 36,
                         "startColumn": 4,
-                        "startOffset": 1607,
+                        "startOffset": 1643,
                         "endColumn": 51,
-                        "endOffset": 1654
+                        "endOffset": 1690
                     }
                 }
             },
@@ -486,13 +486,13 @@
                     "endOffset": 1576
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 29,
                         "startColumn": 4,
-                        "startOffset": 1222,
+                        "startOffset": 1251,
                         "endColumn": 57,
-                        "endOffset": 1275
+                        "endOffset": 1304
                     }
                 }
             },
@@ -505,13 +505,13 @@
                     "endOffset": 1622
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 50,
                         "startColumn": 4,
-                        "startOffset": 2264,
+                        "startOffset": 2314,
                         "endColumn": 45,
-                        "endOffset": 2305
+                        "endOffset": 2355
                     }
                 }
             },
@@ -524,13 +524,13 @@
                     "endOffset": 1686
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 24,
                         "startColumn": 4,
-                        "startOffset": 922,
+                        "startOffset": 946,
                         "endColumn": 63,
-                        "endOffset": 981
+                        "endOffset": 1005
                     }
                 }
             },
@@ -543,13 +543,13 @@
                     "endOffset": 1741
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 31,
                         "startColumn": 4,
-                        "startOffset": 1335,
+                        "startOffset": 1366,
                         "endColumn": 54,
-                        "endOffset": 1385
+                        "endOffset": 1416
                     }
                 }
             },
@@ -562,13 +562,13 @@
                     "endOffset": 1797
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 32,
                         "startColumn": 4,
-                        "startOffset": 1390,
+                        "startOffset": 1422,
                         "endColumn": 55,
-                        "endOffset": 1441
+                        "endOffset": 1473
                     }
                 }
             },
@@ -581,13 +581,13 @@
                     "endOffset": 1852
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 30,
                         "startColumn": 4,
-                        "startOffset": 1280,
+                        "startOffset": 1310,
                         "endColumn": 54,
-                        "endOffset": 1330
+                        "endOffset": 1360
                     }
                 }
             },
@@ -600,13 +600,13 @@
                     "endOffset": 1901
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 45,
                         "startColumn": 4,
-                        "startOffset": 2011,
+                        "startOffset": 2056,
                         "endColumn": 48,
-                        "endOffset": 2055
+                        "endOffset": 2100
                     }
                 }
             },
@@ -619,13 +619,13 @@
                     "endOffset": 1948
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 41,
                         "startColumn": 4,
-                        "startOffset": 1812,
+                        "startOffset": 1853,
                         "endColumn": 46,
-                        "endOffset": 1854
+                        "endOffset": 1895
                     }
                 }
             },
@@ -638,13 +638,13 @@
                     "endOffset": 1997
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 33,
                         "startColumn": 4,
-                        "startOffset": 1446,
+                        "startOffset": 1479,
                         "endColumn": 48,
-                        "endOffset": 1490
+                        "endOffset": 1523
                     }
                 }
             },
@@ -657,13 +657,13 @@
                     "endOffset": 2049
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-sw600dp\\dimens.xml",
                     "position": {
                         "startLine": 34,
                         "startColumn": 4,
-                        "startOffset": 1495,
+                        "startOffset": 1529,
                         "endColumn": 51,
-                        "endOffset": 1542
+                        "endOffset": 1576
                     }
                 }
             },
@@ -676,7 +676,7 @@
                     "endOffset": 2104
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
                     "position": {
                         "startLine": 9,
                         "startColumn": 4,

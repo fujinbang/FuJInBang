@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
 import com.fujinbang.R;
+import com.fujinbang.global.IMController;
 import com.fujinbang.global.MissionDetail;
 import com.fujinbang.global.StatusBarCompat;
 import com.fujinbang.internet.HttpConnRequest;
@@ -31,7 +32,6 @@ import java.util.Map;
  */
 public class ChatActivity extends FragmentActivity {
     private int groupPosition;
-    protected Map<String,EaseUser> userMap = new HashMap<>();
     protected ArrayList<String> allNick = new ArrayList<>();
     protected ArrayList<String> allAvatar = new ArrayList<>();
     protected ArrayList<Integer> attenderId = new ArrayList<>();
@@ -46,13 +46,6 @@ public class ChatActivity extends FragmentActivity {
         this.groupPosition = it.getExtras().getInt("groupPosition");
 
         initAllUser();
-        EaseUI.getInstance().setUserProfileProvider(new EaseUI.EaseUserProfileProvider() {
-            @Override
-            public EaseUser getUser(String username) {
-                return getUserInfo(username);
-            }
-        });
-
 
         chatFragment.setMyMissionClickListener(new View.OnClickListener() {
             @Override
@@ -72,12 +65,6 @@ public class ChatActivity extends FragmentActivity {
         getSupportFragmentManager().beginTransaction().add(R.id.chat_contain, chatFragment).commit();
     }
 
-    private EaseUser getUserInfo(String username) {
-        if (userMap.containsKey(username)){
-            return userMap.get(username);
-        }
-        return null;
-    }
 
     protected void initAllUser(){
         new SearchUserTask().
@@ -107,7 +94,7 @@ public class ChatActivity extends FragmentActivity {
                                 attenderId.add(attender.getInt("id"));
                                 String avatar = "http://o73gf55zi.bkt.clouddn.com/" + attender.getInt("id") + ".png";
                                 user.setAvatar(avatar);
-                                userMap.put(user.getUsername(), user);
+                                IMController.userMap.put(user.getUsername(), user);
                                 if (attender.has("nickname") && !attender.getString("nickname").equals("")){
                                     user.setNick(attender.getString("nickname"));
                                     allNick.add(attender.getString("nickname"));
@@ -117,6 +104,7 @@ public class ChatActivity extends FragmentActivity {
                                 allAvatar.add(avatar);
                             }
                         }
+                        chatFragment.refresh();
                     }
                 } catch (Exception e){e.printStackTrace();}
             }
@@ -146,9 +134,10 @@ public class ChatActivity extends FragmentActivity {
                             user.setNick(data.getString("nickName"));
                             String avatar = "http://o73gf55zi.bkt.clouddn.com/" + data.getInt("id") + ".png";
                             user.setAvatar(avatar);
-                            userMap.put(user.getUsername(), user);
+                            IMController.userMap.put(user.getUsername(), user);
                             allNick.add(0,data.getString("nickName"));
                             allAvatar.add(0,avatar);
+                            chatFragment.refresh();
                         }
                     }
                 } catch (Exception e){e.printStackTrace();}

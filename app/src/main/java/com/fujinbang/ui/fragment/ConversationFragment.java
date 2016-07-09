@@ -67,8 +67,7 @@ public class ConversationFragment extends Fragment {
                 MissionDetail.getInstance().getInvitedMissionList().remove(position);
                 helpListAdapter.notifyDataSetChanged();
                 helpListView.turnToNormal();
-                ((MainActivity) getActivity()).setUnreadCount(EMClient.getInstance().chatManager().getUnreadMsgsCount()
-                        + MissionDetail.getInstance().getInvitedMissionList().size());
+                MainActivity.refreshUnreadCount();
             }
         });
         helpListView.setAdapter(helpListAdapter);

@@ -30,14 +30,12 @@ import java.util.List;
 
 public class MainActivity extends FragmentActivity {
 
-    private NeibourTabView tabView;
+    private static NeibourTabView tabView;
     private Fragment[] mFragments = new Fragment[4];
     private LinearLayout root;
     private boolean isLogin;
     long days;
     SimpleDataBase simpleDataBase;
-
-    int unreadCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,9 +93,10 @@ public class MainActivity extends FragmentActivity {
             tabView.changeBtn(tabNum);
     }
 
-    public void setUnreadCount(int count) {
+    public static void refreshUnreadCount() {
         if (tabView != null)
-            tabView.setUnReadCount(count);
+            tabView.setUnReadCount(EMClient.getInstance().chatManager().getUnreadMsgsCount()
+                    + MissionDetail.getInstance().getInvitedMissionList().size());
     }
 
     private final void replaceFragment(int tabNum) {
@@ -156,8 +155,7 @@ public class MainActivity extends FragmentActivity {
         missionDetail.initialize(simpleDataBase.getPhoneNum(), new MissionDetail.OnMissionListener() {
             @Override
             public void onMissionSucceed(List<HashMap<String, Object>> mission) {
-                unreadCount += EMClient.getInstance().chatManager().getUnreadMsgsCount();
-                setUnreadCount(unreadCount);
+                refreshUnreadCount();
                 missionDetail.initGroupAvatar();
                 for (int i = 0; i < mission.size(); i++) {
                     if (mission.get(i).containsKey("voicelength") &&
@@ -172,8 +170,7 @@ public class MainActivity extends FragmentActivity {
 
             @Override
             public void onInvitedSucceed(List<HashMap<String, Object>> invitedMission) {
-                unreadCount += invitedMission.size();
-                setUnreadCount(unreadCount);
+                refreshUnreadCount();
                 for (int i = 0;i<invitedMission.size();i++){
                     if (invitedMission.get(i).containsKey("voicelength") &&
                             invitedMission.get(i).get("voicelength").toString().length() != 0){
@@ -201,7 +198,6 @@ public class MainActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         if (!simpleDataBase.getPhoneNum().equals("无")) {
-            unreadCount = 0;
             updateMission();
             EMClient.getInstance().groupManager().loadAllGroups();
             EMClient.getInstance().chatManager().loadAllConversations();

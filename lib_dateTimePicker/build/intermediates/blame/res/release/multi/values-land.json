@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\res\\merged\\release\\values-land\\values-land.xml",
+        "outputFile": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\res\\merged\\release\\values-land\\values-land.xml",
         "map": [
             {
                 "to": {
@@ -11,7 +11,7 @@
                     "endOffset": 112
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-land\\values-land.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-land\\values-land.xml",
                     "position": {
                         "startLine": 2,
                         "startColumn": 4,
@@ -30,7 +30,7 @@
                     "endOffset": 184
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-land\\values-land.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-land\\values-land.xml",
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,
@@ -49,7 +49,7 @@
                     "endOffset": 254
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-land\\values-land.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-land\\values-land.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,
@@ -68,7 +68,7 @@
                     "endOffset": 318
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-land\\values-land.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-land\\values-land.xml",
                     "position": {
                         "startLine": 5,
                         "startColumn": 4,
@@ -87,7 +87,7 @@
                     "endOffset": 389
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-land\\values-land.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-land\\values-land.xml",
                     "position": {
                         "startLine": 6,
                         "startColumn": 4,
@@ -106,7 +106,7 @@
                     "endOffset": 457
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-land\\values-land.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.4.0\\res\\values-land\\values-land.xml",
                     "position": {
                         "startLine": 7,
                         "startColumn": 4,
@@ -125,13 +125,13 @@
                     "endOffset": 504
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-land\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-land\\dimens.xml",
                     "position": {
                         "startLine": 17,
                         "startColumn": 4,
-                        "startOffset": 691,
+                        "startOffset": 708,
                         "endColumn": 46,
-                        "endOffset": 733
+                        "endOffset": 750
                     }
                 }
             },
@@ -144,13 +144,13 @@
                     "endOffset": 553
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-land\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-land\\dimens.xml",
                     "position": {
                         "startLine": 18,
                         "startColumn": 4,
-                        "startOffset": 738,
+                        "startOffset": 756,
                         "endColumn": 48,
-                        "endOffset": 782
+                        "endOffset": 800
                     }
                 }
             },
@@ -163,13 +163,13 @@
                     "endOffset": 608
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-land\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-land\\dimens.xml",
                     "position": {
                         "startLine": 21,
                         "startColumn": 4,
-                        "startOffset": 843,
+                        "startOffset": 864,
                         "endColumn": 54,
-                        "endOffset": 893
+                        "endOffset": 914
                     }
                 }
             },
@@ -182,13 +182,13 @@
                     "endOffset": 664
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-land\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-land\\dimens.xml",
                     "position": {
                         "startLine": 22,
                         "startColumn": 4,
-                        "startOffset": 898,
+                        "startOffset": 920,
                         "endColumn": 55,
-                        "endOffset": 949
+                        "endOffset": 971
                     }
                 }
             },
@@ -201,13 +201,13 @@
                     "endOffset": 719
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-land\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-land\\dimens.xml",
                     "position": {
                         "startLine": 20,
                         "startColumn": 4,
-                        "startOffset": 788,
+                        "startOffset": 808,
                         "endColumn": 54,
-                        "endOffset": 838
+                        "endOffset": 858
                     }
                 }
             }

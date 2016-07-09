@@ -4,9 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.fujinbang.R;
+import com.fujinbang.ui.activity.ConversationFragment;
 import com.fujinbang.ui.activity.MainActivity;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
@@ -14,9 +16,12 @@ import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.easeui.controller.EaseUI;
+import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.model.EaseNotifier;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by VITO on 2016/6/26.
@@ -27,6 +32,7 @@ public class IMController {
     private EaseUI easeUI;
     private Context appContext;
     protected EMMessageListener messageListener = null;
+    public static Map<String,EaseUser> userMap;
 
     private static IMController instance = null;
     public synchronized static IMController getInstance() {
@@ -47,6 +53,13 @@ public class IMController {
             setNotifier();
             registerEventListener();
         }
+        userMap = new HashMap<>();
+        EaseUI.getInstance().setUserProfileProvider(new EaseUI.EaseUserProfileProvider() {
+            @Override
+            public EaseUser getUser(String username) {
+                return getUserInfo(username);
+            }
+        });
     }
 
     protected void setNotifier() {
@@ -127,8 +140,7 @@ public class IMController {
                     //应用在后台，不需要刷新UI,通知栏提示新消息
                     if(!easeUI.hasForegroundActivies()){
                         easeUI.getNotifier().onNewMsg(message);
-                    } else {
-
+                        MainActivity.refreshUnreadCount();
                     }
                 }
             }
@@ -184,5 +196,12 @@ public class IMController {
         };
 
         EMClient.getInstance().chatManager().addMessageListener(messageListener);
+    }
+
+    protected EaseUser getUserInfo(String username) {
+        if (userMap.containsKey(username)){
+            return userMap.get(username);
+        }
+        return null;
     }
 }

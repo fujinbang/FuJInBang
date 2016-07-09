@@ -1,14 +1,14 @@
 [
     {
-        "merged": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\build\\intermediates\\res\\merged\\release\\drawable-hdpi-v4\\indicator_arrow.png",
-        "source": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\drawable-hdpi\\indicator_arrow.png"
+        "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\build\\intermediates\\res\\merged\\release\\drawable-hdpi-v4\\default_ptr_rotate.png",
+        "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\drawable-hdpi\\default_ptr_rotate.png"
     },
     {
-        "merged": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\build\\intermediates\\res\\merged\\release\\drawable-hdpi-v4\\default_ptr_rotate.png",
-        "source": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\drawable-hdpi\\default_ptr_rotate.png"
+        "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\build\\intermediates\\res\\merged\\release\\drawable-hdpi-v4\\indicator_arrow.png",
+        "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\drawable-hdpi\\indicator_arrow.png"
     },
     {
-        "merged": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\build\\intermediates\\res\\merged\\release\\drawable-hdpi-v4\\default_ptr_flip.png",
-        "source": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\drawable-hdpi\\default_ptr_flip.png"
+        "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\build\\intermediates\\res\\merged\\release\\drawable-hdpi-v4\\default_ptr_flip.png",
+        "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\drawable-hdpi\\default_ptr_flip.png"
     }
 ]

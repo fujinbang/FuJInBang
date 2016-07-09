@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -223,11 +222,9 @@ public class ConversationListAdapter extends BaseExpandableListAdapter {
 
         if (groupChat.get(groupPosition).getUnreadMsgCount() > 0) {
             // 显示与此用户的消息未读数
-            Log.e("cc","设置消息未读数（有未读）");
             groupViewHolder.unreadLabel.setText(String.valueOf(groupChat.get(groupPosition).getUnreadMsgCount()));
             groupViewHolder.unreadLabel.setVisibility(View.VISIBLE);
         } else {
-            Log.e("cc","设置消息未读数（不可见）");
             groupViewHolder.unreadLabel.setVisibility(View.INVISIBLE);
         }
         return convertView;

@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\build\\intermediates\\res\\merged\\debug\\values\\values.xml",
+        "outputFile": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\build\\intermediates\\res\\merged\\debug\\values\\values.xml",
         "map": [
             {
                 "to": {
@@ -11,13 +11,13 @@
                     "endOffset": 1570
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\dimens.xml",
                     "position": {
                         "startLine": 6,
                         "startColumn": 4,
-                        "startOffset": 223,
+                        "startOffset": 229,
                         "endColumn": 63,
-                        "endOffset": 282
+                        "endOffset": 288
                     }
                 }
             },
@@ -30,13 +30,13 @@
                     "endOffset": 1634
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\dimens.xml",
                     "position": {
                         "startLine": 7,
                         "startColumn": 4,
-                        "startOffset": 287,
+                        "startOffset": 294,
                         "endColumn": 63,
-                        "endOffset": 346
+                        "endOffset": 353
                     }
                 }
             },
@@ -49,13 +49,13 @@
                     "endOffset": 1689
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\dimens.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,
-                        "startOffset": 111,
+                        "startOffset": 115,
                         "endColumn": 54,
-                        "endOffset": 161
+                        "endOffset": 165
                     }
                 }
             },
@@ -68,13 +68,13 @@
                     "endOffset": 1746
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\dimens.xml",
                     "position": {
                         "startLine": 5,
                         "startColumn": 4,
-                        "startOffset": 166,
+                        "startOffset": 171,
                         "endColumn": 56,
-                        "endOffset": 218
+                        "endOffset": 223
                     }
                 }
             },
@@ -87,13 +87,13 @@
                     "endOffset": 1801
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\dimens.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\dimens.xml",
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,
-                        "startOffset": 56,
+                        "startOffset": 59,
                         "endColumn": 54,
-                        "endOffset": 106
+                        "endOffset": 109
                     }
                 }
             },
@@ -106,13 +106,13 @@
                     "endOffset": 1839
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\ids.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\ids.xml",
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,
-                        "startOffset": 56,
+                        "startOffset": 59,
                         "endColumn": 38,
-                        "endOffset": 90
+                        "endOffset": 93
                     }
                 }
             },
@@ -125,13 +125,13 @@
                     "endOffset": 1879
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\ids.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\ids.xml",
                     "position": {
                         "startLine": 5,
                         "startColumn": 4,
-                        "startOffset": 133,
+                        "startOffset": 138,
                         "endColumn": 40,
-                        "endOffset": 169
+                        "endOffset": 174
                     }
                 }
             },
@@ -144,13 +144,13 @@
                     "endOffset": 1916
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\ids.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\ids.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,
-                        "startOffset": 95,
+                        "startOffset": 99,
                         "endColumn": 37,
-                        "endOffset": 128
+                        "endOffset": 132
                     }
                 }
             },
@@ -163,13 +163,13 @@
                     "endOffset": 2018
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\pull_refresh_strings.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\pull_refresh_strings.xml",
                     "position": {
                         "startLine": 8,
                         "startColumn": 4,
-                        "startOffset": 390,
+                        "startOffset": 398,
                         "endColumn": 101,
-                        "endOffset": 487
+                        "endOffset": 495
                     }
                 }
             },
@@ -182,13 +182,13 @@
                     "endOffset": 2132
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\pull_refresh_strings.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\pull_refresh_strings.xml",
                     "position": {
                         "startLine": 10,
                         "startColumn": 4,
-                        "startOffset": 600,
+                        "startOffset": 610,
                         "endColumn": 113,
-                        "endOffset": 709
+                        "endOffset": 719
                     }
                 }
             },
@@ -201,13 +201,13 @@
                     "endOffset": 2240
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\pull_refresh_strings.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\pull_refresh_strings.xml",
                     "position": {
                         "startLine": 9,
                         "startColumn": 4,
-                        "startOffset": 492,
+                        "startOffset": 501,
                         "endColumn": 107,
-                        "endOffset": 595
+                        "endOffset": 604
                     }
                 }
             },
@@ -220,13 +220,13 @@
                     "endOffset": 2312
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\pull_refresh_strings.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\pull_refresh_strings.xml",
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,
-                        "startOffset": 56,
+                        "startOffset": 59,
                         "endColumn": 71,
-                        "endOffset": 123
+                        "endOffset": 126
                     }
                 }
             },
@@ -239,13 +239,13 @@
                     "endOffset": 2382
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\pull_refresh_strings.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\pull_refresh_strings.xml",
                     "position": {
                         "startLine": 5,
                         "startColumn": 4,
-                        "startOffset": 206,
+                        "startOffset": 211,
                         "endColumn": 69,
-                        "endOffset": 271
+                        "endOffset": 276
                     }
                 }
             },
@@ -258,13 +258,13 @@
                     "endOffset": 2460
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\pull_refresh_strings.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values\\pull_refresh_strings.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,
-                        "startOffset": 128,
+                        "startOffset": 132,
                         "endColumn": 77,
-                        "endOffset": 201
+                        "endOffset": 205
                     }
                 }
             }

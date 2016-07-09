@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\build\\intermediates\\res\\merged\\release\\values-fi\\values-fi.xml",
+        "outputFile": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\build\\intermediates\\res\\merged\\release\\values-fi\\values-fi.xml",
         "map": [
             {
                 "to": {
@@ -11,13 +11,13 @@
                     "endOffset": 141
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values-fi\\pull_refresh_strings.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values-fi\\pull_refresh_strings.xml",
                     "position": {
                         "startLine": 8,
                         "startColumn": 4,
-                        "startOffset": 404,
+                        "startOffset": 412,
                         "endColumn": 90,
-                        "endOffset": 490
+                        "endOffset": 498
                     }
                 }
             },
@@ -30,13 +30,13 @@
                     "endOffset": 255
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values-fi\\pull_refresh_strings.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values-fi\\pull_refresh_strings.xml",
                     "position": {
                         "startLine": 10,
                         "startColumn": 4,
-                        "startOffset": 603,
+                        "startOffset": 613,
                         "endColumn": 113,
-                        "endOffset": 712
+                        "endOffset": 722
                     }
                 }
             },
@@ -49,13 +49,13 @@
                     "endOffset": 363
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values-fi\\pull_refresh_strings.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values-fi\\pull_refresh_strings.xml",
                     "position": {
                         "startLine": 9,
                         "startColumn": 4,
-                        "startOffset": 495,
+                        "startOffset": 504,
                         "endColumn": 107,
-                        "endOffset": 598
+                        "endOffset": 607
                     }
                 }
             },
@@ -68,13 +68,13 @@
                     "endOffset": 442
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values-fi\\pull_refresh_strings.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values-fi\\pull_refresh_strings.xml",
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,
-                        "startOffset": 56,
+                        "startOffset": 59,
                         "endColumn": 78,
-                        "endOffset": 130
+                        "endOffset": 133
                     }
                 }
             },
@@ -87,13 +87,13 @@
                     "endOffset": 516
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values-fi\\pull_refresh_strings.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values-fi\\pull_refresh_strings.xml",
                     "position": {
                         "startLine": 5,
                         "startColumn": 4,
-                        "startOffset": 216,
+                        "startOffset": 221,
                         "endColumn": 73,
-                        "endOffset": 285
+                        "endOffset": 290
                     }
                 }
             },
@@ -106,13 +106,13 @@
                     "endOffset": 597
                 },
                 "from": {
-                    "file": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values-fi\\pull_refresh_strings.xml",
+                    "file": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\values-fi\\pull_refresh_strings.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,
-                        "startOffset": 135,
+                        "startOffset": 139,
                         "endColumn": 80,
-                        "endOffset": 211
+                        "endOffset": 215
                     }
                 }
             }
