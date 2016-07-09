@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "D:\\androidSDK\\zhangyuLib\\ping++pay\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\dialog_enter.xml",
+        "source": "D:\\androidSDK\\zhangyuLib\\ping++pay\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\anim\\dialog_enter.xml"
+    },
+    {
+        "merged": "D:\\androidSDK\\zhangyuLib\\ping++pay\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\dialog_exit.xml",
+        "source": "D:\\androidSDK\\zhangyuLib\\ping++pay\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\anim\\dialog_exit.xml"
+    }
+]

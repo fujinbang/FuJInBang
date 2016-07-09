@@ -1,0 +1,238 @@
+package com.fujinbang.activity;
+
+
+import android.content.Context;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ExpandableListView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.fujinbang.R;
+import com.fujinbang.conversation.ConversationListAdapter;
+import com.fujinbang.conversation.HelpListAdapter;
+import com.fujinbang.conversation.SystemMsgAdapter;
+import com.fujinbang.global.MissionDetail;
+import com.fujinbang.global.SimpleDataBase;
+import com.fujinbang.internet.HttpConnRequest;
+import com.fujinbang.view.TimeView;
+import com.hyphenate.EMConnectionListener;
+import com.hyphenate.EMError;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConversation;
+import com.hyphenate.easeui.domain.EaseUser;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+/**
+ * Created by VITO on 2016/4/24.
+ * 消息界面
+ */
+public class ConversationFragment extends Fragment {
+    Context mContext;
+    ExpandableListView expandListView;
+    ListView helpListView, sysMsgListView;
+
+    ConversationListAdapter conversationListAdapter;
+    HelpListAdapter helpListAdapter;
+    SystemMsgAdapter systemMsgAdapter;
+    public static HashMap<String,String> groupAvatarId = new HashMap<>();
+
+    protected boolean isConflict;
+    protected static int unreadMsgCount;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_conversation, container, false);
+        mContext = this.getContext();
+
+        expandListView = (ExpandableListView) view.findViewById(R.id.expand_listview);
+        expandListView.setGroupIndicator(null);
+        helpListView = (ListView) view.findViewById(R.id.help_listview);
+
+        sysMsgListView = (ListView) view.findViewById(R.id.sys_listview);
+        sysMsgListView.setVisibility(View.VISIBLE);
+        EMConversation sysMsg = EMClient.getInstance().chatManager().getConversation("sys");
+        systemMsgAdapter = new SystemMsgAdapter(mContext,sysMsg,sysMsgListView);
+        sysMsgListView.setAdapter(systemMsgAdapter);
+
+        SimpleDataBase simpleDataBase = new SimpleDataBase(mContext);
+        unreadMsgCount = 0;
+        MissionDetail.getInstance().initialize(simpleDataBase.getPhoneNum(), new MissionDetail.OnMissionListener() {
+            @Override
+            public void onMissionSucceed(List<HashMap<String, Object>> mission) {
+                conversationListAdapter = new ConversationListAdapter(mContext, expandListView, mission);
+                expandListView.setAdapter(conversationListAdapter);
+                //conversationListAdapter.start();
+                expandListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+                    @Override
+                    public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                        ChatActivity.startActivity(mContext, groupPosition);
+                        return true;
+                    }
+                });
+                unreadMsgCount += conversationListAdapter.getUnreadMsgNum();
+                ((MainActivity)getActivity()).setUnreadCount(unreadMsgCount);
+
+                getGroupAvatarIdCount = 0;
+                for (int i = 0;i<mission.size();i++){
+                    initGroupAvatarId(mission.get(i).get("helpid").toString(), mission.size());
+                }
+            }
+
+            @Override
+            public void onInvitedSucceed(List<HashMap<String, Object>> invitedMission){
+                helpListAdapter = new HelpListAdapter(mContext, invitedMission);
+                helpListView.setAdapter(helpListAdapter);
+                helpListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        PersonalHelpActivity.startActivity(mContext, position);
+                    }
+                });
+                unreadMsgCount += invitedMission.size();
+                ((MainActivity)getActivity()).setUnreadCount(unreadMsgCount);
+            }
+
+            @Override
+            public void onError(String errorMsg) {
+                //Toast.makeText(mContext,errorMsg,Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        EMClient.getInstance().addConnectionListener(connectionListener);
+
+        return view;
+    }
+
+    int getGroupAvatarIdCount;
+    private void initGroupAvatarId(String helpid, final int missionSize){
+        new AsyncTask<String, Integer, String>() {
+            @Override
+            protected String doInBackground(String... params) {
+                return HttpConnRequest.request("http://120.24.240.199:6789/help/queryattenders?helpid="+params[0], "GET", null);
+            }
+            @Override
+            protected void onPostExecute(String result) {
+                if (result != null) {
+                    try {
+                        JSONObject object = new JSONObject(result);
+                        if (object.has("attenders")){
+                            JSONArray attenders = object.getJSONArray("attenders");
+                            for (int i = 0;i<attenders.length();i++){
+                                JSONObject attender = attenders.getJSONObject(i);
+                                String avatar = "http://o73gf55zi.bkt.clouddn.com/" + attender.getInt("id") + ".png";
+                                groupAvatarId.put(attender.getString("phoneNum"), avatar);
+                            }
+                            getGroupAvatarIdCount++;
+                            if (getGroupAvatarIdCount == missionSize){
+                                conversationListAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    } catch (Exception e){e.printStackTrace();}
+                }
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,helpid);
+    }
+
+    protected EMConnectionListener connectionListener = new EMConnectionListener() {
+        @Override
+        public void onDisconnected(int error) {
+            if (error == EMError.USER_REMOVED || error == EMError.USER_LOGIN_ANOTHER_DEVICE) {
+                isConflict = true;
+            } else {
+                handler.sendEmptyMessage(0);
+            }
+        }
+
+        @Override
+        public void onConnected() {
+            handler.sendEmptyMessage(1);
+        }
+    };
+
+    protected Handler handler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            switch (msg.what) {
+                case 0:
+                    onConnectionDisconnected();
+                    break;
+                case 1:
+                    onConnectionConnected();
+                    break;
+
+                case 2: {
+                    if (conversationListAdapter!= null){
+                        conversationListAdapter.notifyDataSetChanged();
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    };
+
+    /**
+     * 连接到服务器
+     */
+    protected void onConnectionConnected() {
+        //已连接
+    }
+
+    /**
+     * 连接断开
+     */
+    protected void onConnectionDisconnected() {
+        Toast.makeText(mContext, "未连接到服务器", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 刷新页面
+     */
+    public void refresh() {
+        if (!handler.hasMessages(2)) {
+            handler.sendEmptyMessage(2);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        TimeView.isCancel = false;
+        refresh();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        TimeView.isCancel = true;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EMClient.getInstance().removeConnectionListener(connectionListener);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (isConflict) {
+            outState.putBoolean("isConflict", true);
+        }
+    }
+}

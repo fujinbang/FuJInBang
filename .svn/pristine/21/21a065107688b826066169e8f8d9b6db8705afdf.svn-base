@@ -1,0 +1,188 @@
+package com.fujinbang.activity;
+
+import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.LinearLayout;
+
+import com.fujinbang.R;
+import com.fujinbang.global.MissionDetail;
+import com.fujinbang.global.SimpleDataBase;
+import com.fujinbang.global.StatusBarCompat;
+import com.fujinbang.global.TempFragment;
+import com.fujinbang.view.NeibourTabView;
+import com.hyphenate.chat.EMClient;
+import com.igexin.sdk.PushManager;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+
+public class MainActivity extends FragmentActivity {
+
+    private NeibourTabView tabView;
+    private Fragment[] mFragments = new Fragment[4];
+    private LinearLayout root;
+    private boolean isLogin;
+    long days;
+    SimpleDataBase simpleDataBase;
+
+    int unreadCount = 0;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_main);
+
+        StatusBarCompat.compat(this);
+
+        simpleDataBase = new SimpleDataBase(this);
+        isLogin = false;
+        root = (LinearLayout) findViewById(R.id.activity_main_root);
+        root.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (!isLogin) {
+                        checkLoginStatus();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
+        initTabView();
+        initContain();
+    }
+
+    private final void initContain() {
+        mFragments[0] = new NeibourFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.contain, mFragments[0]);
+        transaction.commit();
+    }
+
+    private final void initTabView() {
+        tabView = (NeibourTabView) findViewById(R.id.tabView);
+        tabView.setOnClickTabListener(new NeibourTabView.onClickTabListener() {
+            @Override
+            public void onClick(int tabNum, String tabName) {
+                replaceFragment(tabNum);
+            }
+        });
+    }
+
+    /**
+     * 使下方选项卡页面改变到指定的选项卡
+     *
+     * @param tabNum 0-3表示4个选项卡编号
+     */
+    public void changTab(int tabNum) {
+        if (tabView != null)
+            tabView.changeBtn(tabNum);
+    }
+
+    public void setUnreadCount(int count) {
+        if (tabView != null)
+            tabView.setUnReadCount(count);
+    }
+
+    private final void replaceFragment(int tabNum) {
+        if (mFragments[tabNum] == null) {
+            switch (tabNum) {
+                case 0:
+                    mFragments[tabNum] = new NeibourFragment();
+                    break;
+                case 1:
+                    mFragments[tabNum] = new SeekHelpFragment();
+                    break;
+                case 2:
+                    mFragments[tabNum] = new ConversationFragment();
+                    break;
+                case 3:
+                    mFragments[tabNum] = new SettingFragment();
+                    break;
+            }
+        }
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.contain, mFragments[tabNum]);
+        transaction.commit();
+    }
+
+    private void checkLoginStatus() {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Date curDate = new Date(System.currentTimeMillis());//获取当前时间
+        String cur = df.format(curDate);
+        String loginDate = simpleDataBase.getLoginDate();
+        if (loginDate == null) {
+            Intent it = new Intent(MainActivity.this, LoginActivity.class);
+            //it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(it);
+        } else {
+            try {
+                Date d1 = df.parse(loginDate);
+                Date d2 = df.parse(cur);
+                long diff = d2.getTime() - d1.getTime();//这样得到的差值是微秒级别
+                days = diff / (1000 * 60 * 60 * 24);
+                Log.i("zy", diff + "," + days);
+            } catch (Exception e) {
+                Log.e("zy", "MainActivity " + e);
+            }
+            if (days > 6) {
+                Intent it = new Intent(MainActivity.this, LoginActivity.class);
+                //it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(it);
+            } else {
+                isLogin = true;
+            }
+        }
+    }
+
+    private void updateUnreadCount() {
+        MissionDetail.getInstance().initialize(simpleDataBase.getPhoneNum(), new MissionDetail.OnMissionListener() {
+            @Override
+            public void onMissionSucceed(List<HashMap<String, Object>> mission) {
+                unreadCount += EMClient.getInstance().chatManager().getUnreadMsgsCount();
+                setUnreadCount(unreadCount);
+            }
+
+            @Override
+            public void onInvitedSucceed(List<HashMap<String, Object>> invitedMission) {
+                unreadCount += invitedMission.size();
+                setUnreadCount(unreadCount);
+            }
+
+            @Override
+            public void onError(String errorMsg) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!simpleDataBase.getPhoneNum().equals("无")) {
+            unreadCount = 0;
+            updateUnreadCount();
+            EMClient.getInstance().groupManager().loadAllGroups();
+            EMClient.getInstance().chatManager().loadAllConversations();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+}

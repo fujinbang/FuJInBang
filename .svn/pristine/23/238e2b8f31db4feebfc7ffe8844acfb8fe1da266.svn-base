@@ -1,0 +1,111 @@
+package com.fujinbang.baidumap;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.baidu.mapapi.cloud.NearbySearchInfo;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.radar.RadarNearbyInfo;
+import com.baidu.mapapi.radar.RadarNearbyResult;
+import com.baidu.mapapi.radar.RadarNearbySearchOption;
+import com.baidu.mapapi.radar.RadarSearchManager;
+import com.fujinbang.R;
+import com.fujinbang.global.SimpleDataBase;
+import com.fujinbang.internet.AvatarRequest;
+import com.fujinbang.view.MapCircleImageView;
+
+import java.util.List;
+
+/**
+ * Created by Administrator on 2016/5/17.
+ * 管理地图上的覆盖物，显示不同用户的头像在对应的位置上
+ */
+public class MarkerManager {
+
+    private static MarkerManager singleton;
+    private BaiduMap map;
+    private Context context;
+    private AvatarRequest avatarRequest;
+    private SimpleDataBase db;
+    /*默认的头像的图片描述*/
+    private BitmapDescriptor defaultAvatar;
+
+    private MarkerManager(BaiduMap map, Context context) {
+        this.map = map;
+        this.context = context;
+        this.db = new SimpleDataBase(context);
+        this.avatarRequest = new AvatarRequest(context);
+
+        MapCircleImageView civ = new MapCircleImageView(context);
+        civ.setImageResource(R.drawable.bb);
+        defaultAvatar = BitmapDescriptorFactory.fromView(civ);
+    }
+
+    public static MarkerManager getInstance(BaiduMap map, Context context) {
+        if (singleton == null) {
+            synchronized (MarkerManager.class) {
+                if (singleton == null) {
+                    singleton = new MarkerManager(map, context);
+                }
+            }
+        }
+        singleton.map = map;
+        singleton.context = context;
+        return singleton;
+    }
+
+    public final void updateMarker(final LatLng pos) {
+        /*清空地图上的marker*/
+        map.clear();
+
+        /*获取附近的用户信息后 请求获取头像*/
+        LocationManager.getInstance(context).requestNearByLocation(pos, new LocationManager.OnNearByLocationListener() {
+            @Override
+            public void onRevieveNearByLocation(RadarNearbyResult result) {
+                List<RadarNearbyInfo> list = result.infoList;
+                for (RadarNearbyInfo info : list) {
+                    Log.i("zy", "附近的帮友信息: id: " + info.comments + " ,mobileName: " + info.mobileName + " position: " + info.pt + " ,distance: " + info.distance);
+                    int userId = Integer.valueOf(info.comments);//might throw exception
+                    LatLng userPos = info.pt;
+
+                    requestAvatar(userId, userPos);
+                }
+            }
+        });
+
+        int id = db.getClientId();
+        requestAvatar(id, pos);
+    }
+
+    private final void requestAvatar(int id, final LatLng pos) {
+        if (id != 0) {
+            avatarRequest.getAvatar(id, 300, 300, new AvatarRequest.OnAvatorListener() {
+                @Override
+                public void onSucess(Bitmap avatar) {
+                    MarkerOptions mo = new MarkerOptions();
+                    MapCircleImageView civ = new MapCircleImageView(context);
+                    civ.setImageBitmap(avatar);
+                    BitmapDescriptor bd = BitmapDescriptorFactory.fromView(civ);
+                    mo.icon(bd).position(pos);
+                    map.addOverlay(mo);
+                }
+
+                @Override
+                public void onError(String desc) {
+                    Log.e("zy", "MarkerManager error" + desc);
+                    if (defaultAvatar != null) {
+                        MarkerOptions mo = new MarkerOptions();
+                        mo.icon(defaultAvatar).position(pos);
+                        map.addOverlay(mo);
+                    }
+                }
+            });
+        }
+    }
+}

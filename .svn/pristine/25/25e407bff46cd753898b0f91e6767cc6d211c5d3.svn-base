@@ -1,0 +1,160 @@
+package com.fujinbang.setting;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
+
+import com.fujinbang.R;
+import com.fujinbang.view.CircleImageView;
+
+/**
+ * Created by Administrator on 2016/3/14.
+ */
+public class SettingAdapter extends BaseAdapter {
+
+    String[] property = new String[]{"头像", "昵称", "性别", "邮箱", "手机号", "地区"};
+    String[] value = new String[]{"未设置", "未设置", "未设置", "未设置", "未设置", "未设置"};
+    Bitmap mAvatar;
+    Context mContext;
+
+    public SettingAdapter(Context context) {
+        mContext = context;
+        mAvatar = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.bb);
+
+        //Example:
+        setPhoneNum("无");
+        setEmail("无");
+        setUserName("无");
+        setSex(true);
+        setArea("无");
+    }
+
+    public void setAvatar(Bitmap avatar) {
+        mAvatar = avatar;
+        notifyDataSetChanged();
+    }
+
+    public Bitmap getAvatar() {
+        return mAvatar;
+    }
+
+    public void setUserName(String userName) {
+        value[1] = userName;
+        notifyDataSetChanged();
+    }
+
+    public String getUserName() {
+        return value[1];
+    }
+
+    public void setSex(boolean isMan) {
+        if (isMan) {
+            value[2] = "男";
+        } else {
+            value[2] = "女";
+        }
+        notifyDataSetChanged();
+    }
+
+    public String getSex() {
+        return value[2];
+    }
+
+    public void setEmail(String E_mail) {
+        value[3] = E_mail;
+        notifyDataSetChanged();
+    }
+
+    public String getEmail() {
+        return value[3];
+    }
+
+    public void setPhoneNum(String phoneNum) {
+        value[4] = phoneNum;
+        notifyDataSetChanged();
+    }
+
+    public String getPhoneNum() {
+        return value[4];
+    }
+
+    public void setArea(String area) {
+        value[5] = area;
+        notifyDataSetChanged();
+    }
+
+    public String getArea() {
+        return value[5];
+    }
+
+    public void set(String field, String value) {
+        switch (field) {
+            case "头像":
+                //error
+                break;
+            case "昵称":
+                setUserName(value);
+                break;
+            case "性别":
+                //error
+                break;
+            case "邮箱":
+                setEmail(value);
+                break;
+            case "手机号":
+                setPhoneNum(value);
+                break;
+            case "地区":
+                setArea(value);
+                break;
+            default:
+                break;
+        }
+        notifyDataSetChanged();
+    }
+
+    public String getPropertyByPosition(int position) {
+        if (position < 0 || 5 < position) {
+            throw new IllegalArgumentException("the \"position\" should be in [0,5]");
+        }
+        return property[position];
+    }
+
+    @Override
+    public int getCount() {
+        return property.length;
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return property[position];
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        final View view = LayoutInflater.from(mContext).inflate(R.layout.listview_item_setting, null);
+        final TextView tv_property = (TextView) view.findViewById(R.id.tv_property);
+        tv_property.setText(property[position]);
+
+        if (position == 0) {
+            final CircleImageView civ_avatar = (CircleImageView) view.findViewById(R.id.civ_avatar);
+            civ_avatar.setImageBitmap(mAvatar);
+            civ_avatar.setVisibility(View.VISIBLE);
+        } else {
+            final TextView tv_value = (TextView) view.findViewById(R.id.tv_value);
+            tv_value.setText(value[position]);
+            tv_value.setVisibility(View.VISIBLE);
+        }
+        return view;
+    }
+}

@@ -74,8 +74,6 @@ public class MarkerManager {
                 }
             }
         });
-        //int id = db.getClientId();
-        //requestAvatar(id, pos);
     }
 
     private final void requestAvatar(int id, final LatLng pos) {

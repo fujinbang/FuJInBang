@@ -1,0 +1,41 @@
+package com.fujinbang.activity;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+
+import com.fujinbang.R;
+import com.fujinbang.global.StatusBarCompat;
+
+/**
+ * Created by VITO on 2016/5/18.
+ * 任务详情界面
+ */
+public class MissionDetailActivity extends Activity{
+    ImageView iv_back;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_mission_detail);
+        StatusBarCompat.compat(this);
+        initView();
+    }
+
+    private final void initView() {
+        iv_back = (ImageView) findViewById(R.id.iv_back);
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MissionDetailActivity.this.finish();
+            }
+        });
+    }
+
+    public static void startActivity(Context context) {
+        Intent intent = new Intent(context, MissionActivity.class);
+        context.startActivity(intent);
+    }
+}

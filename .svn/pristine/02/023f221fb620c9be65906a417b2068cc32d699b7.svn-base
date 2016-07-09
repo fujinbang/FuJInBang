@@ -1,0 +1,67 @@
+package com.fujinbang.presenter;
+
+import android.graphics.Bitmap;
+import android.util.Log;
+
+import com.fujinbang.activity.IntegrationActivity;
+import com.fujinbang.activity.SetPayPwdActivity;
+import com.fujinbang.activity.iactivity.IIntegrationView;
+import com.fujinbang.global.SimpleDataBase;
+import com.fujinbang.internet.UserMsgRequest;
+import com.fujinbang.setting.User;
+import com.fujinbang.view.PayDialog;
+
+/**
+ * Created by Administrator on 2016/6/10.
+ */
+public class IntegrationPresenter {
+
+    private IIntegrationView view;
+    private UserMsgRequest request;
+    private SimpleDataBase db;
+
+    public IntegrationPresenter(IIntegrationView view) {
+        this.view = view;
+        request = new UserMsgRequest(view.getActivityContext());
+        db = new SimpleDataBase(view.getActivityContext());
+    }
+
+    public void updateIntegration() {
+        String token = db.getToken();
+        request.getUserMsg(token, new UserMsgRequest.OnUserListener() {
+            @Override
+            public void onSucess(User user) {
+                int integration = user.getScore();
+                view.setIntegration(integration);
+                db.putIntegration(integration);
+            }
+
+            @Override
+            public void onAvatar(Bitmap Avatar) {
+
+            }
+
+            @Override
+            public void onError(String error) {
+                view.showToast("网络异常");
+                Log.e("zy", "integration presenter error " + error);
+            }
+        });
+    }
+
+    public void showPasswordDialog() {
+        if (!db.getPayPassword().equals("")) {/*如果有支付密码*/
+            new PayDialog().setOnFinishListener(new PayDialog.OnPasswordFinish() {
+                @Override
+                public void onFinish(boolean passwordCorrectOrNull, String psd) {
+                    if (passwordCorrectOrNull)
+                        SetPayPwdActivity.startActivity(view.getActivityContext());
+                    else
+                        view.showToast("密码错误");
+                }
+            }).show(view.getFM(), "payDialog");
+        } else {
+            SetPayPwdActivity.startActivity(view.getActivityContext());
+        }
+    }
+}

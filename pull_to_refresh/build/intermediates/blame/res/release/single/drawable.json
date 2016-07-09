@@ -1,10 +1,18 @@
 [
     {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\build\\intermediates\\res\\merged\\release\\drawable\\indicator_bg_bottom.xml",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\drawable\\indicator_bg_bottom.xml"
+    },
+    {
         "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\build\\intermediates\\res\\merged\\release\\drawable\\indicator_bg_bottom.xml",
         "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\drawable\\indicator_bg_bottom.xml"
     },
     {
         "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\build\\intermediates\\res\\merged\\release\\drawable\\indicator_bg_top.xml",
         "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\drawable\\indicator_bg_top.xml"
+    },
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\build\\intermediates\\res\\merged\\release\\drawable\\indicator_bg_top.xml",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\drawable\\indicator_bg_top.xml"
     }
 ]

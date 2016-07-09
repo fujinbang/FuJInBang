@@ -1,0 +1,110 @@
+package com.fujinbang.activity;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.fujinbang.R;
+import com.fujinbang.activity.iactivity.ISettingUserNameView;
+import com.fujinbang.global.SimpleDataBase;
+import com.fujinbang.internet.UserMsgUpload;
+import com.fujinbang.presenter.SettingPresenter;
+import com.fujinbang.presenter.ipresenter.ISettingPresenter;
+
+
+public class UserNameSettingActivity extends BaseActivity implements View.OnTouchListener, ISettingUserNameView {
+
+    private EditText et_setting_userName;
+    private ImageView iv_back;
+    private Button btn_ok;
+    private ISettingPresenter presenter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user_name_setting);
+
+        initView();
+    }
+
+    private final void initView() {
+        presenter = new SettingPresenter(this);
+
+        et_setting_userName = (EditText) findViewById(R.id.et_setting_userName);
+        iv_back = (ImageView) findViewById(R.id.iv_back);
+        btn_ok = (Button) findViewById(R.id.btn_ok);
+
+        String userName = getIntent().getStringExtra("userName");
+        if (userName != null) et_setting_userName.setText(userName);
+        iv_back.setOnTouchListener(this);
+        btn_ok.setOnTouchListener(this);
+    }
+
+    public final void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_back:
+                finishActivity();
+                break;
+            case R.id.btn_ok:
+                presenter.uploadUserName();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                v.setBackgroundColor(0xffe8e8e8);
+                break;
+            case MotionEvent.ACTION_UP:
+                v.setBackgroundColor(0x00000000);
+                onClick(v);
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public Context getActivityContext() {
+        return this;
+    }
+
+    @Override
+    public void showToast(String str) {
+        Toast.makeText(getActivityContext(), str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public String getUserName() {
+        return et_setting_userName.getText().toString();
+    }
+
+    @Override
+    public void setUserName(String userName) {
+        if (userName != null)
+            et_setting_userName.setText(userName);
+    }
+
+    @Override
+    public void finishActivity() {
+        finish();
+    }
+
+    public static final void startActivity(Context context, String userName) {
+        Intent intent = new Intent(context, UserNameSettingActivity.class);
+        intent.putExtra("userName", userName);
+        context.startActivity(intent);
+    }
+}

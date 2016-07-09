@@ -1,0 +1,18 @@
+package com.fujinbang.ui.activity.iactivity;
+
+import android.content.Context;
+import android.support.v4.app.FragmentManager;
+
+/**
+ * Created by Administrator on 2016/6/12.
+ */
+public interface IIntegrationView {
+
+    void setIntegration(int integration);
+
+    Context getActivityContext();
+
+    void showToast(String str);
+
+    FragmentManager getFM();
+}

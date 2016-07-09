@@ -26,6 +26,7 @@ public class SystemMsgAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private EMConversation SysMsg;
     private SlideListView mListView;
+
     public SystemMsgAdapter(Context context, SlideListView mListView) {
         this.mInflater = LayoutInflater.from(context);
         this.SysMsg = EMClient.getInstance().chatManager().getConversation(SimpleDataBase.admin,
@@ -33,6 +34,7 @@ public class SystemMsgAdapter extends BaseAdapter {
                 true);
         this.mListView = mListView;
     }
+
     @Override
     public int getCount() {
         return 1;
@@ -52,7 +54,7 @@ public class SystemMsgAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.item_else,null);
+            convertView = mInflater.inflate(R.layout.item_else, null);
             holder = new ViewHolder();
             holder.name = (TextView) convertView.findViewById(R.id.item_else_name);
             holder.msg = (TextView) convertView.findViewById(R.id.item_else_msg);
@@ -62,39 +64,40 @@ public class SystemMsgAdapter extends BaseAdapter {
             holder.delBtn = (RelativeLayout) convertView.findViewById(R.id.item_else_delete_button);
             holder.locationImg = (ImageView) convertView.findViewById(R.id.item_else_location_img);
             convertView.setTag(holder);
-        } else{
-            holder = (ViewHolder)convertView.getTag();
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
         holder.name.setText("附近帮");
         holder.name.setTextColor(0xffffaf00);
         holder.img.setImageResource(R.drawable.integration);
         holder.locationImg.setVisibility(View.GONE);
-        if (SysMsg.getLastMessage() != null){
+        if (SysMsg.getLastMessage() != null) {
             holder.msg.setText(SysMsg.getLastMessage().toString());
             holder.time.setText(String.valueOf(SysMsg.getLastMessage().getMsgTime()));
-            if (SysMsg.getUnreadMsgCount() >0 ){
+            if (SysMsg.getUnreadMsgCount() > 0) {
                 mListView.setVisibility(View.VISIBLE);
-                holder.msgNum.setText(SysMsg.getUnreadMsgCount());
+                holder.msgNum.setText(SysMsg.getUnreadMsgCount() + "");
                 holder.msgNum.setVisibility(View.VISIBLE);
             } else {
                 holder.msgNum.setVisibility(View.GONE);
             }
-        }else {
+        } else {
             holder.msgNum.setVisibility(View.GONE);
             holder.msg.setText("");
         }
 
-            holder.delBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SysMsg.markAllMessagesAsRead();
-                    mListView.setVisibility(View.GONE);
+        holder.delBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SysMsg.markAllMessagesAsRead();
+                mListView.setVisibility(View.GONE);
             }
         });
         return convertView;
     }
-    public class ViewHolder{
+
+    public class ViewHolder {
         TextView name;
         TextView msg;
         TextView msgNum;

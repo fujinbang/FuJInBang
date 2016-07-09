@@ -1,0 +1,294 @@
+package com.fujinbang.activity;
+
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.Selection;
+import android.text.TextWatcher;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.fujinbang.R;
+import com.fujinbang.internet.HttpConnRequest;
+import com.fujinbang.internet.MD5;
+
+import org.json.JSONObject;
+
+/**
+ * Created by VITO on 2016/3/4.
+ * 注册界面
+ */
+public class RegisterActivity extends AppCompatActivity {
+    private ActionBar actionBar;
+    private TextView acTitle,agreement;
+    private EditText number,password,invite_code,mail,certificate_code;
+    private ImageView isCurCode;
+    private ImageButton see_password;
+    private Button getCode,submitBtn;
+    private CheckBox checkbox;
+    private boolean can_see,Sign1 = false,Sign2 = false,Sign3 = false;
+    private String registerUrl = "http://120.24.240.199:6789/user";
+    private String verUrl = "http://120.24.240.199:6789/verification";
+    private String invUrl = "http://120.24.240.199:6789/invitation";
+    HttpConnRequest request = new HttpConnRequest();
+    private AsyncTask<String,Integer,String[]> task = null;//访问api异步处理任务
+
+    public String token;
+    int code;
+    int status;
+    String phoneNum;
+    int id;
+    String regDate;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_register);
+        initCustomActionBar();
+        //手机号码
+        number = (EditText)RegisterActivity.this.findViewById(R.id.register_editText);
+        number.addTextChangedListener(mTextWatcher);
+        //密码
+        password = (EditText)RegisterActivity.this.findViewById(R.id.register_editText2);
+        password.addTextChangedListener(mTextWatcher);
+        //密码可见按钮
+        can_see = false;
+        see_password = (ImageButton)RegisterActivity.this.findViewById(R.id.register_see_password);
+        see_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!can_see){
+                    password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    can_see = true;
+                }else if (can_see){
+                    password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    can_see = false;
+                }
+                Editable etable = password.getText();
+                Selection.setSelection(etable, etable.length());
+            }
+        });
+        //邀请码
+        isCurCode = (ImageView)RegisterActivity.this.findViewById(R.id.register_isCurCode);
+        invite_code = (EditText)RegisterActivity.this.findViewById(R.id.register_editText3);
+        invite_code.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (invite_code.getText().length() == 6){
+                    if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+                        task.cancel(true);
+                    }
+                    task = new regTask();
+                    task.execute(
+                            "2",//使用验证邀请码接口
+                            invUrl,
+                            invite_code.getText().toString());
+                }
+            }
+        });
+        //邮箱
+        mail = (EditText)RegisterActivity.this.findViewById(R.id.register_editText4);
+        //验证码
+        certificate_code = (EditText)RegisterActivity.this.findViewById(R.id.register_editText5);
+        certificate_code.addTextChangedListener(mTextWatcher);
+        getCode = (Button)RegisterActivity.this.findViewById(R.id.register_getCode);
+        getCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //获取验证码
+                if (number.getText().length() == 11){
+                    if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+                        task.cancel(true);
+                    }
+                    task = new regTask();
+                    task.execute(
+                            "1",//使用获取验证码接口
+                            verUrl,
+                            number.getText().toString());
+                }
+            }
+        });
+        //是否同意条款
+        checkbox = (CheckBox)RegisterActivity.this.findViewById(R.id.register_checkbox);
+        checkbox.setChecked(true);
+        checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked){
+                    submitBtn.setClickable(false);
+                    submitBtn.setBackgroundResource(R.drawable.register_btn2);
+                }
+                else if (Sign1 & Sign2 & Sign3){
+                    submitBtn.setClickable(true);
+                    submitBtn.setBackgroundResource(R.drawable.login_btn);
+                    submitBtn.setTextColor(getResources().getColor(android.R.color.white));
+                }
+            }
+        });
+        //跳转协议界面
+        agreement = (TextView)RegisterActivity.this.findViewById(R.id.register_agreement);
+        agreement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //跳转协议界面
+            }
+        });
+        //提交注册操作
+        submitBtn = (Button)RegisterActivity.this.findViewById(R.id.register_submitBtn);
+        submitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //提交操作
+                if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+                    task.cancel(true);
+                }
+                task = new regTask();
+                task.execute(
+                        "0",
+                        registerUrl,
+                        number.getText().toString(),
+                        password.getText().toString(),
+                        mail.getText().toString(),
+                        invite_code.getText().toString(),
+                        certificate_code.getText().toString());
+            }
+        });
+    }
+    private boolean initCustomActionBar() {
+        actionBar = getSupportActionBar();
+        if (actionBar == null) {
+            return false;
+        }
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setCustomView(R.layout.actionbar_layout);
+        acTitle = (TextView)actionBar.getCustomView().findViewById(R.id.title);
+        acTitle.setText("注册");
+        return true;
+    }
+    TextWatcher mTextWatcher = new TextWatcher() {
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            Sign1 = number.getText().length() == 11;
+            Sign2 = password.getText().length() >= 6 && password.getText().length() <= 10;
+            Sign3 = certificate_code.getText().length() > 0;
+
+            if (Sign1 & Sign2 & Sign3 & checkbox.isChecked()) {
+                submitBtn.setClickable(true);
+                submitBtn.setBackgroundResource(R.drawable.login_btn);
+                submitBtn.setTextColor(getResources().getColor(android.R.color.white));
+            }else {
+                submitBtn.setClickable(false);
+                submitBtn.setBackgroundResource(R.drawable.register_btn2);
+            }
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count,
+                                      int after) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
+
+    class regTask extends AsyncTask<String,Integer,String[]> {
+        protected String[] doInBackground(String...params){
+            try{
+                String[] data = new String[2];
+                data[0]=params[0];//0:注册,1:获取验证码,2:邀请码验证
+                JSONObject obj = new JSONObject();
+                switch (data[0]){
+                    case "0":
+                        obj.put("phonenum",params[2]);
+                        MD5 md5 = null;
+                        String md5password = md5.getMD5(params[3]);
+                        obj.put("password",md5password);
+                        obj.put("email",params[4]);
+                        obj.put("invitation",params[5]);
+                        obj.put("vcode",params[6]);
+                        break;
+                    case "1":
+                        obj.put("phonenum",params[2]);
+                        break;
+                    case "2":
+                        obj.put("code",params[2]);
+                        break;
+                }
+                data[1] = request.request(
+                        params[1],//使用注册或验证码或邀请码接口
+                        obj);
+                return data;
+            }catch (Exception e){e.printStackTrace();}
+            return null;
+        }
+        protected void onPostExecute(String[] result){//在主线程中执行，方法参数为任务执行结果
+            if(result[1]==null){
+                Toast.makeText(RegisterActivity.this, "网络未连接，请检查网络连接后重新登录", Toast.LENGTH_LONG).show();
+            }else if (result[0].equals("0")){//注册操作
+                getJsonData(result[1]);
+                if (code == 1){
+                    //注册成功
+                    Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+                    finish();
+                }else {
+                    //注册失败
+                    Toast.makeText(RegisterActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
+                }
+            }else if (result[0].equals("2")){//验证邀请码操作
+                if (getJsonCode(result[1]) == 1){
+                    //邀请码正确
+                    isCurCode.setImageResource(R.drawable.a23);
+                    invite_code.setTextColor(getResources().getColor(android.R.color.background_dark));
+                }else {
+                    //提示邀请码不存在
+                    isCurCode.setImageResource(R.drawable.a22);
+                    invite_code.setHint("亲，该邀请码不存在哦");
+                    invite_code.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+                    invite_code.setText("");
+                }
+            }
+        }
+    }
+    private void getJsonData(String jsonResult){
+        try{
+            JSONObject Obj = new JSONObject(jsonResult);
+            code = Obj.getInt("code");
+            if (code == 1){
+                token = Obj.getString("token");
+                JSONObject data = Obj.getJSONObject("data");
+                status = data.getInt("status");
+                phoneNum = data.getString("phoneNum");
+                id = data.getInt("id");
+                regDate = data.getString("regDate");
+            }
+        }catch (Exception e){e.printStackTrace();}
+    }
+    private int getJsonCode(String jsonResult){
+        try{
+            JSONObject Obj = new JSONObject(jsonResult);
+            code = Obj.getInt("code");
+        }catch (Exception e){e.printStackTrace();}
+        return code;
+    }
+}

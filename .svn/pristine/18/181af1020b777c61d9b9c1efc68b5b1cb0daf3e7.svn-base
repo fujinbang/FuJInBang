@@ -1,0 +1,60 @@
+package com.fujinbang.baidumap;
+
+import android.content.Context;
+import android.widget.Toast;
+
+import com.baidu.location.BDLocation;
+
+/**
+ * Created by Administrator on 2016/5/5.
+ */
+public class LocationStateDetermination {
+
+    private LocationStateDetermination() {
+
+    }
+
+    public static void judgeState(int locType, Context context) {
+        if (isError(locType)) {
+            Toast.makeText(context, decriptionOf(locType), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * @param locType
+     * @return 返回locType对应的简介
+     */
+    public static final String decriptionOf(int locType) {
+        switch (locType) {
+            case BDLocation.TypeGpsLocation:// GPS定位结果
+                return "gps定位成功";
+            case BDLocation.TypeNetWorkLocation:// 网络定位结果
+                return "网络定位成功";
+            case BDLocation.TypeOffLineLocation:// 离线定位结果
+                return "离线定位成功";
+            case BDLocation.TypeServerError:
+                return "服务端网络定位失败";
+            case BDLocation.TypeNetWorkException:
+                return "网络原因导致定位失败";
+            case BDLocation.TypeCriteriaException:
+                return "无法获取有效定位依据导致定位失败，一般是由于手机的原因，处于飞行模式下一般会造成这种结果，可以试着重启手机";
+            default:
+                return "错误码：" + locType;
+        }
+    }
+
+    /**
+     * @param locType
+     * @return 判断locType对应的类型是否是错误
+     */
+    public static final boolean isError(int locType) {
+        switch (locType) {
+            case BDLocation.TypeGpsLocation:// GPS定位结果
+            case BDLocation.TypeNetWorkLocation:// 网络定位结果
+            case BDLocation.TypeOffLineLocation:// 离线定位结果
+                return false;
+            default:
+                return true;
+        }
+    }
+}

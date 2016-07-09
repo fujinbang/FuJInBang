@@ -1,0 +1,202 @@
+package com.fujinbang.conversation;
+
+import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.fujinbang.R;
+import com.fujinbang.activity.ConversationFragment;
+import com.fujinbang.global.TimeCalculator;
+
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+/**
+ * Created by VITO on 2016/5/19.
+ */
+public class FakeCoversationListAdapter extends BaseExpandableListAdapter {
+    private LayoutInflater mLayoutInflater;
+
+    private ExpandableListView mListView;
+    HashMap<String, HashMap<String, Object>> childList;
+
+    public FakeCoversationListAdapter(Context context, ExpandableListView listView,HashMap<String, HashMap<String, Object>> childList) {
+        mListView = listView;
+        mLayoutInflater = LayoutInflater.from(context);
+        this.childList = childList;
+    }
+
+    @Override
+    public int getGroupCount() {
+        return 5;
+    }
+
+    @Override
+    public int getChildrenCount(int groupPosition) {
+        return 1;
+    }
+
+    @Override
+    public Object getGroup(int groupPosition) {
+        return " ";
+    }
+
+    @Override
+    public Object getChild(int groupPosition, int childPosition) {
+        return " ";
+    }
+
+    @Override
+    public long getGroupId(int groupPosition) {
+        return groupPosition;
+    }
+
+    @Override
+    public long getChildId(int groupPosition, int childPosition) {
+        return groupPosition + childPosition;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return false;
+    }
+
+    @Override
+    public View getGroupView(final int groupPosition, final boolean isExpanded, View convertView, ViewGroup parent) {
+
+        GroupViewHolder groupViewHolder;
+        View view = convertView;
+        if (view == null) {
+            view = mLayoutInflater.inflate(R.layout.item_mission, null, false);
+
+            groupViewHolder = new GroupViewHolder();
+            /*得到各个控件的对象*/
+            groupViewHolder.unreadLabel = (TextView) view.findViewById(R.id.item_mission_unread);
+            //groupViewHolder.avatar = (ImageView) view.findViewById(R.id.avatar);
+            groupViewHolder.expandBtn = (ImageView) view.findViewById(R.id.item_mission_btn);
+            groupViewHolder.time = (TextView) view.findViewById(R.id.item_mission_time);
+
+            view.setTag(groupViewHolder);//绑定ViewHolder对象
+        } else {
+            groupViewHolder = (GroupViewHolder) view.getTag();
+        }
+
+        if (!childList.isEmpty()&&childList.get("groupid").containsKey("restTime")){
+            groupViewHolder.time.setText(childList.get("groupid").get("restTime").toString());
+        }
+        groupViewHolder.expandBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isExpanded) {
+                    //未展开
+                    v.setBackgroundResource(R.drawable.expanded);
+                    mListView.expandGroup(groupPosition);
+                } else {
+                    v.setBackgroundResource(R.drawable.unexpanded);
+                    mListView.collapseGroup(groupPosition);
+                }
+            }
+        });
+        return view;
+    }
+
+    public static class GroupViewHolder {
+        /**
+         * 用户头像
+         */
+        ImageView avatar;
+        /**
+         * 任务剩余时间
+         */
+        TextView time;
+        /**
+         * 消息未读数
+         */
+        TextView unreadLabel;
+        /**
+         * 下拉列表按钮
+         */
+        ImageView expandBtn;
+    }
+
+    @Override
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        Log.i("zy", "getChildView" + childPosition);
+        ChildViewHolder childViewHolder;
+        View view = convertView;
+        if (view == null) {
+            childViewHolder = new ChildViewHolder();
+            view = mLayoutInflater.inflate(R.layout.item_now_child, null);
+            childViewHolder.desc = (TextView) view.findViewById(R.id.item_now_child_desc);
+            childViewHolder.time = (TextView) view.findViewById(R.id.item_now_child_time);
+            childViewHolder.bonus = (TextView) view.findViewById(R.id.item_now_child_bonus);
+            view.setTag(childViewHolder);
+        } else {
+            childViewHolder = (ChildViewHolder) view.getTag();
+        }
+        childViewHolder.desc.setText("任务简述：" + "帮我去拿个外卖");
+        childViewHolder.time.setText("12-13 15:10" + "至" + "12-13 15:15");
+        childViewHolder.bonus.setText("200积分");
+
+        return view;
+    }
+
+    class ChildViewHolder {
+        TextView desc;
+        TextView time;
+        TextView bonus;
+    }
+
+    int result = 0;
+    private Thread thread;
+    public void start() {
+        thread = new Thread() {
+            public void run() {
+                while (true) {
+                    try {
+                        if (childList == null || result == childList.size()) {
+                            break;
+                        }
+                        sleep(1000);
+                        Iterator iter = childList.entrySet().iterator();
+                        while (iter.hasNext()) {
+                            Map.Entry entry = (Map.Entry) iter.next();
+                            Object key = entry.getKey();
+                            if (childList.get(key).containsKey("restTime")&&childList.get(key).get("restTime").toString().equals("0:00:00")) {
+                                childList.remove(key);
+                                continue;
+                            }
+                            long second = TimeCalculator.getRestTime("2016-5-24 18:28:00");
+                            long hour = second / 3600;
+                            long minute = second % 3600 / 60;
+                            long realSecond = second % 3600 % 60;
+                            String m = new DecimalFormat("00").format(minute);
+                            String s = new DecimalFormat("00").format(realSecond);
+                            Log.d("ccc", hour + "" + m + s);
+                            childList.get(key).put("restTime", hour + ":" + m + ":" + s);
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        thread.start();
+    }
+
+    @Override
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        return true;
+    }
+}

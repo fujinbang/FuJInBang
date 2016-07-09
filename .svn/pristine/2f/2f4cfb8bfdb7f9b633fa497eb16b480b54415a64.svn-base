@@ -1,0 +1,200 @@
+package com.fujinbang.internet;
+
+import android.content.Context;
+import android.util.Log;
+
+import com.fujinbang.helplist.HelpMsg;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
+/**
+ * Created by Administrator on 2016/5/7.
+ */
+public class HelpListRequest extends InternetRequest {
+
+    public final static String TAG = "InternetRequest";
+
+    public HelpListRequest(Context context) {
+        super(context);
+    }
+
+    public void getHelpList(float lat, float lng, int size, final OnHelpListRequestListener listener) {
+        String url = "http://120.24.240.199:6789/help?x=" + lat + "&y=" + lng + "&limit=" + size;
+        getJsonObject(url, null, new InternetRequest.OnResponseListener<JSONObject>() {
+            @Override
+            public void onSuccess(JSONObject jsonObject) {
+                if (listener != null) {
+                    listener.onSuccess(parseJson(jsonObject));
+                }
+            }
+
+            @Override
+            public void onError(String desc, int statusCode) {
+                if (listener != null) {
+                    listener.onError(statusCode + ": " + desc);
+                }
+            }
+        });
+    }
+
+    public void getUserName(final int id, final int index, final OnHelpListRequestListener listener) {
+        String url = "http://120.24.240.199:6789/user/queryuserinfo";
+        try {
+            JSONObject post = new JSONObject();
+            post.put("id", id);
+            getJsonObject(url, post, new OnResponseListener<JSONObject>() {
+                @Override
+                public void onSuccess(JSONObject object) {
+                    if (listener != null) listener.onUserName(index, parseUserObject(object));
+                }
+
+                @Override
+                public void onError(String desc, int statusCode) {
+                    if (listener != null) listener.onError(desc);
+                }
+            });
+
+        } catch (JSONException e) {
+            Log.e("zy", "HelpListRequest error:" + e);
+            if (listener != null) listener.onError(e.toString());
+        }
+    }
+
+    public void getJoinedList(String phoneNum, final OnJoinedListListener listener) {
+        String url = "http://120.24.240.199:6789/helpquery";
+        try {
+            JSONObject post = new JSONObject();
+            post.put("phonenum", phoneNum);
+            getJsonObject(url, post, new OnResponseListener<JSONObject>() {
+                @Override
+                public void onSuccess(JSONObject object) {
+                    if (listener != null)
+                        listener.onSuccess(parseAttendList(object), parsePostList(object));
+                }
+
+                @Override
+                public void onError(String desc, int statusCode) {
+                    if (listener != null) listener.onError(desc);
+                }
+            });
+        } catch (JSONException e) {
+            if (listener != null) listener.onError(e.toString());
+        }
+
+    }
+
+    public void joinHelp(String token, int helpId, final OnJoinHelpListener listener) {
+        String url = "http://120.24.240.199:6789/joinhelp";
+        try {
+            JSONObject post = new JSONObject();
+            post.put("token", token);
+            post.put("helpinfoid", helpId);
+            getJsonObject(url, post, new OnResponseListener<JSONObject>() {
+                @Override
+                public void onSuccess(JSONObject object) {
+                    if (listener != null) listener.onSuccess(object.toString());
+                }
+
+                @Override
+                public void onError(String desc, int statusCode) {
+                    if (listener != null) listener.onError(desc);
+                }
+            });
+        } catch (JSONException e) {
+            if (listener != null) listener.onError(e.toString());
+        }
+
+    }
+
+    public interface OnJoinedListListener {
+        void onSuccess(HashSet<Integer> attend, HashSet<Integer> post);
+
+        void onError(String desc);
+    }
+
+    public interface OnHelpListRequestListener {
+        void onSuccess(List<HelpMsg> list);
+
+        void onUserName(int index, String userName);
+
+        void onError(String desc);
+    }
+
+    public interface OnJoinHelpListener {
+        void onSuccess(String desc);
+
+        void onError(String desc);
+    }
+
+    protected static String parseUserObject(JSONObject object) {
+        JSONObject data = object.optJSONObject("data");
+        if (data != null)
+            return data.optString("nickName");
+        return "";
+    }
+
+    protected static List<HelpMsg> parseJson(JSONObject object) {
+        List<HelpMsg> helpMsgList = new ArrayList<>();
+        JSONArray array = object.optJSONArray("data");
+        if (array != null) {
+            for (int i = 0; i < array.length(); i++) {
+                HelpMsg helpMsg = new HelpMsg();
+                JSONObject jsonHelp = array.optJSONObject(i);
+                if (jsonHelp != null) {
+                    helpMsg.setId(jsonHelp.optInt("id"));
+                    helpMsg.setIntegration(jsonHelp.optInt("bonus"));
+                    helpMsg.setStartTime(jsonHelp.optString("start_time"));
+                    helpMsg.setEndTime(jsonHelp.optString("end_time"));
+                    helpMsg.setNeederId(jsonHelp.optInt("neederid"));
+                    helpMsg.setNeedPeopleNum(jsonHelp.optInt("needPeopleNum"));
+                    helpMsg.setDescription(jsonHelp.optString("desc"));
+
+                    JSONObject location = jsonHelp.optJSONObject("location");
+                    if (location != null) {
+                        helpMsg.setX((float) location.optDouble("x"));
+                        helpMsg.setY((float) location.optDouble("y"));
+                    }
+                }//if jsonHelp != null
+
+                helpMsgList.add(helpMsg);
+            }//for(JSONObject:array)
+        }//if array != null
+        return helpMsgList;
+    }
+
+    protected HashSet<Integer> parseAttendList(JSONObject object) {
+        HashSet<Integer> set = new HashSet<>();
+        JSONArray array = object.optJSONArray("attend");
+        if (array != null) {
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject jsonHelp = array.optJSONObject(i);
+                if (jsonHelp != null) {
+                    set.add(jsonHelp.optInt("id"));
+                }
+            }
+        }
+        return set;
+    }
+
+    protected HashSet<Integer> parsePostList(JSONObject object) {
+        HashSet<Integer> set = new HashSet<>();
+        JSONArray array = object.optJSONArray("post");
+        if (array != null) {
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject jsonHelp = array.optJSONObject(i);
+                if (jsonHelp != null) {
+                    set.add(jsonHelp.optInt("id"));
+                }
+            }
+        }
+        return set;
+    }
+}
+
+

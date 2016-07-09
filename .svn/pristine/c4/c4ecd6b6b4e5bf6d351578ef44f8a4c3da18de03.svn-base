@@ -1,0 +1,288 @@
+package com.fujinbang.activity;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
+
+import com.baidu.location.BDLocation;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BaiduMapOptions;
+import com.baidu.mapapi.map.LogoPosition;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.model.LatLng;
+import com.fujinbang.R;
+import com.fujinbang.baidumap.LocationManager;
+import com.fujinbang.baidumap.LocationStateDetermination;
+import com.fujinbang.baidumap.MarkerManager;
+import com.fujinbang.baidumap.PositionModel;
+
+/**
+ * Created by Administrator on 2016/3/6.
+ */
+public class MapFragment extends Fragment {
+    /**
+     * 日志标签
+     */
+    public static final String TAG = "zy";
+    /**
+     * 百度地图组件
+     */
+    private MapView mMapView;
+    private BaiduMap mBaiduMap;
+    /**
+     * 锁定镜头在当前中点的按钮
+     */
+    private Button btn_location;
+    /**
+     * 定位器
+     */
+    private LocationManager mLocationManager;
+    /**
+     * 定位回调函数
+     */
+    private LocationManager.OnLocationListener mOnLocationListener;
+    /**
+     * 是否锁定镜头
+     */
+    private boolean mLockCenter = true;
+    /**
+     * 默认的地图缩放级别 百度地图默认级别为3-21
+     */
+    private static final int DEFAULT_ZOOM = 19;
+    private static final int DEFAULT_MAX_ZOOM = 21;
+    private static final int DEFAULT_MIN_ZOOM = 14;
+    /**
+     * 地图上显示当前用户的经纬度
+     */
+    private LatLng myPos;
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_map, container, false);
+
+        initBtnLocation(view);//初始化锁定镜头到当前位置的按钮
+        initMapView(view);//初始化地图组件
+        initMapOption();//设置地图的属性
+        initLocationManager();//设置定位器
+        initLocalPosition();//读取上次坐标，设置初始的位置
+
+        return view;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "onCreate");
+        super.onCreate(savedInstanceState);
+
+        //if (mMapView != null)
+        //mMapView.onCreate(getContext(), savedInstanceState);
+    }
+
+    private final void initBtnLocation(View view) {
+        btn_location = (Button) view.findViewById(R.id.btn_location);
+        btn_location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (myPos == null) {
+                    Toast.makeText(getContext(), "正获取当前定位..", Toast.LENGTH_SHORT).show();
+                } else {
+                    updateMap();
+                }
+            }
+        });
+    }
+
+    private final void initMapView(View view) {
+        mMapView = (MapView) view.findViewById(R.id.bmapView);
+    }
+
+    /**
+     * 初始化地图的显示区域
+     */
+    private final void initLocalPosition() {
+        if (mMapView != null) {
+            if (restorePos())
+                updateMap();
+        }
+    }
+
+    /**
+     * 从本地存储获取上一次的坐标
+     *
+     * @return 是否存在上一次的坐标
+     */
+    private final boolean restorePos() {
+        PositionModel position = new PositionModel(getContext());
+        if (position.getPositionX() >= 0 && position.getPositionY() >= 0) {
+            myPos = new LatLng(position.getPositionX(), position.getPositionY());
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 向本地存储写入当前的坐标
+     */
+    private final void savePos(double lat, double lng) {
+        PositionModel position = new PositionModel(getContext());
+        position.setPositionX(lat);
+        position.setPositionY(lng);
+    }
+
+    /**
+     * 更新地图的中点和缩放等级
+     */
+    private final void updateMap() {
+        if (myPos != null) {
+            //设置地图状态 缩放级别【3-21】
+            Log.i(TAG, "map fragment pos:" + myPos.toString());
+            MapStatusUpdate newMapSatus = MapStatusUpdateFactory.newLatLngZoom(myPos, DEFAULT_ZOOM);
+            mBaiduMap.setMapStatus(newMapSatus);
+            changeLockCenter(true);
+
+            MarkerManager.getInstance(mBaiduMap, getContext()).updateMarker(myPos);
+        }
+    }
+
+    /**
+     * 设置百度地图的属性
+     */
+    private final void initMapOption() {
+        if (mMapView == null) {
+            createMap();
+        } else {
+            initMap();
+        }
+
+        mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);//普通地图
+        mBaiduMap.setMaxAndMinZoomLevel(DEFAULT_MAX_ZOOM, DEFAULT_MIN_ZOOM);
+        mBaiduMap.setMyLocationEnabled(true);//开启定位图层
+        mBaiduMap.setOnMapStatusChangeListener(new BaiduMap.OnMapStatusChangeListener() {
+            @Override
+            public void onMapStatusChangeStart(MapStatus mapStatus) {
+                changeLockCenter(false);
+            }
+
+            @Override
+            public void onMapStatusChange(MapStatus mapStatus) {
+            }
+
+            @Override
+            public void onMapStatusChangeFinish(MapStatus mapStatus) {
+            }
+        });
+    }
+
+    /**
+     * 初始化定位器
+     */
+    private final void initLocationManager() {
+        mLocationManager = LocationManager.getInstance(getContext());
+        mOnLocationListener = new LocationManager.OnLocationListener() {
+            @Override
+            public void onRecieveLocation(BDLocation location) {
+                if (LocationStateDetermination.isError(location.getLocType())) {
+                    LocationStateDetermination.judgeState(location.getLocType(), getContext());
+                } else {
+                    myPos = new LatLng(location.getLatitude(), location.getLongitude());
+                    if (mLockCenter) {
+                        updateMap();
+                    }
+                }
+            }
+        };
+    }
+
+    /**
+     * 不采用xml布局文件生成mapView时，可采用代码方式建一个mapView
+     * 设置百度地图的属性
+     */
+    private final void createMap() {
+        BaiduMapOptions options = new BaiduMapOptions();
+        options.compassEnabled(true);//不允许指南针
+        options.logoPosition(LogoPosition.logoPostionRightBottom);//baidu logo显示在地图右下角
+        options.zoomControlsEnabled(false);//缩放控件不可用
+        options.scaleControlEnabled(true);//比例尺控件可用
+        if (restorePos()) {//获取上一次离开app时的坐标值
+            //设置初始的坐标
+            options.mapStatus(new MapStatus.Builder().target(myPos).zoom(DEFAULT_ZOOM).build());
+        }
+        mMapView = new MapView(getContext(), options);
+        mBaiduMap = mMapView.getMap();
+    }
+
+    /**
+     * 采用xml布局文件生成mapView并调用findViewById绑定控件后
+     * 设置百度地图的属性
+     */
+    private final void initMap() {
+        mBaiduMap = mMapView.getMap();
+        mBaiduMap.getUiSettings().setCompassEnabled(true);//不允许指南针
+        mMapView.setLogoPosition(LogoPosition.logoPostionRightBottom);//baidu logo显示在地图右下角
+        mMapView.showZoomControls(false);//缩放控件不可用
+        mMapView.showScaleControl(true);//比例尺控件可用
+    }
+
+    /**
+     * 改变是否锁定屏幕的按钮的状态
+     *
+     * @param lock true:改为锁定屏幕 false：取消锁定屏幕中心
+     */
+    private final void changeLockCenter(boolean lock) {
+        if (lock) {
+            mLockCenter = true;
+            btn_location.setBackgroundResource(R.drawable.location);
+        } else {
+            mLockCenter = false;
+            btn_location.setBackgroundResource(R.drawable.location_false);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.i(TAG, "onDestroy");
+        super.onDestroy();
+
+        if (myPos != null) {
+            savePos(myPos.latitude, myPos.longitude);
+        }
+
+        if (mOnLocationListener != null)
+            mLocationManager.removeOnLocationListener(mOnLocationListener);
+        if (mMapView != null)
+            mMapView.onDestroy();//在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mMapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onResume() {
+        //在activity执行onResume时执行mMapView. onResume()，实现地图生命周期管理
+        mMapView.onResume();
+        mLockCenter = true;
+        mLocationManager.addOnLocationListener(mOnLocationListener);
+
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        //在activity执行onPause时执行mMapView. onPause ()，实现地图生命周期管理
+        mMapView.onPause();
+    }
+
+}

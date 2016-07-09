@@ -1,0 +1,30 @@
+package com.fujinbang.activity;
+
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
+import android.os.Bundle;
+
+import com.fujinbang.R;
+import com.fujinbang.global.StatusBarCompat;
+
+public class SeekHelpActivity extends FragmentActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_seek_help);
+        StatusBarCompat.compat(this);
+        SeekHelpFragment seekHelpFragment = new SeekHelpFragment();
+        Bundle args = new Bundle();
+        args.putInt("targetId", getIntent().getExtras().getInt("targetId"));
+        seekHelpFragment.setArguments(args);
+        getSupportFragmentManager().beginTransaction().add(R.id.seekhelp_contain, seekHelpFragment).commit();
+    }
+
+    public static void startActivity(Context context, int targetId) {
+        Intent intent = new Intent(context, SeekHelpActivity.class);
+        intent.putExtra("targetId", targetId);
+        context.startActivity(intent);
+    }
+}

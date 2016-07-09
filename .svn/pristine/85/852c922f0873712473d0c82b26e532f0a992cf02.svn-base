@@ -1,0 +1,19 @@
+package com.fujinbang.internet.IRequest;
+
+import java.util.HashMap;
+
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.http.Multipart;
+import retrofit2.http.POST;
+import retrofit2.http.Part;
+import rx.Observable;
+
+/**
+ * Created by Administrator on 2016/6/8.
+ */
+public interface IAvatarUpload {
+    @Multipart
+    @POST("http://upload.qiniu.com")
+    Observable<HashMap<String, Object>> uploadAvatar(@Part("token") RequestBody token, @Part("key") RequestBody key, @Part MultipartBody.Part bitmap);
+}

@@ -1,5 +1,9 @@
 [
     {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\easeui\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\ic_launcher.png",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\easeui\\res\\drawable-mdpi\\ic_launcher.png"
+    },
+    {
         "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\easeui\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\ic_launcher.png",
         "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\easeui\\res\\drawable-mdpi\\ic_launcher.png"
     }

@@ -71,9 +71,9 @@ public class HelpListRequest extends InternetRequest {
     public Observable<HelpMsg> getHelpList(float x, float y, int limited, final HashSet<Integer> hashSet) {
         return getRequest().getHelpList(x, y, limited)
                 .subscribeOn(Schedulers.io())
-                        /**
-                         * 把获取的求助列表 铺平（flatMap）为单个求助信息
-                         */
+                /**
+                 * 把获取的求助列表 铺平（flatMap）为单个求助信息
+                 */
                 .flatMap(new Func1<HashMap<String, Object>, Observable<LinkedTreeMap<String, Object>>>() {
                     @Override
                     public Observable<LinkedTreeMap<String, Object>> call(HashMap<String, Object> hashmap) {
@@ -82,27 +82,27 @@ public class HelpListRequest extends InternetRequest {
                         return Observable.from(list);
                     }
                 })
-                        /**
-                         * 把重复的求助信息(distinct)去掉
-                         */
+                /**
+                 * 把重复的求助信息(distinct)去掉
+                 */
                 .distinct(new Func1<LinkedTreeMap<String, Object>, Integer>() {
                     @Override
                     public Integer call(LinkedTreeMap<String, Object> helpMsg) {
                         return (int) ((double) helpMsg.get("id"));
                     }
                 })
-                        /**
-                         * 把求助信息从LinkedTreeMap映射（map）为HelpMsg
-                         */
+                /**
+                 * 把求助信息从LinkedTreeMap映射（map）为HelpMsg
+                 */
                 .map(new Func1<LinkedTreeMap<String, Object>, HelpMsg>() {
                     @Override
                     public HelpMsg call(LinkedTreeMap<String, Object> map) {
                         return HashMap2POJO(map);
                     }
                 })
-                        /**
-                         * 把自己发布或者自己已参与的求助信息删除
-                         */
+                /**
+                 * 把自己发布或者自己已参与的求助信息删除
+                 */
                 .filter(new Func1<HelpMsg, Boolean>() {
                     @Override
                     public Boolean call(HelpMsg helpMsg) {
@@ -120,12 +120,9 @@ public class HelpListRequest extends InternetRequest {
 
     /**
      * 通过用户id获取用户的姓名
-     *
-     * @return
-     * @throws RuntimeException
      */
     public final Observable<HelpMsg> getUserName(final HelpMsg helpMsg) throws RuntimeException {
-        return getRequest().getUserMsg(new IHelpListRequest.ID(helpMsg.getId()))
+        return getRequest().getUserMsg(new IHelpListRequest.ID(helpMsg.getNeederId()))
                 .subscribeOn(Schedulers.io())
                 .map(new Func1<HashMap<String, Object>, HelpMsg>() {
                     @Override
@@ -142,7 +139,6 @@ public class HelpListRequest extends InternetRequest {
      *
      * @param phoneNum 用户的手机号码
      * @return 保存任务id的hashSet
-     * @throws RuntimeException
      */
     public final Observable<HashSet<Integer>> getUserHelpList(String phoneNum) throws RuntimeException {
         return getRequest().getUserHelpList(new IHelpListRequest.phoneNum(phoneNum))

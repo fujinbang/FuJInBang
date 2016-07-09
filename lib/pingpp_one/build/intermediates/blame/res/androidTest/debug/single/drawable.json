@@ -1,19 +1,19 @@
 [
     {
-        "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_failed.png",
-        "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_failed.png"
-    },
-    {
         "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_alipay.png",
         "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_alipay.png"
     },
     {
-        "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_common_pay_channel_btton.xml",
-        "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_common_pay_channel_btton.xml"
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_baidu.png",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_baidu.png"
     },
     {
-        "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_unipay.png",
-        "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_unipay.png"
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_wepay.png",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_wepay.png"
+    },
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_alipay.png",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_alipay.png"
     },
     {
         "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_wepay.png",
@@ -26,6 +26,10 @@
     {
         "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_nocard.png",
         "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_nocard.png"
+    },
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_baidupay.png",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_baidupay.png"
     },
     {
         "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_baidupay.png",
@@ -44,12 +48,72 @@
         "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_done.png"
     },
     {
-        "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_channel_item_selector.xml",
-        "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_channel_item_selector.xml"
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_unionpay.png",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_unionpay.png"
+    },
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_shopping.png",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_shopping.png"
+    },
+    {
+        "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_common_pay_button_blue.xml",
+        "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_common_pay_button_blue.xml"
+    },
+    {
+        "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_failed.png",
+        "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_failed.png"
+    },
+    {
+        "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_common_pay_channel_btton.xml",
+        "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_common_pay_channel_btton.xml"
+    },
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_unipay.png",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_unipay.png"
+    },
+    {
+        "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_unipay.png",
+        "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_unipay.png"
+    },
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\tips_bg.9.png",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\tips_bg.9.png"
+    },
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_failed.png",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_failed.png"
+    },
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_wechat.png",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_wechat.png"
+    },
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_channel_item_selector.xml",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_channel_item_selector.xml"
+    },
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_common_pay_channel_btton.xml",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_common_pay_channel_btton.xml"
+    },
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_jingdongpay.png",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_jingdongpay.png"
     },
     {
         "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_shopping.png",
         "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_shopping.png"
+    },
+    {
+        "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_channel_item_selector.xml",
+        "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_channel_item_selector.xml"
+    },
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_progressbar.xml",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_progressbar.xml"
+    },
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_success.png",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_success.png"
     },
     {
         "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_unionpay.png",
@@ -68,11 +132,23 @@
         "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_wechat.png"
     },
     {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_nocard.png",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_nocard.png"
+    },
+    {
         "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_success.png",
         "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_success.png"
     },
     {
-        "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_common_pay_button_blue.xml",
-        "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_common_pay_button_blue.xml"
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_done.png",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_done.png"
+    },
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_common_pay_button_green.xml",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_common_pay_button_green.xml"
+    },
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pingpp_common_pay_button_blue.xml",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\bundles\\debug\\res\\drawable\\pingpp_common_pay_button_blue.xml"
     }
 ]

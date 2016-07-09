@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FCFCFC"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".ui.activity.AboutActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#FFAF00">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="关于附近帮"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="11"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:src="@drawable/integration" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="附近帮1.0"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/zy_textview_bg_xml"
+            android:inputType="textMultiLine"
+            android:padding="10dp"
+            android:textSize="13sp"
+            android:text="“附近帮”是深圳市可蚁科技有限公司的主要产品，它是一款致力于充分利用社会闲置的人力资源，实现人们闲暇时间价值最大化的APP。
+            \n通过“附近帮”APP，同时有需求的使用方和有闲暇的使用方可以在平台上发布信息，互相沟通，达成协议互相帮助，使得时间利用效益最大化。同时，在“附近帮”APP上，有共同爱好，有共同沟通欲望的客户可以相互邀约，结伴而行，使得沟通从线上转移到线下。
+            \n有闲时闲力的你，既可以来为别人提供帮助，赚钱并能交友，也可以接一些商家任务，动动手指就能赚钱。有事要求于人的你更应该来附近帮，我们能立马给你配置你附近的帮友为你解决问题，高效率，高质量。
+            \n有空不如来赚钱，有事更应来求助。附近帮，让你我更亲近，让生活更方便。" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:text="Copyright ©2016"
+            android:textColor="#B2B2B2"
+            android:textSize="13sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="深圳市可蚁科技有限公司"
+            android:textColor="#B2B2B2"
+            android:textSize="13sp" />
+    </LinearLayout>
+</LinearLayout>

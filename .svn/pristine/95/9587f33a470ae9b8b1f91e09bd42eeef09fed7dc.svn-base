@@ -1,0 +1,142 @@
+package com.fujinbang.activity;
+
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.fujinbang.R;
+import com.fujinbang.global.SimpleDataBase;
+import com.fujinbang.setting.User;
+import com.fujinbang.internet.UserMsgRequest;
+import com.fujinbang.view.CircleImageView;
+
+public class SettingFragment extends Fragment implements View.OnTouchListener {
+
+    private LinearLayout ll_setting, ll_setting_mall, ll_setting_set, ll_setting_integration,
+            ll_setting_friends, ll_setting_mission;
+
+    private TextView tv_userName, tv_phoneNum, tv_integration;
+
+    private CircleImageView civ_avatar;
+
+    private UserMsgRequest userMsgRequest;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_setting, container, false);
+
+        initView(view);
+        updateUserMsgFromLocal();
+
+        return view;
+    }
+
+    private final void initView(View view) {
+        ll_setting = (LinearLayout) view.findViewById(R.id.ll_setting);
+        ll_setting_mall = (LinearLayout) view.findViewById(R.id.ll_setting_mall);
+        ll_setting_set = (LinearLayout) view.findViewById(R.id.ll_setting_set);
+        ll_setting_integration = (LinearLayout) view.findViewById(R.id.ll_setting_integration);
+        ll_setting_friends = (LinearLayout) view.findViewById(R.id.ll_setting_friends);
+        ll_setting_mission = (LinearLayout) view.findViewById(R.id.ll_setting_mission);
+        tv_userName = (TextView) view.findViewById(R.id.tv_userName);
+        tv_phoneNum = (TextView) view.findViewById(R.id.tv_phoneNum);
+        tv_integration = (TextView) view.findViewById(R.id.tv_integration);
+        civ_avatar = (CircleImageView) view.findViewById(R.id.civ_avatar);
+        ll_setting.setOnTouchListener(this);
+        ll_setting_mall.setOnTouchListener(this);
+        ll_setting_set.setOnTouchListener(this);
+        ll_setting_integration.setOnTouchListener(this);
+        ll_setting_friends.setOnTouchListener(this);
+        ll_setting_mission.setOnTouchListener(this);
+        tv_integration.setText(new SimpleDataBase(getContext()).getIntegration() + "");
+    }
+
+    private final void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ll_setting:
+                SettingActivity.startActivity(getContext());
+                break;
+            case R.id.ll_setting_integration:
+                IntegrationActivity.startActivity(getContext());
+                break;
+            case R.id.ll_setting_mission:
+                MissionActivity.startActivity(getContext());
+                break;
+            case R.id.ll_setting_set:
+                SetActivity.startActivity(getContext());
+                break;
+            case R.id.ll_setting_mall:
+                CreditActivity.startActivity((Activity) getContext());
+                break;
+            case R.id.ll_setting_friends:
+                ContactActivity.startActivity(getContext());
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUserMsg();
+    }
+
+    private void updateUserMsgFromLocal() {
+        final SimpleDataBase db = new SimpleDataBase(getContext());
+        tv_userName.setText(db.getUserName());
+        tv_phoneNum.setText("+86 " + db.getPhoneNum());
+    }
+
+    private void updateUserMsg() {
+        final SimpleDataBase db = new SimpleDataBase(getContext());
+        if (userMsgRequest == null) userMsgRequest = new UserMsgRequest(getContext());
+        UserMsgRequest.OnUserListener listener = new UserMsgRequest.OnUserListener() {
+            @Override
+            public void onSucess(User user) {
+                tv_userName.setText(user.getUserName());
+                tv_phoneNum.setText("+86 " + user.getPhoneNum());
+
+                db.putUserName(user.getUserName());
+                db.putPhoneNum(user.getPhoneNum());
+            }
+
+            @Override
+            public void onAvatar(Bitmap Avatar) {
+                civ_avatar.setImageBitmap(Avatar);
+            }
+
+            @Override
+            public void onError(String error) {
+                if (getContext() != null)
+                    Toast.makeText(getContext().getApplicationContext(), "获取用户信息失败", Toast.LENGTH_SHORT).show();
+            }
+        };
+        userMsgRequest.getUserMsg(db.getToken(), listener);
+        userMsgRequest.getUserAvator(db.getClientId(), 400, 400, listener);
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                v.setBackgroundColor(0xffe8e8e8);
+                break;
+            case MotionEvent.ACTION_UP:
+                v.setBackgroundColor(0x00000000);
+                onClick(v);
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+}

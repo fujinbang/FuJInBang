@@ -1,0 +1,66 @@
+package com.fujinbang.ui.fragment;
+
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import com.baidu.location.Poi;
+import com.fujinbang.R;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class PoiListDialogFragment extends DialogFragment {
+
+    private static final String POI = "poi";
+    private ListView lv_poi;
+
+    public static PoiListDialogFragment newInstance(List<Poi> poiList) {
+        PoiListDialogFragment pldf = new PoiListDialogFragment();
+
+        /* poiList to String ArrayList */
+        ArrayList<String> list = new ArrayList<>();
+        for (Poi poi : poiList) {
+            list.add(poi.getName());
+        }
+        /* set Arguments to this Fragment */
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList(POI, list);
+        pldf.setArguments(bundle);
+
+        return pldf;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+        View view = inflater.inflate(R.layout.fragment_poi_list, container, false);
+        initView(view);
+        return view;
+    }
+
+    private final void initView(View v) {
+        final List<String> list = getArguments().getStringArrayList(POI);
+
+        lv_poi = (ListView) v.findViewById(R.id.lv_list_poi);
+        lv_poi.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, list));
+        lv_poi.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ((OnClickPoiListener) getParentFragment()).onClick(list.get(position));
+                dismiss();
+            }
+        });
+    }
+
+    public interface OnClickPoiListener {
+        void onClick(String poi);
+    }
+}

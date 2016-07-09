@@ -1,5 +1,48 @@
 [
     {
+        "outputFile": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\res\\merged\\debug\\values-normal-v4\\values-normal-v4.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 67,
+                    "endOffset": 118
+                },
+                "from": {
+                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-normal\\dimens.xml",
+                    "position": {
+                        "startLine": 3,
+                        "startColumn": 4,
+                        "startOffset": 120,
+                        "endColumn": 67,
+                        "endOffset": 183
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 123,
+                    "endColumn": 64,
+                    "endOffset": 183
+                },
+                "from": {
+                    "file": "D:\\Android Studio\\project\\FuJInBang\\lib_dateTimePicker\\src\\main\\res\\values-normal\\dimens.xml",
+                    "position": {
+                        "startLine": 2,
+                        "startColumn": 4,
+                        "startOffset": 55,
+                        "endColumn": 64,
+                        "endOffset": 115
+                    }
+                }
+            }
+        ]
+    },
+    {
         "outputFile": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib_dateTimePicker\\build\\intermediates\\res\\merged\\debug\\values-normal-v4\\values-normal-v4.xml",
         "map": [
             {

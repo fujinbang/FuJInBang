@@ -1,7 +1,15 @@
 [
     {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\pull_to_refresh_header_horizontal.xml",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\build\\intermediates\\bundles\\debug\\res\\layout\\pull_to_refresh_header_horizontal.xml"
+    },
+    {
         "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\pull_to_refresh_header_vertical.xml",
         "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\build\\intermediates\\bundles\\debug\\res\\layout\\pull_to_refresh_header_vertical.xml"
+    },
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\pull_to_refresh_header_vertical.xml",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\build\\intermediates\\bundles\\debug\\res\\layout\\pull_to_refresh_header_vertical.xml"
     },
     {
         "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\pull_to_refresh_header_horizontal.xml",

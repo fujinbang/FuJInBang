@@ -1,0 +1,133 @@
+package com.fujinbang.view;
+
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+
+import com.fujinbang.R;
+
+/**
+ * 当发生需要支付用户积分的动作时
+ * 需要填写支付积分的密码（6位数字）
+ */
+public class PayDialog extends DialogFragment {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.dialog_pay, container, false);
+        PasswordEditText et_psd = (PasswordEditText) view.findViewById(R.id.pet_psd);
+        et_psd.setOnPasswordFinishListener(new PasswordEditText.OnPasswordFinish() {
+            @Override
+            public void onFinish(String psd) {
+                dismiss();
+            }
+        });
+        return view;
+    }
+}
+
+class PasswordEditText extends EditText {
+
+    /**
+     * 密码的位数
+     */
+    private final static int password_bit_num = 6;
+    /**
+     * 已输入密码的位数
+     */
+    private int password_num;
+
+    private OnPasswordFinish mListener;
+
+    public PasswordEditText(Context context) {
+        super(context);
+        init();
+    }
+
+    public PasswordEditText(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public PasswordEditText(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public PasswordEditText(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init();
+    }
+
+    private final void init() {
+        addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                Log.i("zy", "payDialog before:" + s + " " + count + " " + after);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.i("zy", "payDialog onchange:" + s + " " + before + " " + count);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.i("zy", "payDialog after:" + s);
+                if (mListener != null)
+                    mListener.onFinish(s.toString());
+            }
+        });
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        int width = getMeasuredWidth();
+        int height = getMeasuredHeight();
+        int cellWidth = width / password_bit_num;
+
+        /*把前景涂白*/
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(0xffffffff);
+        for (int i = 0; i < password_bit_num; i++)
+            canvas.drawRect(new RectF(i * cellWidth, 0, (i + 1) * cellWidth, height), paint);
+        /*描上边框*/
+        paint.setStrokeWidth(2.0f);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(0xff8E8E8E);
+        for (int i = 0; i < password_bit_num; i++)
+            canvas.drawRect(new RectF(i * cellWidth, 0, (i + 1) * cellWidth, height), paint);
+        /*根据输入密码的位数来画圆点*/
+        int offsetX = cellWidth / 2;
+        int offsetY = height / 2;
+        paint.reset();
+        paint.setColor(0xff000000);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        for (int i = 0; i < password_num; i++)
+            canvas.drawCircle(i * cellWidth + offsetX, offsetY, 15, paint);
+    }
+
+    public void setOnPasswordFinishListener(OnPasswordFinish listener) {
+
+    }
+
+    public interface OnPasswordFinish {
+        void onFinish(String psd);
+    }
+}

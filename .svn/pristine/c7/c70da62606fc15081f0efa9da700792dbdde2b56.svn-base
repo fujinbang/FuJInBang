@@ -1,0 +1,222 @@
+package com.fujinbang.activity;
+
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.fujinbang.R;
+import com.fujinbang.activity.iactivity.IUserView;
+import com.fujinbang.global.SimpleDataBase;
+import com.fujinbang.internet.HttpConnRequest;
+import com.fujinbang.presenter.UserPresenter;
+import com.fujinbang.presenter.ipresenter.IUserPresenter;
+import com.fujinbang.view.CircleImageView;
+import com.fujinbang.view.TagFlowLayout;
+
+import org.json.JSONObject;
+
+public class UserActivity extends BaseActivity implements IUserView, View.OnClickListener {
+
+    private CircleImageView civ_avatar;
+    private TextView tv_userName, tv_sex, tv_area, tv_distance, tv_desc, tv_pickNum, tv_helpNum;
+    private TagFlowLayout tfl_tag;
+    private ImageView iv_back;
+    private Button btn_help, btn_report, btn_add_friend;
+    private IUserPresenter presenter;
+    /**
+     * 当前用户页面显示的用户的id
+     */
+    private int id;
+
+    /**
+     * 当前用户页面的用户是否已经是好友
+     */
+    private boolean isFriend;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user);
+
+        id = getIntent().getIntExtra("id", -1);
+        isFriend = getIntent().getBooleanExtra("isFriend", false);
+
+        initView();
+        initTagFlowLayout();
+        initPresenter();
+    }
+
+    private final void initView() {
+        iv_back = (ImageView) findViewById(R.id.iv_back);
+        civ_avatar = (CircleImageView) findViewById(R.id.civ_user_avatar);
+        tv_userName = (TextView) findViewById(R.id.tv_user_user_name);
+        tv_desc = (TextView) findViewById(R.id.tv_user_desc);
+        tv_area = (TextView) findViewById(R.id.tv_user_area);
+        tv_distance = (TextView) findViewById(R.id.tv_user_distance);
+        tv_sex = (TextView) findViewById(R.id.tv_user_sex);
+        tv_helpNum = (TextView) findViewById(R.id.tv_user_help_num);
+        tv_pickNum = (TextView) findViewById(R.id.tv_user_pick_num);
+        btn_help = (Button) findViewById(R.id.btn_user_help);
+        btn_report = (Button) findViewById(R.id.btn_user_report);
+        btn_add_friend = (Button) findViewById(R.id.btn_user_add_friend);
+
+        if (isFriend) {
+            btn_add_friend.setVisibility(View.GONE);
+        }
+
+        iv_back.setOnClickListener(this);
+        btn_report.setOnClickListener(this);
+        btn_help.setOnClickListener(this);
+        btn_add_friend.setOnClickListener(this);
+    }
+
+    private final void initPresenter() {
+        presenter = new UserPresenter(this);
+    }
+
+    private final void initTagFlowLayout() {
+        tfl_tag = (TagFlowLayout) findViewById(R.id.tfl_user_tag);
+        tfl_tag.addTag("跑腿");
+        tfl_tag.addTag("作业");
+        tfl_tag.addTag("陪聊");
+        tfl_tag.addTag("快递");
+        tfl_tag.addTag("占位");
+        tfl_tag.addTag("抢课");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        presenter.updateUserMsg();
+    }
+
+    public static void startActivity(Context context, int id, boolean isFriend) {
+        Intent intent = new Intent(context, UserActivity.class);
+        intent.putExtra("id", id);
+        intent.putExtra("isFriend", isFriend);
+        context.startActivity(intent);
+    }
+
+    public static void startActivity(Context context, int id) {
+        startActivity(context, id, false);
+    }
+
+    @Override
+    public void showUserName(String name) {
+        tv_userName.setText(name);
+    }
+
+    @Override
+    public void showSex(String sex) {
+        tv_sex.setText(sex);
+    }
+
+    @Override
+    public void showArea(String area) {
+        tv_area.setText(area);
+    }
+
+    @Override
+    public void showDistance(String distance) {
+        tv_distance.setText(distance);
+    }
+
+    @Override
+    public void showDescription(String desc) {
+        tv_desc.setText(desc);
+    }
+
+    @Override
+    public void showPickNum(String pickNum) {
+        tv_pickNum.setText(pickNum);
+    }
+
+    @Override
+    public void showPostNum(String postNum) {
+        tv_helpNum.setText(postNum);
+    }
+
+    @Override
+    public void showAvatar(Bitmap avatar) {
+        civ_avatar.setImageBitmap(avatar);
+    }
+
+    @Override
+    public Context getActivityContext() {
+        return this;
+    }
+
+    @Override
+    public int getUserId() {
+        return id;
+    }
+
+    @Override
+    public void showToast(String str) {
+        Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_back:
+                finish();
+                break;
+            case R.id.btn_user_add_friend:
+                //添加好友
+                addFriend();
+                break;
+            case R.id.btn_user_help:
+                //向他求助
+                SeekHelpActivity.startActivity(UserActivity.this, id);
+                break;
+            case R.id.btn_user_report:
+                //投诉
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void addFriend(){
+        new AsyncTask<String, Integer, String>() {
+            @Override
+            protected String doInBackground(String... params) {
+                String result = null;
+                try{
+                    JSONObject object = new JSONObject();
+                    object.put("token", params[0]);
+                    object.put("id", Integer.parseInt(params[1]));
+                    object.put("status", 0);
+                    result = HttpConnRequest.request("http://120.24.240.199:6789/user/friend/add", "POST", object);
+                }catch (Exception e){e.printStackTrace();}
+                return result;
+            }
+            @Override
+            protected void onPostExecute(String result){
+                if (result!=null){
+                    try{
+                        JSONObject object = new JSONObject(result);
+                        if (object.has("code")&&object.getInt("code") == 1){
+                            Toast.makeText(UserActivity.this,"添加帮友成功！",Toast.LENGTH_SHORT).show();
+                            finish();
+                        } else {
+                            Toast.makeText(UserActivity.this,"添加帮友失败！",Toast.LENGTH_SHORT).show();
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        Toast.makeText(UserActivity.this,"添加帮友失败！",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }.execute(new SimpleDataBase(UserActivity.this).getToken(), String.valueOf(id));
+    }
+}

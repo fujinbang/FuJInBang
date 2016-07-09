@@ -1,0 +1,34 @@
+package com.fujinbang.ui.activity;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+
+import com.fujinbang.R;
+
+public class AboutActivity extends BaseActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_about);
+
+        initView();
+    }
+
+    private final void initView() {
+        ImageView iv_back = (ImageView) findViewById(R.id.iv_back);
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AboutActivity.this.finish();
+            }
+        });
+    }
+
+    public static void startActivity(Context context) {
+        context.startActivity(new Intent(context, AboutActivity.class));
+    }
+}

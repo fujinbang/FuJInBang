@@ -1,0 +1,239 @@
+package com.fujinbang.activity;
+
+
+import android.content.Intent;
+import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.os.Bundle;
+import android.util.Log;
+import android.util.Pair;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ExpandableListView;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import com.fujinbang.R;
+import com.fujinbang.conversation.ConversationListAdapter;
+import com.fujinbang.conversation.FakeCoversationListAdapter;
+import com.fujinbang.conversation.HelpListAdapter;
+import com.fujinbang.conversation.SystemMsgAdapter;
+import com.fujinbang.global.MissionDetail;
+import com.fujinbang.global.SimpleDataBase;
+import com.hyphenate.EMConnectionListener;
+import com.hyphenate.EMConversationListener;
+import com.hyphenate.EMError;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConversation;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+/**
+ * Created by VITO on 2016/4/24.
+ * 消息界面
+ */
+public class ConversationFragment extends Fragment {
+    private final static int MSG_REFRESH = 2;
+
+    ExpandableListView expandListView;
+    ListView helpListView, sysMsgListView;
+    ConversationListAdapter conversationListAdapter;
+    HelpListAdapter helpListAdapter;
+    SystemMsgAdapter systemMsgAdapter;
+    private List<EMConversation> groupList;
+    private List<HashMap<String, Object>> childList;
+    private List<HashMap<String, Object>> helpList;
+    private List<EMConversation> sysMsg;
+
+    protected boolean isConflict;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_conversation, container, false);
+
+        //SimpleDataBase simpleDataBase = new SimpleDataBase(getContext());
+        //MissionDetail.getInstance().initialize(simpleDataBase.getPhoneNum());
+
+        //设置expandableListView
+        /*
+        groupList.addAll(loadConversationList());
+        expandListView = (ExpandableListView) view.findViewById(R.id.expand_listview);
+        expandListView.setEmptyView(view.findViewById(R.id.view_empty));
+        conversationListAdapter = new ConversationListAdapter(getContext(),groupList,childList);
+        expandListView.setAdapter(conversationListAdapter);
+        //设置 属性 GroupIndicator 去掉默认向下的箭头
+        expandListView.setGroupIndicator(null);
+        expandListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                ChatActivity.startActivity(getContext(),groupList.get(groupPosition).getUserName());
+                return true;
+            }
+        });*/
+        expandListView = (ExpandableListView) view.findViewById(R.id.expand_listview);
+        expandListView.setGroupIndicator(null);
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("任务描述", "我很帅");
+        MissionDetail.getInstance().addMission("123", hashMap);
+        FakeCoversationListAdapter madapter = new FakeCoversationListAdapter(getContext(), expandListView);
+        expandListView.setAdapter(madapter);
+        expandListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                Log.i("zy", "onClickGroupView" + groupPosition);
+                ChatActivity.startActivity(getContext(), "123");
+                return true;
+            }
+        });
+
+        //设置求助列表
+        /*
+        helpListView = (ListView) view.findViewById(R.id.help_listview);
+        helpListView.setEmptyView(view.findViewById(R.id.view_empty));
+        helpListAdapter = new HelpListAdapter(getContext(),helpList);
+        helpListView.setAdapter(helpListAdapter);*/
+
+        //设置系统消息
+        /*
+        sysMsgListView = (ListView) view.findViewById(R.id.sys_listview);
+        sysMsgListView.setEmptyView(view.findViewById(R.id.view_empty));
+        systemMsgAdapter = new SystemMsgAdapter(getContext(),sysMsg);
+        sysMsgListView.setAdapter(systemMsgAdapter);*/
+
+        EMClient.getInstance().addConnectionListener(connectionListener);
+
+        return view;
+    }
+
+    protected EMConversationListener convListener = new EMConversationListener() {
+
+        @Override
+        public void onCoversationUpdate() {
+            refresh();
+        }
+
+    };
+
+    /**
+     * 获取会话列表
+     **/
+    protected List<EMConversation> loadConversationList() {
+        // 获取所有会话，包括陌生人
+        Map<String, EMConversation> conversations = EMClient.getInstance().chatManager().getAllConversations();
+        // 过滤掉messages size为0的conversation
+        /**
+         * 如果在排序过程中有新消息收到，lastMsgTime会发生变化
+         * 影响排序过程，Collection.sort会产生异常
+         * 保证Conversation在Sort过程中最后一条消息的时间不变
+         * 避免并发问题
+         */
+        List<Pair<Long, EMConversation>> sortList = new ArrayList<Pair<Long, EMConversation>>();
+        synchronized (conversations) {
+            for (EMConversation conversation : conversations.values()) {
+                if (conversation.getAllMessages().size() != 0) {
+                    if (conversation.getType() == EMConversation.EMConversationType.GroupChat) {
+                        sortList.add(new Pair<Long, EMConversation>(conversation.getLastMessage().getMsgTime(), conversation));
+                    }
+                    if (conversation.getType() == EMConversation.EMConversationType.Chat) {
+                        sysMsg.clear();
+                        sysMsg.add(conversation);
+                    }
+                }
+            }
+        }
+        List<EMConversation> list = new ArrayList<EMConversation>();
+        for (Pair<Long, EMConversation> sortItem : sortList) {
+            list.add(sortItem.second);
+        }
+        return list;
+    }
+
+    protected EMConnectionListener connectionListener = new EMConnectionListener() {
+
+        @Override
+        public void onDisconnected(int error) {
+            if (error == EMError.USER_REMOVED || error == EMError.USER_LOGIN_ANOTHER_DEVICE) {
+                isConflict = true;
+            } else {
+                handler.sendEmptyMessage(0);
+            }
+        }
+
+        @Override
+        public void onConnected() {
+            handler.sendEmptyMessage(1);
+        }
+    };
+
+    protected Handler handler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            switch (msg.what) {
+                case 0:
+                    onConnectionDisconnected();
+                    break;
+                case 1:
+                    onConnectionConnected();
+                    break;
+
+                case MSG_REFRESH: {
+//                    groupList.clear();
+//                    groupList.addAll(loadConversationList());
+//                    expandListView.getAdapter().notify();
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    };
+
+    /**
+     * 连接到服务器
+     */
+    protected void onConnectionConnected() {
+        //已连接
+    }
+
+    /**
+     * 连接断开
+     */
+    protected void onConnectionDisconnected() {
+        Toast.makeText(getContext(), "未连接到服务器", Toast.LENGTH_SHORT).show();
+    }
+
+
+    /**
+     * 刷新页面
+     */
+    public void refresh() {
+        if (!handler.hasMessages(MSG_REFRESH)) {
+            handler.sendEmptyMessage(MSG_REFRESH);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refresh();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EMClient.getInstance().removeConnectionListener(connectionListener);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (isConflict) {
+            outState.putBoolean("isConflict", true);
+        }
+    }
+}

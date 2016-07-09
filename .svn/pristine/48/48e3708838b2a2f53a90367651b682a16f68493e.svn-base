@@ -1,0 +1,64 @@
+package com.fujinbang.activity;
+
+import android.content.Context;
+import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.fujinbang.R;
+
+public class MissionRecordActivity extends BaseActivity implements View.OnTouchListener {
+
+    private TextView tv_delete;
+    private ImageView iv_back;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_mission_record);
+
+        initView();
+    }
+
+    private final void initView() {
+        tv_delete = (TextView) findViewById(R.id.tv_mission_record_delete);
+        iv_back = (ImageView) findViewById(R.id.iv_back);
+
+        iv_back.setOnTouchListener(this);
+        tv_delete.setOnTouchListener(this);
+    }
+
+    private final void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_back:
+                finish();
+                break;
+            default:
+                break;
+        }
+    }
+
+    public static void startActivity(Context context) {
+        context.startActivity(new Intent(context, MissionRecordActivity.class));
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                v.setBackgroundColor(0xffe8e8e8);
+                break;
+            case MotionEvent.ACTION_UP:
+                v.setBackgroundColor(0x00000000);
+                onClick(v);
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+}

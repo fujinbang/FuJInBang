@@ -1,0 +1,282 @@
+package com.fujinbang.conversation;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.Filter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.fujinbang.R;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMGroup;
+import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.utils.EaseUserUtils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+
+/**
+ * Created by VITO on 2016/5/12.
+ * 正在进行的任务，列表适配器
+ */
+public class ConversationListAdapter extends BaseExpandableListAdapter{
+
+    private LayoutInflater mLayoutInflater;
+    private List<EMConversation> conversationList;
+    private List<EMConversation> copyConversationList;
+    private List<HashMap<String,Object>> childList;
+    private ConversationFilter conversationFilter;
+    private boolean notiyfyByFilter;
+
+    public ConversationListAdapter (Context context,List<EMConversation> objects,List<HashMap<String,Object>> childList){
+        mLayoutInflater = LayoutInflater.from(context);
+        this.conversationList = objects;
+        this.childList = childList;
+        copyConversationList = new ArrayList<EMConversation>();
+        copyConversationList.addAll(objects);
+    }
+
+    @Override
+    public Object getChild(int groupPosition, int childPosition) {
+        return childList.get(groupPosition).get(childPosition);
+    }
+
+    @Override
+    public long getChildId(int groupPosition, int childPosition) {
+        return childPosition;
+    }
+
+    @Override
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView,
+                             ViewGroup parent) {
+        ChildViewHolder childViewHolder;
+        View view = convertView;
+        if (view == null) {
+            childViewHolder = new ChildViewHolder();
+            view = mLayoutInflater.inflate(R.layout.item_now_child, null);
+            childViewHolder.desc = (TextView) view.findViewById(R.id.item_now_child_desc);
+            childViewHolder.time = (TextView) view.findViewById(R.id.item_now_child_time);
+            childViewHolder.bonus = (TextView) view.findViewById(R.id.item_now_child_bonus);
+            view.setTag(childViewHolder);
+        }else {
+            childViewHolder = (ChildViewHolder)view.getTag();
+        }
+        childViewHolder.desc.setText("任务简述："+childList.get(groupPosition).get("desc").toString());
+        childViewHolder.time.setText(childList.get(groupPosition).get("starttime").toString()+"至"+childList.get(groupPosition).get("endtime"));
+        childViewHolder.bonus.setText(childList.get(groupPosition).get("time").toString()+"积分");
+
+        return view;
+    }
+
+    class ChildViewHolder{
+        TextView desc;
+        TextView time;
+        TextView bonus;
+    }
+
+    @Override
+    public int getChildrenCount(int groupPosition) {
+        return childList.get(groupPosition).size();
+    }
+
+    @Override
+    public EMConversation getGroup(int groupPosition) {
+        if (groupPosition < conversationList.size()) {
+            return conversationList.get(groupPosition);
+        }
+        return null;
+    }
+
+    @Override
+    public int getGroupCount() {
+        return conversationList.size();
+    }
+
+    @Override
+    public long getGroupId(int groupPosition) {
+        return groupPosition;
+    }
+
+    @Override
+    public View getGroupView(final int groupPosition, final boolean isExpanded, View convertView, ViewGroup parent) {
+        final GroupViewHolder groupViewHolder;
+        if (convertView == null) {
+            convertView = mLayoutInflater.inflate(R.layout.item_now, null);
+
+            groupViewHolder = new GroupViewHolder();
+            /*得到各个控件的对象*/
+            groupViewHolder.unreadLabel = (TextView) convertView.findViewById(R.id.unread_msg_number);
+            groupViewHolder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
+            groupViewHolder.list_itease_layout = (RelativeLayout) convertView.findViewById(R.id.list_itease_layout);
+            groupViewHolder.expandBtn = (ImageButton) convertView.findViewById(R.id.item_now_btn);
+            groupViewHolder.time = (TextView) convertView.findViewById(R.id.item_now_time);
+
+            convertView.setTag(groupViewHolder);//绑定ViewHolder对象
+        }else{
+            groupViewHolder = (GroupViewHolder)convertView.getTag();
+        }
+
+        groupViewHolder.expandBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isExpanded) {
+                    //未展开
+                    onGroupExpanded(groupPosition);
+                    groupViewHolder.expandBtn.setImageResource(R.drawable.expanded);
+                } else {
+                    onGroupCollapsed(groupPosition);
+                    groupViewHolder.expandBtn.setImageResource(R.drawable.unexpanded);
+                }
+            }
+        });
+        groupViewHolder.list_itease_layout.setBackgroundResource(com.hyphenate.easeui.R.drawable.ease_mm_listitem);
+
+        // 获取与此用户/群组的会话
+        EMConversation conversation = getGroup(groupPosition);
+        // 获取用户username或者群组groupid
+        String username = conversation.getUserName();
+
+        if (conversation.getType() == EMConversation.EMConversationType.GroupChat) {
+            // 群聊消息，显示群聊头像
+            groupViewHolder.avatar.setImageResource(com.hyphenate.easeui.R.drawable.ease_group_icon);
+            //EMGroup group = EMClient.getInstance().groupManager().getGroup(username);
+            //holder.name.setText(group != null ? group.getGroupName() : username);
+        }
+
+        if (conversation.getUnreadMsgCount() > 0) {
+            // 显示与此用户的消息未读数
+            groupViewHolder.unreadLabel.setText(String.valueOf(conversation.getUnreadMsgCount()));
+            groupViewHolder.unreadLabel.setVisibility(View.VISIBLE);
+        } else {
+            groupViewHolder.unreadLabel.setVisibility(View.INVISIBLE);
+        }
+        return convertView;
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+        if(!notiyfyByFilter){
+            copyConversationList.clear();
+            copyConversationList.addAll(conversationList);
+            notiyfyByFilter = false;
+        }
+    }
+
+    public Filter getFilter() {
+        if (conversationFilter == null) {
+            conversationFilter = new ConversationFilter(conversationList);
+        }
+        return conversationFilter;
+    }
+
+    private class ConversationFilter extends Filter {
+        List<EMConversation> mOriginalValues = null;
+
+        public ConversationFilter(List<EMConversation> mList) {
+            mOriginalValues = mList;
+        }
+
+        @Override
+        protected FilterResults performFiltering(CharSequence prefix) {
+            FilterResults results = new FilterResults();
+
+            if (mOriginalValues == null) {
+                mOriginalValues = new ArrayList<EMConversation>();
+            }
+            if (prefix == null || prefix.length() == 0) {
+                results.values = copyConversationList;
+                results.count = copyConversationList.size();
+            } else {
+                String prefixString = prefix.toString();
+                final int count = mOriginalValues.size();
+                final ArrayList<EMConversation> newValues = new ArrayList<EMConversation>();
+
+                for (int i = 0; i < count; i++) {
+                    final EMConversation value = mOriginalValues.get(i);
+                    String username = value.getUserName();
+
+                    EMGroup group = EMClient.getInstance().groupManager().getGroup(username);
+                    if(group != null){
+                        username = group.getGroupName();
+                    }else{
+                        EaseUser user = EaseUserUtils.getUserInfo(username);
+                        // TODO: not support Nick anymore
+//                        if(user != null && user.getNick() != null)
+//                            username = user.getNick();
+                    }
+
+                    // First match against the whole ,non-splitted value
+                    if (username.startsWith(prefixString)) {
+                        newValues.add(value);
+                    } else{
+                        final String[] words = username.split(" ");
+                        final int wordCount = words.length;
+
+                        // Start at index 0, in case valueText starts with space(s)
+                        for (int k = 0; k < wordCount; k++) {
+                            if (words[k].startsWith(prefixString)) {
+                                newValues.add(value);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                results.values = newValues;
+                results.count = newValues.size();
+            }
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            conversationList.clear();
+            if (results.values != null) {
+                conversationList.addAll((List<EMConversation>) results.values);
+            }
+            if (results.count > 0) {
+                notiyfyByFilter = true;
+                notifyDataSetChanged();
+            } else {
+                notifyDataSetInvalidated();
+            }
+
+        }
+
+    }
+
+
+
+    @Override
+    public boolean hasStableIds() {
+        return false;
+    }
+
+    @Override
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        return true;
+    }
+
+
+    public static class GroupViewHolder{
+        /** 用户头像 */
+        ImageView avatar;
+        /** 任务剩余时间 */
+        TextView time;
+        /** 整个list中每一行总布局 */
+        RelativeLayout list_itease_layout;
+        /** 消息未读数 */
+        TextView unreadLabel;
+        /** 下拉列表按钮 */
+        ImageButton expandBtn;
+    }
+}

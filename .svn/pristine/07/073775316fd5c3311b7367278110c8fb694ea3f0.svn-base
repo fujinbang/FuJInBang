@@ -1,0 +1,16 @@
+package com.fujinbang.internet.IRequest;
+
+
+import java.util.HashMap;
+
+import retrofit2.http.GET;
+import retrofit2.http.Query;
+import rx.Observable;
+
+/**
+ * Created by Administrator on 2016/6/1.
+ */
+public interface HelpListRequest {
+    @GET("/help")
+    Observable<HashMap<String,Object>> getHelpList(@Query("x") float x, @Query("y") float y, @Query("limit") int limit);
+}

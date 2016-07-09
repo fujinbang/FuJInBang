@@ -1,0 +1,209 @@
+package com.fujinbang.activity;
+
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Environment;
+import android.util.DisplayMetrics;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.fujinbang.R;
+import com.fujinbang.global.MissionDetail;
+import com.fujinbang.global.SimpleDataBase;
+import com.fujinbang.global.TimeCalculator;
+import com.fujinbang.internet.HttpConnRequest;
+import com.fujinbang.internet.UrlConstant;
+import com.fujinbang.seekhelp.MediaManager;
+
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.HashMap;
+
+import retrofit2.http.Url;
+
+/**
+ * Created by VITO on 2016/5/18.
+ * 面向个人的求助信息界面
+ */
+public class PersonalHelpActivity extends BaseActivity implements View.OnClickListener{
+    protected static String dir = Environment.getExternalStorageDirectory()+"/fujinbang_vido";
+
+    protected ImageView personal_help_back;
+    protected TextView reqDesc;
+    protected FrameLayout play_sound;
+    protected View animView;
+    protected TextView record_time;
+    protected TextView starttime;
+    protected TextView endtime;
+    protected TextView textbonus;
+    protected TextView neednum;
+    protected TextView sex;
+    protected TextView location;
+    protected Button refuseBtn;
+    protected Button acceptBtn;
+
+    HashMap<String,Object> data;
+    protected int mMinWidth;
+    protected int mMaxWidth;
+
+    protected SimpleDataBase simpleDataBase;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_personal_help);
+        simpleDataBase = new SimpleDataBase(PersonalHelpActivity.this);
+        Intent intent = this.getIntent();
+        data = MissionDetail.getInstance().getInvitedMission(intent.getExtras().getInt("position"));
+        initView();
+    }
+
+    private void initView() {
+        personal_help_back = (ImageView) findViewById(R.id.personal_help_back);
+        record_time = (TextView)findViewById(R.id.personal_help_recoder_time);
+        play_sound = (FrameLayout) findViewById(R.id.personal_help_recoder_lenght);
+        animView = findViewById(R.id.personal_help_recoder_anim);
+        reqDesc = (TextView) findViewById(R.id.personal_help_reqdes);
+        starttime = (TextView) findViewById(R.id.personal_help_starttime);
+        endtime = (TextView) findViewById(R.id.personal_help_endtime);
+        textbonus = (TextView) findViewById(R.id.personal_help_textbonus);
+        neednum = (TextView) findViewById(R.id.personal_help_num);
+        sex = (TextView) findViewById(R.id.personal_help_sex);
+        location = (TextView) findViewById(R.id.personal_help_location);
+        refuseBtn = (Button) findViewById(R.id.personal_help_refuse_btn);
+        acceptBtn = (Button) findViewById(R.id.personal_help_accept_btn);
+
+        reqDesc.setText(data.get("desc").toString());
+        textbonus.setText(data.get("bonus").toString());
+        neednum.setText(data.get("needPeopleNum").toString());
+        location.setText(getPoi((double)data.get("x"), (double)data.get("y")));
+
+        TimeCalculator start = new TimeCalculator(data.get("start_time").toString());
+        String s = start.getMonthDay() +" "+ start.getHourMin();
+        TimeCalculator end = new TimeCalculator(data.get("end_time").toString());
+        String e = end.getMonthDay() +" "+ end.getHourMin();
+        starttime.setText(s);
+        endtime.setText(e);
+
+        personal_help_back.setOnClickListener(this);
+        refuseBtn.setOnClickListener(this);
+        acceptBtn.setOnClickListener(this);
+
+        if (data.containsKey("voicelength")){
+            WindowManager wm = (WindowManager) PersonalHelpActivity.this.getSystemService(Context.WINDOW_SERVICE);
+            DisplayMetrics outMetrics = new DisplayMetrics();
+            wm.getDefaultDisplay().getMetrics(outMetrics);
+            mMaxWidth = (int) (outMetrics.widthPixels * 0.4f);
+            mMinWidth = (int) (outMetrics.widthPixels * 0.15f);
+            ViewGroup.LayoutParams lp = play_sound.getLayoutParams();
+            lp.width = (int) (mMinWidth + (mMaxWidth / 60f) * Integer.parseInt(data.get("voicelength").toString()));
+            animView.setBackgroundResource(R.drawable.adj);
+            reqDesc.setVisibility(View.GONE);
+            play_sound.setVisibility(View.VISIBLE);
+            record_time.setVisibility(View.VISIBLE);
+            record_time.setText(data.get("voicelength") + "\"");
+            play_sound.setOnClickListener(this);
+        }
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.personal_help_back:
+                PersonalHelpActivity.this.finish();
+                break;
+            case R.id.personal_help_refuse_btn:
+                //拒绝
+
+                break;
+            case R.id.personal_help_accept_btn:
+                joinMission(simpleDataBase.getToken(), data.get("helpid").toString());
+                break;
+            case R.id.personal_help_recoder_lenght:
+                //播放帧动画
+                animView.setBackgroundResource(R.drawable.play_anim);
+                AnimationDrawable animation = (AnimationDrawable) animView.getBackground();
+                animation.start();
+                //播放录音
+                MediaManager.playSound(new File(dir, data.get("helpid").toString() + ".aac").getAbsolutePath(), new MediaPlayer.OnCompletionListener() {
+
+                    public void onCompletion(MediaPlayer mp) {
+                        //停止播放帧动画
+                        animView.setBackgroundResource(R.drawable.adj);
+                        MediaManager.release();
+                    }
+                });
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 获得定位的标志性地名
+     */
+    private String getPoi(double x, double y) {
+        String poi = "";
+        return poi;
+    }
+
+    /**
+     * 接单
+     */
+    protected boolean canJoinMission = true;
+    private void joinMission(String token, String helpid){
+        if (!canJoinMission){
+            return;
+        }
+        canJoinMission = false;
+        new AsyncTask<String, Integer, String>() {
+            @Override
+            protected String doInBackground(String... params) {
+                String result = null;
+                try {
+                    JSONObject object = new JSONObject();
+                    object.put("token", params[0]);
+                    object.put("helpinfoid", Integer.parseInt(params[1]));
+                    result = HttpConnRequest.request(UrlConstant.joinMission,"POST",object);
+                } catch (Exception e){e.printStackTrace();}
+                return result;
+            }
+            @Override
+            protected void onPostExecute(String result){
+                if (result!=null){
+                    try {
+                        JSONObject object = new JSONObject(result);
+                        if (object.has("code") && object.getInt("code") == 1){
+                            Toast.makeText(PersonalHelpActivity.this,"接单成功！",Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    } catch (Exception e){
+                        e.printStackTrace();
+                        Toast.makeText(PersonalHelpActivity.this,"连接服务器失败！",Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(PersonalHelpActivity.this,"连接服务器失败！",Toast.LENGTH_SHORT).show();
+                }
+                canJoinMission = true;
+            }
+        }.execute(token, helpid);
+    }
+
+    public static void startActivity(Context context,int position) {
+        Intent intent = new Intent(context, PersonalHelpActivity.class);
+        intent.putExtra("position",position);
+        context.startActivity(intent);
+    }
+
+}

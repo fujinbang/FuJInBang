@@ -1,0 +1,120 @@
+package com.fujinbang.presenter;
+
+import android.util.Log;
+
+import com.fujinbang.activity.iactivity.IHelpListFragment;
+import com.fujinbang.helplist.HelpMsg;
+import com.fujinbang.internet.IRequest.HelpListRequest;
+import com.fujinbang.presenter.ipresenter.IHelpListPresenter;
+import com.google.gson.internal.LinkedTreeMap;
+
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+
+/**
+ * Created by Administrator on 2016/6/1.
+ */
+public class HelpListPresenter implements IHelpListPresenter {
+
+    private IHelpListFragment view;
+
+    public HelpListPresenter(IHelpListFragment view) {
+        this.view = view;
+    }
+
+    @Override
+    public void joinHelpList(String token, int helpId) {
+
+    }
+
+    /**
+     * 获取坐标（x，y）附近的求助列表，数量为limited
+     * <p>
+     * 1.获取x，y附近的所有求助信息 all_list（剔除重复）
+     * 2.获取自己参与和自己发布的求助信息 attend_list 和 post_list
+     * 3.取差集：list = all_list - attend_list - post_list
+     * 4.获取用户的姓名 for id in list -> name
+     * 5.获取用户的头像 for id in list -> avatar.png
+     * 6.在主线程显示出来
+     *
+     * @param x       经度
+     * @param y       纬度
+     * @param limited 求助信息数量
+     */
+    @Override
+    public void getHelpList(float x, float y, int limited) {
+        Log.i("zy", x + " , " + y + " , " + limited);
+        getRetrofit().create(HelpListRequest.class)
+                .getHelpList(x, y, limited)
+                .subscribeOn(Schedulers.io())
+                        /**
+                         * 把获取的求助列表 铺平（flatMap）为单个求助信息
+                         */
+                .flatMap(new Func1<HashMap<String, Object>, Observable<LinkedTreeMap<String, Object>>>() {
+                    @Override
+                    public Observable<LinkedTreeMap<String, Object>> call(HashMap<String, Object> hashmap) {
+                        ArrayList<LinkedTreeMap<String, Object>> list = (ArrayList<LinkedTreeMap<String, Object>>) hashmap.get("data");
+                        return Observable.from(list);
+                    }
+                })
+                        /**
+                         * 把重复的求助信息(distinct)去掉
+                         */
+                .distinct(new Func1<LinkedTreeMap<String, Object>, Integer>() {
+                    @Override
+                    public Integer call(LinkedTreeMap<String, Object> helpMsg) {
+                        return (int) ((double) helpMsg.get("id"));
+                    }
+                })
+                .subscribe(new Action1<LinkedTreeMap<String, Object>>() {
+                    @Override
+                    public void call(LinkedTreeMap<String, Object> helpMsg) {
+                        parseHashMap(helpMsg);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Log.e("zy", throwable.toString());
+                    }
+                });
+    }
+
+    private final Retrofit getRetrofit() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://120.24.240.199:6789")
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
+        return retrofit;
+    }
+
+    private final void parseHashMap(LinkedTreeMap<String, Object> helpMsg) {
+        try {
+            //ArrayList<LinkedTreeMap<String, Object>> list = (ArrayList<LinkedTreeMap<String, Object>>) map.get("data");
+            //for (LinkedTreeMap<String, Object> helpMsg : list) {
+            HelpMsg helpmsg = new HelpMsg();
+            helpmsg.setIntegration((int) (double) helpMsg.get("bonus"));
+            helpmsg.setChatGroupId((String) helpMsg.get("chatgroupid"));
+            helpmsg.setStartTime((String) helpMsg.get("start_time"));
+            helpmsg.setNeederId((int) (double) helpMsg.get("neederid"));
+            String location = (String) helpMsg.get("location");
+            helpmsg.setNeedPeopleNum((int) (double) helpMsg.get("needPeopleNum"));
+            helpmsg.setDescription((String) helpMsg.get("desc"));
+            helpmsg.setId((int) (double) helpMsg.get("id"));
+            helpmsg.setEndTime((String) helpMsg.get("end_time"));
+            Log.i("zy", "helpMsg:" + helpmsg.toString() + location);
+            //}
+        } catch (RuntimeException e) {
+            Log.e("zy", "parse response" + e.toString());
+        }
+    }
+}

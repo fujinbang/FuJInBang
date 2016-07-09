@@ -1,0 +1,67 @@
+package com.fujinbang.ui.activity;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+
+import com.fujinbang.R;
+
+public class FeedbackActivity extends BaseActivity implements View.OnTouchListener {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_feedback);
+
+        initView();
+    }
+
+    private final void initView() {
+        final Button btn_online = (Button) findViewById(R.id.btn_feedback_online);
+        final Button btn_phonecall = (Button) findViewById(R.id.btn_feedback_phonecall);
+        final ImageView iv_back = (ImageView) findViewById(R.id.iv_back);
+
+        btn_online.setOnTouchListener(this);
+        btn_phonecall.setOnTouchListener(this);
+        iv_back.setOnTouchListener(this);
+    }
+
+    public static void startActivity(Context context) {
+        context.startActivity(new Intent(context, FeedbackActivity.class));
+    }
+
+    private final void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_feedback_online:
+                FeedbackOnlineActivity.startActivity(this);
+                break;
+            case R.id.btn_feedback_phonecall:
+                FeedbackPhonecallActivity.startActivity(this);
+                break;
+            case R.id.iv_back:
+                finish();
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                v.setBackgroundColor(0xffe8e8e8);
+                break;
+            case MotionEvent.ACTION_UP:
+                v.setBackgroundColor(0xFFF2F2F2);
+                onClick(v);
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+}

@@ -1,0 +1,80 @@
+package com.fujinbang.activity;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+
+import com.fujinbang.R;
+import com.fujinbang.setting.Area;
+
+import java.util.List;
+
+public class UserProvinceSettingActivity extends BaseActivity {
+
+    private ImageView iv_back;
+    private ListView lv_province;
+    private List<String> province;
+    private final static int REQUEST_CODE = 20;
+    private final static String AREA = "area";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user_province_setting);
+
+        initView();
+    }
+
+    private final void initView() {
+        iv_back = (ImageView) findViewById(R.id.iv_back);
+        lv_province = (ListView) findViewById(R.id.lv_setting_province);
+
+        province = Area.getProvince();
+        lv_province.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, province));
+        lv_province.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String name = province.get(position);
+                UserCitySettingActivity.startActivityForResult(UserProvinceSettingActivity.this, REQUEST_CODE, name);
+            }
+        });
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE) {
+            String city = UserCitySettingActivity.getResultCityName(data);
+            Intent intent = new Intent();
+            intent.putExtra(AREA, city);
+            setResult(200, intent);
+            finish();
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    public static String getResultAreaName(Intent data) {
+        String area = data.getStringExtra(AREA);
+        if (area != null)
+            return area;
+        return "";
+    }
+
+    public static void startAcitivityForResult(Activity context, int requestCode) {
+        context.startActivityForResult(new Intent(context, UserProvinceSettingActivity.class), requestCode);
+    }
+}

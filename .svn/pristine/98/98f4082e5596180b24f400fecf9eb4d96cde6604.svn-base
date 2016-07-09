@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fitsSystemWindows="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:background="#FFAF00">
+        <ImageView
+            android:id="@+id/item_push_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:scaleType="fitXY"
+            android:clickable="true"
+            android:background="@drawable/back"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="帮友须知"
+            android:textSize="20sp"
+            android:textColor="#fff"/>
+    </RelativeLayout>
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="20dp"
+            android:background="@drawable/zy_textview_bg_xml"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\t为了保障附近帮信息能及时推送给您，请手机搭载如下第三方ROM的帮友按提示进行设置" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\nEMUI OS（华为）:"
+                android:textColor="@color/colorPrimary"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\t自启动管理：需要把应用加到【自启动管理】列表
+                \n\t后台应用保护：需要手动把应用加到此列表
+                \n\t通知管理-应用状态请设置【允许】或【提示】"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\n\nFlyme OS（魅族）:"
+                android:textColor="@color/colorPrimary"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\t自启动管理：需要把应用加到【自启动管理】列表
+                \n\t通知栏推送：保持应用通知开启状态
+                \n\t通知管理-应用状态请设置【允许】或【提示】"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\n\nFuntouch OS（VIVO）:"
+                android:textColor="@color/colorPrimary"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\t自启动管理：需要将应用加入“i管家”中的【自启动管理】列表"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\n\nColor OS（OPPO）:"
+                android:textColor="@color/colorPrimary"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\t冻结应用管理：需要将应用加入纯净后台
+                \n\t自启动管理：将应用加入【自启动管理】列表
+                \n\t设置-应用程序-正在运行里锁定应用进程"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\n\nMIUI OS (小米):"
+                android:textColor="@color/colorPrimary"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\t自启动管理：需要把应用加到【自启动管理】列表
+                \n\t通知提示设置：保持应用默认【显示通知栏通知】"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\n\nMIUI 7 神隐模式:"
+                android:textColor="@color/colorPrimary"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\t允许用户设置后台联网应用
+                \n\t【设置】->【电量和性能】->【神隐模式】"/>
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

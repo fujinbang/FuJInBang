@@ -1,0 +1,137 @@
+package com.fujinbang.global;
+
+import android.os.AsyncTask;
+import android.util.Log;
+
+import com.fujinbang.internet.HttpConnRequest;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+/**
+ * Created by VITO on 2016/5/19.
+ *
+ */
+public class MissionDetail {
+    private static MissionDetail missionDetail;
+    private List<HashMap<String,Object>> mission = new ArrayList<>();
+    private List<HashMap<String,Object>> invitedMission = new ArrayList<>();
+
+    private MissionDetail() {
+    }
+
+    public static MissionDetail getInstance() {
+        if (null == missionDetail) {
+            synchronized (MissionDetail.class) {
+                if (null == missionDetail) {
+                    missionDetail = new MissionDetail();
+                }
+            }
+        }
+        return missionDetail;
+    }
+
+    public void initialize(String phoneNum, final OnMissionListener missionListener)  {
+        new AsyncTask<String, Integer, String>() {
+            @Override
+            protected String doInBackground(String... params) {
+                try {
+                    JSONObject object = new JSONObject();
+                    object.put("phonenum", params[0]);
+                    Log.e("ccc",params[0]);
+                    return HttpConnRequest.request("http://120.24.240.199:6789/helpquery", "POST", object);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                if (result != null) {
+                    mission.clear();
+                    invitedMission.clear();
+                    try {
+                        JSONObject object = new JSONObject(result);
+                        JSONArray attend = object.getJSONArray("attend");
+                        for (int i = 0;i<attend.length();i++){
+                            JSONObject attendMisson = attend.getJSONObject(i);
+                            HashMap<String,Object> hashMap = new HashMap<>();
+                            hashMap.put("bonus", attendMisson.getInt("bonus"));
+                            hashMap.put("chatgroupid", attendMisson.getString("chatgroupid"));
+                            hashMap.put("start_time",attendMisson.getString("start_time"));
+                            hashMap.put("end_time",attendMisson.getString("end_time"));
+                            hashMap.put("neederid",attendMisson.getInt("neederid"));
+                            hashMap.put("desc",attendMisson.getString("desc"));
+                            hashMap.put("helpid",attendMisson.getInt("id"));
+                            JSONObject location = new JSONObject(attendMisson.getString("location"));
+                            //hashMap.put("x",location.getDouble("x"));
+                            //hashMap.put("y", location.getDouble("y"));
+                            mission.add(hashMap);
+                        }
+                        JSONArray post = object.getJSONArray("post");
+                        for (int i = 0;i<post.length();i++){
+                            JSONObject postMisson = post.getJSONObject(i);
+                            HashMap<String,Object> hashMap = new HashMap<>();
+                            hashMap.put("bonus",postMisson.getInt("bonus"));
+                            hashMap.put("chatgroupid",postMisson.getString("chatgroupid"));
+                            hashMap.put("start_time",postMisson.getString("start_time"));
+                            hashMap.put("end_time",postMisson.getString("end_time"));
+                            hashMap.put("neederid",postMisson.getInt("neederid"));
+                            hashMap.put("isAnnouncer",true);
+                            hashMap.put("desc", postMisson.getString("desc"));
+                            hashMap.put("helpid",postMisson.getInt("id"));
+                            JSONObject location = new JSONObject(postMisson.getString("location"));
+                            //hashMap.put("x",location.getDouble("x"));
+                            //hashMap.put("y", location.getDouble("y"));
+                            mission.add(hashMap);
+                        }
+                        missionListener.onMissionSucceed(mission);
+                        JSONArray invited = object.getJSONArray("invited");
+                        for (int i = 0;i<invited.length();i++){
+                            JSONObject invitedmisson = invited.getJSONObject(i);
+                            HashMap<String,Object> hashMap = new HashMap<>();
+                            hashMap.put("bonus",invitedmisson.getInt("bonus"));
+                            hashMap.put("chatgroupid",invitedmisson.getString("chatgroupid"));
+                            hashMap.put("start_time",invitedmisson.getString("start_time"));
+                            hashMap.put("end_time",invitedmisson.getString("end_time"));
+                            hashMap.put("neederid",invitedmisson.getInt("neederid"));
+                            hashMap.put("desc", invitedmisson.getString("desc"));
+                            hashMap.put("helpid",invitedmisson.getInt("id"));
+                            hashMap.put("regDate", invitedmisson.getString("regDate"));
+                            JSONObject location = new JSONObject(invitedmisson.getString("location"));
+                            hashMap.put("x",location.getDouble("x"));
+                            hashMap.put("y",location.getDouble("y"));
+                            invitedMission.add(hashMap);
+                        }
+                        missionListener.onInvitedSucceed(invitedMission);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        missionListener.onError("获取数据失败！");
+                    }
+                } else {
+                    missionListener.onError("连接服务器失败！");
+                }
+            }
+        }.execute(phoneNum);
+    }
+
+    public interface OnMissionListener {
+        void onMissionSucceed(List<HashMap<String,Object>> mission);
+        void onInvitedSucceed(List<HashMap<String,Object>> invitedMission);
+        void onError(String errorMsg);
+    }
+
+    public HashMap<String, Object> getMission(int position) {return mission.get(position);}
+
+    public HashMap<String,Object> getInvitedMission(int position){return invitedMission.get(position);}
+
+    public List<HashMap<String,Object>> getMissionList(){return mission;}
+
+    public List<HashMap<String,Object>> getInvitedMissionList(){return invitedMission;}
+
+}

@@ -1,0 +1,55 @@
+package com.fujinbang.map;
+
+import android.content.Context;
+import android.view.ViewGroup;
+
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.Marker;
+import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.model.LatLng;
+import com.fujinbang.R;
+import com.fujinbang.view.CircleImageView;
+import com.fujinbang.view.MapCircleImageView;
+
+/**
+ * Created by Administrator on 2016/5/17.
+ * 管理地图上的覆盖物，显示不同用户的头像在对应的位置上
+ */
+public class MarkerManager {
+
+    private BaiduMap map;
+
+    private Context context;
+
+    private static MarkerManager singleton;
+
+    private MarkerManager(BaiduMap map, Context context) {
+        this.map = map;
+        this.context = context;
+    }
+
+    public static MarkerManager getInstance(BaiduMap map, Context context) {
+        if (singleton == null) {
+            synchronized (MarkerManager.class) {
+                if (singleton == null) {
+                    singleton = new MarkerManager(map, context);
+                }
+            }
+        }
+        singleton.map = map;
+        singleton.context = context;
+        return singleton;
+    }
+
+    public final void updateMarker(LatLng pos) {
+        map.clear();
+        MarkerOptions me = new MarkerOptions();
+        MapCircleImageView civ = new MapCircleImageView(context);
+        civ.setImageResource(R.drawable.bb);
+        BitmapDescriptor avatar = BitmapDescriptorFactory.fromView(civ);
+        me.icon(avatar).position(pos).flat(false);
+        map.addOverlay(me);
+    }
+}

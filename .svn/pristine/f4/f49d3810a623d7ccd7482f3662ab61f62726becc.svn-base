@@ -1,0 +1,88 @@
+package com.fujinbang.activity;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+
+import com.fujinbang.R;
+import com.fujinbang.checkin.CheckInManager;
+import com.fujinbang.global.StatusBarCompat;
+import com.fujinbang.view.CheckInButton;
+
+public class MissionActivity extends Activity implements View.OnTouchListener {
+
+    LinearLayout ll_qq, ll_wechat, ll_weibo, ll_sms;
+    LinearLayout ll_mission_rule, ll_mission_list, ll_mission_record;
+    ImageView iv_back;
+    CheckInButton cib_check_in;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_mission);
+        StatusBarCompat.compat(this);
+        initView();
+    }
+
+    private final void initView() {
+        iv_back = (ImageView) findViewById(R.id.iv_back);
+        iv_back.setOnTouchListener(this);
+
+        cib_check_in = (CheckInButton) findViewById(R.id.cib_check_in);
+        CheckInManager.init(cib_check_in);
+
+        ll_qq = (LinearLayout) findViewById(R.id.ll_qq);
+        ll_qq.setOnTouchListener(this);
+        ll_wechat = (LinearLayout) findViewById(R.id.ll_wechat);
+        ll_wechat.setOnTouchListener(this);
+        ll_sms = (LinearLayout) findViewById(R.id.ll_sms);
+        ll_sms.setOnTouchListener(this);
+        ll_weibo = (LinearLayout) findViewById(R.id.ll_weibo);
+        ll_weibo.setOnTouchListener(this);
+
+        ll_mission_list = (LinearLayout) findViewById(R.id.ll_mission_list);
+        ll_mission_list.setOnTouchListener(this);
+        ll_mission_record = (LinearLayout) findViewById(R.id.ll_mission_record);
+        ll_mission_record.setOnTouchListener(this);
+        ll_mission_rule = (LinearLayout) findViewById(R.id.ll_mission_rule);
+        ll_mission_rule.setOnTouchListener(this);
+    }
+
+    protected void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_back:
+                MissionActivity.this.finish();
+                break;
+            case R.id.ll_qq:
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                v.setBackgroundColor(0xffe8e8e8);
+                break;
+            case MotionEvent.ACTION_UP:
+                v.setBackgroundColor(0x00000000);
+                onClick(v);
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    public static void startActivity(Context context) {
+        Intent intent = new Intent(context, MissionActivity.class);
+        context.startActivity(intent);
+    }
+}

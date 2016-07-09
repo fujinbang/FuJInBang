@@ -1,0 +1,50 @@
+package com.fujinbang.activity;
+
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.fujinbang.R;
+import com.fujinbang.view.CircleImageView;
+import com.fujinbang.view.TagFlowLayout;
+
+public class UserActivity extends BaseActivity {
+
+    private CircleImageView civ_avatar;
+    private TextView tv_userName, tv_sex, tv_area, tv_distance, tv_desc, tv_pickNum, tv_helpNum;
+    private TagFlowLayout tfl_tag;
+    private Button btn_help, btn_report;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user);
+
+        initView();
+        initTagFlowLayout();
+    }
+
+    private final void initView() {
+        civ_avatar = (CircleImageView) findViewById(R.id.civ_user_avatar);
+        tv_userName = (TextView) findViewById(R.id.tv_user_user_name);
+        tv_desc = (TextView) findViewById(R.id.tv_user_desc);
+        tv_area = (TextView) findViewById(R.id.tv_user_area);
+        tv_distance = (TextView) findViewById(R.id.tv_user_distance);
+        tv_sex = (TextView) findViewById(R.id.tv_user_sex);
+        tv_helpNum = (TextView) findViewById(R.id.tv_user_help_num);
+        tv_pickNum = (TextView) findViewById(R.id.tv_user_pick_num);
+        btn_help = (Button) findViewById(R.id.btn_user_help);
+        btn_report = (Button) findViewById(R.id.btn_user_report);
+    }
+
+    private final void initTagFlowLayout() {
+        tfl_tag = (TagFlowLayout) findViewById(R.id.tfl_user_tag);
+        tfl_tag.addTag("跑腿");
+        tfl_tag.addTag("作业");
+        tfl_tag.addTag("陪聊");
+        tfl_tag.addTag("快递");
+        tfl_tag.addTag("占位");
+        tfl_tag.addTag("抢课");
+    }
+}

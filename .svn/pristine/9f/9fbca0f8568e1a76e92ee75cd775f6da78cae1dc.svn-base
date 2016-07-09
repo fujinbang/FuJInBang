@@ -1,0 +1,114 @@
+package com.fujinbang.activity;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
+
+import com.baidu.location.BDLocation;
+import com.baidu.mapapi.model.LatLng;
+import com.fujinbang.R;
+import com.fujinbang.helplist.HelpListAdapter;
+import com.fujinbang.internet.HelpListRequest;
+import com.fujinbang.helplist.HelpMsg;
+import com.fujinbang.map.LocationManager;
+
+import java.util.List;
+
+public class HelpListFragment extends Fragment {
+    public final static String TAG = "HelpListFragment";
+    /**
+     * 求助列表
+     */
+    private ListView mHelpList;
+    private HelpListAdapter mAdapter;
+    /**
+     * 进度条动画
+     */
+    private RelativeLayout rl_progress;
+    /**
+     * 定位器
+     */
+    private LocationManager.OnLocationListener mLocationListener;
+    private LocationManager mLocationManager;
+    /**
+     * 当前位置
+     */
+    private double x, y;
+    /**
+     * 网络请求
+     */
+    HelpListRequest mHelpListRequest;
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_help_list, container, false);
+
+        initListView(view);
+        initProgressBar(view);
+        initLocation();
+
+        return view;
+    }
+
+    private final void initLocation() {
+        mLocationManager = LocationManager.getInstance(getContext());
+        mLocationListener = new LocationManager.OnLocationListener() {
+            @Override
+            public void onRecieveLocation(BDLocation location) {
+                x = location.getLatitude();
+                y = location.getLongitude();
+
+                refreshData((float) x, (float) y, 10);
+            }
+        };
+    }
+
+    private final void initProgressBar(View view) {
+        rl_progress = (RelativeLayout) view.findViewById(R.id.rl_helplist_progress);
+        rl_progress.setVisibility(View.VISIBLE);
+    }
+
+    private final void initListView(View view) {
+        mAdapter = new HelpListAdapter(getContext());
+        mHelpList = (ListView) view.findViewById(R.id.lv_list_for_help);
+        mHelpList.setAdapter(mAdapter);
+    }
+
+    private final void refreshData(final float x, final float y, final int dataSize) {
+        if (mHelpListRequest == null) mHelpListRequest = new HelpListRequest(getContext());
+        mHelpListRequest.getHelpList(x, y, dataSize, new HelpListRequest.OnHelpListRequestListener() {
+            @Override
+            public void onSuccess(List<HelpMsg> list) {
+                mAdapter.updateList(list, new LatLng(x, y));
+                rl_progress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onError(String desc) {
+                Log.e(TAG, "helpList refresh data error:" + desc);
+                Toast.makeText(getContext().getApplicationContext(), "获取求助列表失败！", Toast.LENGTH_SHORT).show();
+                rl_progress.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mLocationManager.addOnLocationListener(mLocationListener);
+        mLocationManager.requestRightNow();
+    }
+
+    @Override
+    public void onDestroy() {
+        mLocationManager.removeOnLocationListener(mLocationListener);
+        super.onDestroy();
+    }
+}

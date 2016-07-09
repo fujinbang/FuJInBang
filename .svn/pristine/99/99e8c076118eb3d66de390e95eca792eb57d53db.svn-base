@@ -1,0 +1,121 @@
+package com.fujinbang.presenter;
+
+import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.fujinbang.activity.iactivity.IHelpListFragment;
+import com.fujinbang.global.SimpleDataBase;
+import com.fujinbang.helplist.HelpMsg;
+import com.fujinbang.internet.HelpListRequest;
+import com.fujinbang.presenter.ipresenter.IHelpListPresenter;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
+/**
+ * Created by Administrator on 2016/5/29.
+ */
+public class HelpListPresenter implements IHelpListPresenter {
+
+    private final static String TAG = "zy";
+    private HelpListRequest request;
+    private IHelpListFragment view;
+    private Context context;
+
+    public HelpListPresenter(IHelpListFragment view) {
+        this.context = view.getFragmentContext();
+        this.view = view;
+        request = new HelpListRequest(context);
+    }
+
+    @Override
+    public void joinHelpList(String token, int helpId) {
+        request.joinHelp(token, helpId, new HelpListRequest.OnJoinHelpListener() {
+            @Override
+            public void onSuccess(String desc) {
+                view.showProgressBar();
+                view.updateListContent();
+                Toast.makeText(context.getApplicationContext(), "接单成功！", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String desc) {
+                Log.e("zy", "join help list error:" + desc);
+                Toast.makeText(context.getApplicationContext(), "接单失败！", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void getHelpList(float x, float y, int dataSize) {
+        request.getHelpList(x, y, dataSize, new HelpListRequest.OnHelpListRequestListener() {
+            @Override
+            public void onSuccess(final List<HelpMsg> list) {
+                String phoneNum = new SimpleDataBase(context).getPhoneNum();
+                getJoinedList(phoneNum, list);
+            }
+
+            @Override
+            public void onUserName(int index, String userName) {
+            }
+
+            @Override
+            public void onError(String desc) {
+                Log.e(TAG, "helpList refresh data error:" + desc);
+                Toast.makeText(context.getApplicationContext(), "获取求助列表失败！", Toast.LENGTH_SHORT).show();
+                view.hideProgressBar();
+            }
+        });
+    }
+
+    private final void getJoinedList(String phoneNum, final List<HelpMsg> list) {
+        final List<HelpMsg> newList = new ArrayList<>();
+        request.getJoinedList(phoneNum, new HelpListRequest.OnJoinedListListener() {
+            @Override
+            public void onSuccess(HashSet<Integer> attend, HashSet<Integer> post) {
+                for (HelpMsg msg : list) {
+                    Integer id = msg.getId();
+                    if (!attend.contains(id) && !post.contains(id)) {
+                        newList.add(msg);
+                    }
+                }
+                refreshUserName(newList);
+            }
+
+            @Override
+            public void onError(String desc) {
+                Log.e(TAG, "get joined list error:" + desc);
+            }
+        });
+    }
+
+    private final void refreshUserName(final List<HelpMsg> list) {
+        final int len = list.size();
+        for (int i = 0; i < len; i++) {
+            HelpMsg msg = list.get(i);
+            request.getUserName(msg.getNeederId(), i, new HelpListRequest.OnHelpListRequestListener() {
+                @Override
+                public void onSuccess(List<HelpMsg> list) {
+                }
+
+                @Override
+                public void onUserName(int index, String userName) {
+                    list.get(index).setUserName(userName);
+                    if (index == len - 1) {
+                        view.setHelpList(list);
+                        view.hideProgressBar();
+                    }
+                }
+
+                @Override
+                public void onError(String desc) {
+                    Log.e(TAG, "userName refresh data error:" + desc);
+                    Toast.makeText(context.getApplicationContext(), "获取求助列表失败！", Toast.LENGTH_SHORT).show();
+                    view.hideProgressBar();
+                }
+            });
+        }
+    }
+}

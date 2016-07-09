@@ -1,0 +1,51 @@
+package com.fujinbang.map;
+
+import android.content.Context;
+import android.util.Log;
+
+import com.baidu.location.Poi;
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.PoiInfo;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+
+import java.util.List;
+
+/**
+ * Created by Administrator on 2016/6/16.
+ */
+public class PoiManager {
+
+    private PoiManager() {
+    }
+
+    public static void getPoi(final LatLng latLng, final OnPoiSearchListener listener) {
+        GeoCoder geoCoder = GeoCoder.newInstance();
+        geoCoder.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
+            @Override
+            public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
+            }
+
+            @Override
+            public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
+                List<PoiInfo> list = reverseGeoCodeResult.getPoiList();
+                if (listener != null) {
+                    if (list.size() > 0) {
+                        listener.onGetPoi(list.get(0).name);
+                    } else {
+                        listener.onGetPoi("未知位置");
+                    }
+                }
+            }
+        });
+        ReverseGeoCodeOption option = new ReverseGeoCodeOption().location(latLng);
+        geoCoder.reverseGeoCode(option);
+    }
+
+    public interface OnPoiSearchListener {
+        void onGetPoi(String poiName);
+    }
+}

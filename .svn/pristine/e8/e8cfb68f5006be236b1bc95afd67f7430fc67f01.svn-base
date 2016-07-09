@@ -1,0 +1,65 @@
+package com.fujinbang.presenter;
+
+import android.util.Log;
+
+import com.fujinbang.activity.iactivity.IHelpListFragment;
+import com.fujinbang.internet.IRequest.HelpListRequest;
+import com.fujinbang.presenter.ipresenter.IHelpListPresenter;
+
+import org.json.JSONObject;
+
+import retrofit2.Retrofit;
+import rx.Observer;
+import rx.Subscriber;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+
+/**
+ * Created by Administrator on 2016/6/1.
+ */
+public class HelpListPresenter implements IHelpListPresenter {
+
+    private IHelpListFragment view;
+
+    public HelpListPresenter(IHelpListFragment view) {
+        this.view = view;
+    }
+
+    @Override
+    public void joinHelpList(String token, int helpId) {
+
+    }
+
+    /**
+     * 获取坐标（x，y）附近的求助列表，数量为limited
+     *
+     * @param x       经度
+     * @param y       纬度
+     * @param limited 求助信息数量
+     */
+    @Override
+    public void getHelpList(float x, float y, int limited) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://120.24.240.199:6789").build();
+        HelpListRequest request = retrofit.create(HelpListRequest.class);
+        request.getHelpList(x, y, limited)
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<JSONObject>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        Log.i("zy","help list request error");
+                    }
+
+                    @Override
+                    public void onNext(JSONObject object) {
+                        Log.i("zy", "rejava:" + object);
+                    }
+                });
+
+    }
+}

@@ -1,0 +1,48 @@
+package com.fujinbang.internet;
+
+import android.content.Context;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+/**
+ * Created by Administrator on 2016/6/12.
+ */
+public class PayRequest extends InternetRequest {
+    public PayRequest(Context context) {
+        super(context);
+    }
+
+    public void getPrepareId(int fee, String desc, final OnPayListener listener) {
+        String url = "http://120.24.240.199:6789/pay/wx/unified";
+        JSONObject post = new JSONObject();
+        try {
+            post.put("body", desc);
+            post.put("total_fee", fee);
+            getJsonObject(url, post, new OnResponseListener<JSONObject>() {
+                @Override
+                public void onSuccess(JSONObject object) {
+                    if (listener != null) listener.onSuccess(json2String(object));
+                }
+
+                @Override
+                public void onError(String desc, int statusCode) {
+                    if (listener != null) listener.onError(desc);
+                }
+            });
+        } catch (JSONException e) {
+            if (listener != null) listener.onError(e.toString());
+        }
+
+    }
+
+    public interface OnPayListener {
+        void onSuccess(String prepareId);
+
+        void onError(String desc);
+    }
+
+    private final String json2String(JSONObject object) {
+        return object.optString("prepayid");
+    }
+}

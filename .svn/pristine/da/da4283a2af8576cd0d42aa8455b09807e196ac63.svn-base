@@ -1,0 +1,170 @@
+package com.fujinbang.activity;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.fujinbang.R;
+import com.fujinbang.global.StatusBarCompat;
+
+public class SetActivity extends Activity implements View.OnTouchListener {
+
+    private LinearLayout ll_set_root, ll_set_about, ll_set_feedback, ll_set_msg_alert, ll_set_cooperation, ll_set_exit, ll_set_secret, ll_set_security;
+    private RelativeLayout rl_set_range;
+    private ImageView iv_back;
+    /**
+     * 选择响应距离的弹出框
+     */
+    private PopupWindow mPopupWindow;
+    private SwitchCompat switchCompat;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_set);
+        StatusBarCompat.compat(this);
+        initView();
+    }
+
+    private final void initView() {
+        ll_set_root = (LinearLayout) findViewById(R.id.ll_set_root);
+        ll_set_about = (LinearLayout) findViewById(R.id.ll_set_about);
+        ll_set_feedback = (LinearLayout) findViewById(R.id.ll_set_feedback);
+        ll_set_cooperation = (LinearLayout) findViewById(R.id.ll_set_cooperation);
+        ll_set_msg_alert = (LinearLayout) findViewById(R.id.ll_set_msg_alert);
+        ll_set_exit = (LinearLayout) findViewById(R.id.ll_set_exit);
+        ll_set_secret = (LinearLayout) findViewById(R.id.ll_set_secret);
+        ll_set_security = (LinearLayout) findViewById(R.id.ll_set_security);
+        rl_set_range = (RelativeLayout) findViewById(R.id.rl_set_range);
+        iv_back = (ImageView) findViewById(R.id.iv_back);
+
+        ll_set_about.setOnTouchListener(this);
+        ll_set_feedback.setOnTouchListener(this);
+        ll_set_cooperation.setOnTouchListener(this);
+        ll_set_msg_alert.setOnTouchListener(this);
+        ll_set_exit.setOnTouchListener(this);
+        ll_set_secret.setOnTouchListener(this);
+        ll_set_security.setOnTouchListener(this);
+        rl_set_range.setOnTouchListener(this);
+        iv_back.setOnTouchListener(this);
+
+        switchCompat = (SwitchCompat) findViewById(R.id.sc_quiet);
+    }
+
+    private final void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_back:
+                SetActivity.this.finish();
+                break;
+            case R.id.ll_set_about:
+                AboutActivity.startActivity(this);
+                break;
+            case R.id.ll_set_feedback:
+                FeedbackActivity.startActivity(this);
+                break;
+            case R.id.rl_set_range:
+                showSetRangeWindow();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                v.setBackgroundColor(0xffe8e8e8);
+                break;
+            case MotionEvent.ACTION_UP:
+                v.setBackgroundColor(0x00000000);
+                onClick(v);
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    private final void showSetRangeWindow() {
+        View view = LayoutInflater.from(this).inflate(R.layout.popupwindow_set_range, null);
+        final LinearLayout ll_800 = (LinearLayout) view.findViewById(R.id.ll_800);
+        final LinearLayout ll_1000 = (LinearLayout) view.findViewById(R.id.ll_1000);
+        final LinearLayout ll_1500 = (LinearLayout) view.findViewById(R.id.ll_1500);
+        final LinearLayout ll_2000 = (LinearLayout) view.findViewById(R.id.ll_2000);
+        final LinearLayout ll_3000 = (LinearLayout) view.findViewById(R.id.ll_3000);
+        final LinearLayout ll_cancel = (LinearLayout) view.findViewById(R.id.ll_set_cancel);
+
+        ll_800.setOnTouchListener(onRangeTouchListener);
+        ll_1000.setOnTouchListener(onRangeTouchListener);
+        ll_1500.setOnTouchListener(onRangeTouchListener);
+        ll_2000.setOnTouchListener(onRangeTouchListener);
+        ll_3000.setOnTouchListener(onRangeTouchListener);
+        ll_cancel.setOnTouchListener(onRangeTouchListener);
+
+        mPopupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
+        mPopupWindow.setTouchable(true);
+        mPopupWindow.showAtLocation(ll_set_root, Gravity.NO_GRAVITY, 0, 0);
+    }
+
+    /**
+     * 处理响应范围的触摸事件
+     */
+    View.OnTouchListener onRangeTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    v.setBackgroundColor(0xffe8e8e8);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    v.setBackgroundResource(R.drawable.zy_linearlayout_bg);
+                    this.onClick(v);
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        }
+
+        private final void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.ll_800:
+                    break;
+                case R.id.ll_1000:
+                    break;
+                case R.id.ll_1500:
+                    break;
+                case R.id.ll_2000:
+                    break;
+                case R.id.ll_3000:
+                    break;
+                case R.id.ll_set_cancel:
+                    if (mPopupWindow != null) {
+                        mPopupWindow.dismiss();
+                        mPopupWindow = null;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    public static void startActivity(Context context) {
+        Intent intent = new Intent(context, SetActivity.class);
+        context.startActivity(intent);
+    }
+}

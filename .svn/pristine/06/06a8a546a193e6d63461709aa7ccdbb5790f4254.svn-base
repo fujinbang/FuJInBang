@@ -1,0 +1,60 @@
+package com.fujinbang.activity;
+
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
+import android.os.Bundle;
+import android.view.View;
+
+import com.fujinbang.R;
+import com.fujinbang.global.StatusBarCompat;
+import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.ui.EaseContactListFragment;
+import com.hyphenate.easeui.utils.EaseCommonUtils;
+
+import java.util.Hashtable;
+import java.util.Map;
+
+public class ContactActivity extends FragmentActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_contact);
+        StatusBarCompat.compat(this);
+        EaseContactListFragment contactListFragment= new EaseContactListFragment();
+        contactListFragment.setContactsMap(getContactList());
+        contactListFragment.setContactListItemClickListener(new EaseContactListFragment.EaseContactListItemClickListener() {
+            @Override
+            public void onListItemClicked(EaseUser user) {
+                //跳转帮友信息界面
+            }
+        });
+        contactListFragment.initRightTxt(com.hyphenate.easeui.R.drawable.ease_blue_add, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddContactActivity.startActivity(ContactActivity.this);
+            }
+        });
+        getSupportFragmentManager().beginTransaction().add(R.id.contact_contain, contactListFragment).commit();
+    }
+
+
+    protected Map<String, EaseUser> getContactList(){
+        Map<String, EaseUser> users = new Hashtable<String, EaseUser>();
+        String username = "15626222331";
+        String nick = "张宇";
+        String avatar = "http://o73gf55zi.bkt.clouddn.com/7.png";
+        EaseUser user = new EaseUser(username);
+        user.setNick(nick);
+        user.setAvatar(avatar);
+        EaseCommonUtils.setUserInitialLetter(user);
+        users.put(username, user);
+        return users;
+    }
+
+    public static void startActivity(Context context) {
+        Intent intent = new Intent(context, ContactActivity.class);
+        context.startActivity(intent);
+    }
+}

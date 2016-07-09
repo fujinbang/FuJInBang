@@ -1,0 +1,46 @@
+package com.fujinbang.presenter;
+
+import android.graphics.Bitmap;
+import android.util.Log;
+
+import com.fujinbang.activity.IntegrationActivity;
+import com.fujinbang.global.SimpleDataBase;
+import com.fujinbang.internet.UserMsgRequest;
+import com.fujinbang.setting.User;
+
+/**
+ * Created by Administrator on 2016/6/10.
+ */
+public class IntegrationPresenter {
+
+    private IntegrationActivity view;
+    UserMsgRequest request;
+
+    public IntegrationPresenter(IntegrationActivity view) {
+        this.view = view;
+        request = new UserMsgRequest(view.getActivityContext());
+    }
+
+    public void updateIntegration(String token) {
+
+        request.getUserMsg(token, new UserMsgRequest.OnUserListener() {
+            @Override
+            public void onSucess(User user) {
+                int integration = user.getScore();
+                view.setIntegration(integration);
+                new SimpleDataBase(view.getActivityContext()).putIntegration(integration);
+            }
+
+            @Override
+            public void onAvatar(Bitmap Avatar) {
+
+            }
+
+            @Override
+            public void onError(String error) {
+                view.showToast("网路异常");
+                Log.e("zy", "integration presenter error " + error);
+            }
+        });
+    }
+}

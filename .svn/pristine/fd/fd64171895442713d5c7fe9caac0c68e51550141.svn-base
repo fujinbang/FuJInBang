@@ -1,0 +1,91 @@
+package com.fujinbang.conversation;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.hyphenate.chat.EMConversation;
+
+import java.util.HashMap;
+import java.util.List;
+
+import com.fujinbang.view.CircleImageView;
+import com.fujinbang.R;
+
+/**
+ * Created by VITO on 2016/5/17.
+ * 系统消息listView适配器
+ */
+public class SystemMsgAdapter extends BaseAdapter {
+    private LayoutInflater mInflater;//得到一个LayoutInfalter对象用来导入布局
+    private EMConversation SysMsg;
+    public SystemMsgAdapter(Context context , EMConversation SysMsg) {
+        this.mInflater = LayoutInflater.from(context);
+        this.SysMsg = SysMsg;
+    }
+    @Override
+    public int getCount() {
+        return 1;
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return SysMsg;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
+        if (convertView == null) {
+            convertView = mInflater.inflate(R.layout.item_else,null);
+            holder = new ViewHolder();
+            /*得到各个控件的对象*/
+            holder.name = (TextView) convertView.findViewById(R.id.item_else_name);
+            holder.msg = (TextView) convertView.findViewById(R.id.item_else_msg);
+            holder.msgNum = (TextView) convertView.findViewById(R.id.item_else_msg_num);
+            holder.time = (TextView) convertView.findViewById(R.id.item_else_time);
+            holder.img = (CircleImageView) convertView.findViewById(R.id.item_else_img);
+            holder.delBtn = (RelativeLayout) convertView.findViewById(R.id.item_else_delete_button);
+            convertView.setTag(holder);//绑定ViewHolder对象
+        }
+        else{
+            holder = (ViewHolder)convertView.getTag();//取出ViewHolder对象
+        }
+        /*设置TextView显示的内容，即我们存放在动态数组中的数据*/
+        holder.name.setText("附近帮");
+        holder.msg.setText(SysMsg.getLastMessage().toString());
+        holder.time.setText(String.valueOf(SysMsg.getLastMessage().getMsgTime()));
+        holder.msgNum.setText(SysMsg.getUnreadMsgCount());
+        //设置头像
+        //holder.img.setImageResource();
+
+        holder.delBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //删除操作
+            }
+        });
+
+
+
+        return convertView;
+    }
+    /*存放控件*/
+    public final class ViewHolder{
+        TextView name;
+        TextView msg;
+        TextView msgNum;
+        TextView time;
+        CircleImageView img;
+        RelativeLayout delBtn;
+    }
+}

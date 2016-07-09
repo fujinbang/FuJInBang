@@ -1,0 +1,58 @@
+apply plugin: 'com.android.application'
+
+android {
+    signingConfigs {
+        config {
+            keyAlias 'fujinbang'
+            keyPassword '3.1415@fujinbang'
+            storeFile file('D:/androidSDK/fujinbang.jks')
+            storePassword '3.1415@fujinbang'
+        }
+    }
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
+    defaultConfig {
+        applicationId "com.fujinbang"
+        minSdkVersion 16
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+        signingConfig signingConfigs.config
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+        debug {
+            signingConfig signingConfigs.config
+        }
+    }
+    productFlavors {
+    }
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.2.1'
+    compile project(':lib_dateTimePicker')
+    compile project(':easeui')
+    compile project(':onekeyshare')
+    compile files('libs/GetuiExt-2.0.3.jar')
+    compile files('libs/GetuiSDK2.8.1.0.jar')
+    compile files('libs/Volley.jar')
+    //    compile files('libs/BaiduLBS_Android.jar')
+    //    compile files('libs/baidumapapi_map_v3_7_3.jar')
+    //    compile files('libs/baidumapapi_base_v3_7_3.jar')
+    //    compile files('libs/baidumapapi_cloud_v3_7_3.jar')
+    //    compile files('libs/baidumapapi_radar_v3_7_3.jar')
+    //    compile files('libs/baidumapapi_search_v3_7_3.jar')
+    //    compile files('libs/baidumapapi_util_v3_7_3.jar')
+    compile project(':clipimageview')
+    compile files('libs/android-async-http-1.4.9.jar')
+    compile files('libs/qiniu-android-sdk-7.2.0.jar')
+    compile files('libs/happy-dns-0.2.7.jar')
+    compile files('libs/okhttp-3.3.0.jar')
+    compile files('libs/okio-1.8.0.jar')
+}

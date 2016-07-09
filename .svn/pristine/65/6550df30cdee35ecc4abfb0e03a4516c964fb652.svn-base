@@ -1,0 +1,130 @@
+package com.fujinbang.map;
+
+import android.content.Context;
+import android.util.Log;
+import android.view.View;
+
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.utils.DistanceUtil;
+import com.fujinbang.global.SimpleDataBase;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
+/**
+ * Created by Administrator on 2016/5/17.
+ */
+public class LocationManager {
+
+    /**
+     * 单例
+     */
+    private static LocationManager singleInstance;
+    /**
+     * 百度定位
+     */
+    private LocationClient mLocationClient;
+
+    private Context mContext;
+
+    private HashSet<OnLocationListener> listeners = new HashSet<>();
+
+    private LocationManager(Context context) {
+        mContext = context;
+        initLocationClient();
+    }
+
+    public static LocationManager getInstance(Context context) {
+        if (singleInstance == null) {
+            synchronized (LocationManager.class) {
+                if (singleInstance == null) {
+                    singleInstance = new LocationManager(context);
+                }
+            }
+        }
+
+        singleInstance.mContext = context;
+        return singleInstance;
+    }
+
+    /**
+     * 开始定位 每五秒回调一次
+     */
+    public final void start() {
+        if (mLocationClient == null)
+            initLocationClient();
+        mLocationClient.start();
+    }
+
+    /**
+     * 停止定位
+     */
+    public final void stop() {
+        if (mLocationClient != null) {
+            mLocationClient.stop();
+            mLocationClient = null;
+        }
+    }
+
+    /**
+     * 马上向定位服务请求要获取位置
+     */
+    public final void requestRightNow() {
+        if (mLocationClient != null)
+            mLocationClient.requestLocation();
+    }
+
+    /**
+     * 初始化百度定位器
+     */
+    private void initLocationClient() {
+        mLocationClient = new LocationClient(mContext.getApplicationContext());
+        LocationClientOption option = new LocationClientOption();
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+        //返回国测局经纬度坐标系：gcj02 返回百度墨卡托坐标系 ：bd09 返回百度经纬度坐标系 ：bd09ll
+        option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
+        option.setScanSpan(20000);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
+        option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
+        option.setOpenGps(true);//可选，默认false,设置是否使用gps
+        option.setLocationNotify(true);//可选，默认false，设置是否当gps有效时输出GPS结果
+        option.setIsNeedLocationDescribe(true);//可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
+        option.setIsNeedLocationPoiList(true);//可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
+        option.setIgnoreKillProcess(true);//可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
+        option.SetIgnoreCacheException(false);//可选，默认false，设置是否收集CRASH信息，默认收集
+        //option.setEnableSimulateGps(true);//可选，默认false，设置是否需要过滤gps仿真结果，默认需要
+        mLocationClient.setLocOption(option);
+        mLocationClient.registerLocationListener(new BDLocationListener() {//注册监听函数
+            @Override
+            public void onReceiveLocation(BDLocation location) {
+                SimpleDataBase db = new SimpleDataBase(mContext);
+                db.putLocationX(location.getLatitude());
+                db.putLocationY(location.getLongitude());
+                if (!listeners.isEmpty()) {
+                    for (OnLocationListener listener : listeners) {
+                        if (listener != null)
+                            listener.onRecieveLocation(location);
+                    }
+                }
+            }
+        });
+    }
+
+    public final void addOnLocationListener(OnLocationListener listener) {
+        listeners.add(listener);
+        Log.i("zy", "listeners add listener");
+    }
+
+    public final void removeOnLocationListener(OnLocationListener listener) {
+        boolean success = listeners.remove(listener);
+        Log.i("zy", "listeners remove" + success);
+    }
+
+    public interface OnLocationListener {
+        void onRecieveLocation(BDLocation location);
+    }
+}

@@ -35,6 +35,8 @@ public class UrlConstant {
 
     public static final String label = "http://120.24.240.199:6789/user/label";//与标签相关的操作
 
+    public static final String feedback = "http://120.24.240.199:6789/feedback";//用户反馈
+
     public static final String qiniu = "http://o73gf55zi.bkt.clouddn.com/";//七牛存储相关
     public static final String qiniuUpload = "http://up.qiniu.com";//七牛上传
 }

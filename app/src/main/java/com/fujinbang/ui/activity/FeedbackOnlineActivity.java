@@ -7,19 +7,29 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fujinbang.R;
+import com.fujinbang.presenter.FeedBackPresenter;
 
 public class FeedbackOnlineActivity extends BaseActivity implements View.OnTouchListener {
+
+    private FeedBackPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback_online);
 
+        initPresenter();
         initView();
+    }
+
+    private final void initPresenter() {
+        presenter = new FeedBackPresenter(this);
     }
 
     private final void initView() {
@@ -27,8 +37,9 @@ public class FeedbackOnlineActivity extends BaseActivity implements View.OnTouch
         Button btn_ok = (Button) findViewById(R.id.btn_feedback_online_ok);
         TextView title = (TextView) findViewById(R.id.title_feedback_online);
         TextView hint = (TextView) findViewById(R.id.hint_feedback_online);
+        final EditText et_content = (EditText) findViewById(R.id.et_feedback_online_content);
 
-        if (getIntent().getBooleanExtra("flag", false)){
+        if (getIntent().getBooleanExtra("flag", false)) {
             title.setText("举报");
             hint.setText("举报内容");
             hint.setTextColor(0xffff0000);
@@ -38,7 +49,8 @@ public class FeedbackOnlineActivity extends BaseActivity implements View.OnTouch
         btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                presenter.feedback(et_content.getText().toString());
+                finish();
             }
         });
     }
@@ -78,5 +90,9 @@ public class FeedbackOnlineActivity extends BaseActivity implements View.OnTouch
                 break;
         }
         return true;
+    }
+
+    public void showToast(String str) {
+        Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
     }
 }

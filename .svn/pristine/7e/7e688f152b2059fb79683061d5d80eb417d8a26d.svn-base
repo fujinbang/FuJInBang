@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.fujinbang.view.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:background="#fff">
+
+    <RelativeLayout
+        android:id="@+id/item_else_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="8dp">
+
+            <ImageView
+                android:id="@+id/item_else_img"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true" />
+
+            <TextView
+                android:id="@+id/item_else_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_toRightOf="@+id/item_else_img"
+                android:text="Someone"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:id="@+id/item_else_location"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/item_else_name"
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="8dp"
+                android:layout_toLeftOf="@+id/item_else_msg_num"
+                android:layout_toRightOf="@+id/item_else_img"
+                android:gravity="bottom">
+
+                <ImageView
+                    android:id="@+id/item_else_location_img"
+                    android:layout_width="16dp"
+                    android:layout_height="18dp"
+                    android:background="@drawable/user_location" />
+
+                <TextView
+                    android:id="@+id/item_else_location_dist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_toRightOf="@+id/item_else_location_img"
+                    android:text="86m"
+                    android:textColor="#1989FA" />
+
+                <TextView
+                    android:id="@+id/item_else_msg"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@id/item_else_location_dist"
+                    android:singleLine="true"
+                    android:text="Someone向你发来求助，点击查看"
+                    android:textColor="@android:color/darker_gray" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/item_else_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:text="15:30" />
+
+            <TextView
+                android:id="@+id/item_else_msg_num"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/ease_unread_count_bg"
+                android:gravity="center"
+                android:text="1"
+                android:textColor="@android:color/white" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="50dp"
+        android:layout_height="70dp"
+        android:layout_marginLeft="16dp">
+
+        <RelativeLayout
+            android:id="@+id/item_else_delete_button"
+            android:layout_width="50dp"
+            android:layout_height="70dp"
+            android:background="#ff0000"
+            android:clickable="true">
+
+            <View
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/trash" />
+        </RelativeLayout>
+    </LinearLayout>
+</com.fujinbang.view.SwipeLayout>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- 左边一列 -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_helplist_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:focusable="false"
+            android:text="姓名"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+        <com.fujinbang.view.CircleImageView
+            android:id="@+id/civ_helplist_avatar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:focusable="false"
+            android:src="@drawable/bb" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:focusable="false"
+                android:src="@drawable/helplist_location" />
+
+            <TextView
+                android:id="@+id/tv_helplist_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="100米"
+                android:textColor="@color/colorHelpListBlue"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 中间一列 -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_helplist_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:focusable="false"
+                android:inputType="textMultiLine"
+                android:text="任务描述：帮我到学校饭堂打个饭，送到1栋314寝室"
+                android:textColor="#000000" />
+
+            <LinearLayout
+                android:id="@+id/ll_helplist_recoder_lenght"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="@drawable/chatto_bg_focused"
+                android:clickable="true"
+                android:visibility="gone">
+
+                <View
+                    android:id="@+id/id_recoder_anim"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical|start"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/adj" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <!-- 时间 -->
+        <TextView
+            android:id="@+id/tv_helplist_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:focusable="false"
+            android:text="起止时间：5-5 11:00 至5-6 12：45"
+            android:textColor="#000000"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/tv_helplist_needNum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:focusable="false"
+            android:text="还差： 1 人"
+            android:textColor="#000000" />
+    </LinearLayout>
+
+    <!-- 右边一列 -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_helplist_integration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:text="200积分"
+            android:textColor="@color/colorFuJinBang"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/btn_helplist_accept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/zy_button_bg"
+            android:focusable="false"
+            android:padding="10dp"
+            android:text="接单"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+    </LinearLayout>
+</LinearLayout>

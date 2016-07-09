@@ -1,0 +1,217 @@
+package com.fujinbang.internet;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.util.Log;
+
+import com.fujinbang.helplist.HelpMsg;
+import com.fujinbang.internet.IRequest.IHelpListRequest;
+import com.google.gson.internal.LinkedTreeMap;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Notification;
+import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.functions.Func2;
+import rx.schedulers.Schedulers;
+
+/**
+ * Created by Administrator on 2016/5/7.
+ */
+public class HelpListRequest extends InternetRequest {
+    private IHelpListRequest request;
+
+    public HelpListRequest(Context context) {
+        super(context);
+    }
+
+    public void getAvatar(int id, OnResponseListener<Bitmap> listener) {
+        getBitmap("http://o73gf55zi.bkt.clouddn.com/" + id + ".png", 300, 300, listener);
+    }
+
+    private final IHelpListRequest getRequest() {
+        if (request == null) {
+            request = getRetrofit().create(IHelpListRequest.class);
+        }
+        return request;
+    }
+
+    private final Retrofit getRetrofit() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://120.24.240.199:6789")
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
+        return retrofit;
+    }
+
+    public Observable<HashMap<String, Object>> joinHelp(String token, int helpid) {
+        return getRequest().joinHelp(new IHelpListRequest.JH(token, helpid))
+                .subscribeOn(Schedulers.io());
+    }
+
+    /**
+     * 获取坐标（x，y）附近的求助列表，数量为limited
+     *
+     * @param x       经度
+     * @param y       纬度
+     * @param limited 求助信息数量
+     */
+    public Observable<HelpMsg> getHelpList(float x, float y, int limited, final HashSet<Integer> hashSet) {
+        return getRequest().getHelpList(x, y, limited)
+                .subscribeOn(Schedulers.io())
+                        /**
+                         * 把获取的求助列表 铺平（flatMap）为单个求助信息
+                         */
+                .flatMap(new Func1<HashMap<String, Object>, Observable<LinkedTreeMap<String, Object>>>() {
+                    @Override
+                    public Observable<LinkedTreeMap<String, Object>> call(HashMap<String, Object> hashmap) {
+                        ArrayList<LinkedTreeMap<String, Object>> list = (ArrayList<LinkedTreeMap<String, Object>>) hashmap.get("data");
+                        return Observable.from(list);
+                    }
+                })
+                        /**
+                         * 把重复的求助信息(distinct)去掉
+                         */
+                .distinct(new Func1<LinkedTreeMap<String, Object>, Integer>() {
+                    @Override
+                    public Integer call(LinkedTreeMap<String, Object> helpMsg) {
+                        return (int) ((double) helpMsg.get("id"));
+                    }
+                })
+                        /**
+                         * 把求助信息从LinkedTreeMap映射（map）为HelpMsg
+                         */
+                .map(new Func1<LinkedTreeMap<String, Object>, HelpMsg>() {
+                    @Override
+                    public HelpMsg call(LinkedTreeMap<String, Object> map) {
+                        return HashMap2POJO(map);
+                    }
+                })
+                        /**
+                         * 把自己发布或者自己已参与的求助信息删除
+                         */
+                .filter(new Func1<HelpMsg, Boolean>() {
+                    @Override
+                    public Boolean call(HelpMsg helpMsg) {
+                        return !hashSet.contains(helpMsg.getId());
+                    }
+                })
+                .scan(new Func2<HelpMsg, HelpMsg, HelpMsg>() {
+                    @Override
+                    public HelpMsg call(HelpMsg previous, HelpMsg helpMsg) {
+                        helpMsg.setPos(previous.getPos() + 1);
+                        return helpMsg;
+                    }
+                });
+    }
+
+    /**
+     * 通过用户id获取用户的姓名
+     *
+     * @return
+     * @throws RuntimeException
+     */
+    public final Observable<HelpMsg> getUserName(final HelpMsg helpMsg) throws RuntimeException {
+        return getRequest().getUserMsg(new IHelpListRequest.ID(helpMsg.getId()))
+                .subscribeOn(Schedulers.io())
+                .map(new Func1<HashMap<String, Object>, HelpMsg>() {
+                    @Override
+                    public HelpMsg call(HashMap<String, Object> hashMap) {
+                        String userName = hashMap2String(hashMap);
+                        helpMsg.setUserName(userName);
+                        return helpMsg;
+                    }
+                });
+    }
+
+    /**
+     * 获取用户参与/发布的所有任务的id
+     *
+     * @param phoneNum 用户的手机号码
+     * @return 保存任务id的hashSet
+     * @throws RuntimeException
+     */
+    public final Observable<HashSet<Integer>> getUserHelpList(String phoneNum) throws RuntimeException {
+        return getRequest().getUserHelpList(new IHelpListRequest.phoneNum(phoneNum))
+                .subscribeOn(Schedulers.io())
+                .map(new Func1<HashMap<String, Object>, HashSet<Integer>>() {
+                    @Override
+                    public HashSet<Integer> call(HashMap<String, Object> hashMap) {
+                        return HashMap2UserHelpList(hashMap);
+                    }
+                });
+    }
+
+    /**
+     * 把对应的hashMap转化成保存着任务id的hashSet
+     *
+     * @param hashMap
+     * @return
+     * @throws RuntimeException
+     */
+    private final HashSet<Integer> HashMap2UserHelpList(HashMap<String, Object> hashMap) throws RuntimeException {
+        HashSet<Integer> hashSet = new HashSet<>();
+        if (hashMap.get("attend") instanceof List) {
+            List<LinkedTreeMap> list = (List<LinkedTreeMap>) hashMap.get("attend");
+            for (LinkedTreeMap helpMsg : list) {
+                int id = (int) (double) helpMsg.get("id");
+                hashSet.add(id);
+            }
+        }
+        if (hashMap.get("post") instanceof List) {
+            List<LinkedTreeMap> list = (List<LinkedTreeMap>) hashMap.get("post");
+            for (LinkedTreeMap helpMsg : list) {
+                int id = (int) (double) helpMsg.get("id");
+                hashSet.add(id);
+            }
+        }
+        Log.i("zy", "userHelpMsg:" + hashSet.toString());
+        return hashSet;
+    }
+
+    private final HelpMsg HashMap2POJO(LinkedTreeMap<String, Object> helpMsg) throws RuntimeException {
+        HelpMsg helpmsg = new HelpMsg();
+        helpmsg.setIntegration((int) (double) helpMsg.get("bonus"));
+        helpmsg.setChatGroupId((String) helpMsg.get("chatgroupid"));
+        helpmsg.setStartTime((String) helpMsg.get("start_time"));
+        helpmsg.setNeederId((int) (double) helpMsg.get("neederid"));
+        try {
+            String location = (String) helpMsg.get("location");        //{'x':23.146673,'y':113.353907}
+            JSONObject Location = new JSONObject(location);
+            helpmsg.setX(Location.optDouble("x", 0d));
+            helpmsg.setY(Location.optDouble("y", 0d));
+        } catch (JSONException e) {
+            Log.e("zy", "HelpListRequest hashmap2pojo error" + e);
+        }
+        helpmsg.setNeedPeopleNum((int) (double) helpMsg.get("needPeopleNum"));
+        helpmsg.setDescription((String) helpMsg.get("desc"));
+        helpmsg.setId((int) (double) helpMsg.get("id"));
+        helpmsg.setEndTime((String) helpMsg.get("end_time"));
+        Log.i("zy", "helpMsg:" + helpmsg.toString());
+        return helpmsg;
+    }
+
+    private final String hashMap2String(HashMap<String, Object> userMsg) throws RuntimeException {
+        if (userMsg != null) {
+            Log.i("zy", "userMsg:" + userMsg.toString());
+            LinkedTreeMap<String, Object> map = (LinkedTreeMap<String, Object>) userMsg.get("data");
+            if (map != null)
+                return (String) map.get("nickName");
+        }
+        return "";
+    }
+}
+
+

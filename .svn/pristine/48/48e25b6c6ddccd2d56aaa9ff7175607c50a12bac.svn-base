@@ -1,0 +1,109 @@
+package com.fujinbang.activity;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.fujinbang.R;
+import com.fujinbang.global.SimpleDataBase;
+import com.fujinbang.setting.User;
+import com.fujinbang.setting.UserMsgRequest;
+import com.fujinbang.setting.UserMsgUpload;
+
+public class SettingFragment extends Fragment implements View.OnTouchListener {
+
+    private LinearLayout ll_setting, ll_setting_mall, ll_setting_set, ll_setting_integration,
+            ll_setting_friends, ll_setting_mission;
+
+    private TextView tv_userName, tv_phoneNum;
+
+    private UserMsgRequest userMsgRequest;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_setting, container, false);
+
+        initView(view);
+
+        return view;
+    }
+
+    private final void initView(View view) {
+        ll_setting = (LinearLayout) view.findViewById(R.id.ll_setting);
+        ll_setting_mall = (LinearLayout) view.findViewById(R.id.ll_setting_mall);
+        ll_setting_set = (LinearLayout) view.findViewById(R.id.ll_setting_set);
+        ll_setting_integration = (LinearLayout) view.findViewById(R.id.ll_setting_integration);
+        ll_setting_friends = (LinearLayout) view.findViewById(R.id.ll_setting_friends);
+        ll_setting_mission = (LinearLayout) view.findViewById(R.id.ll_setting_mission);
+        tv_userName = (TextView) view.findViewById(R.id.tv_userName);
+        tv_phoneNum = (TextView) view.findViewById(R.id.tv_phoneNum);
+        ll_setting.setOnTouchListener(this);
+        ll_setting_mall.setOnTouchListener(this);
+        ll_setting_set.setOnTouchListener(this);
+        ll_setting_integration.setOnTouchListener(this);
+        ll_setting_friends.setOnTouchListener(this);
+        ll_setting_mission.setOnTouchListener(this);
+    }
+
+    private final void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ll_setting:
+                SettingActivity.startActivity(getContext());
+                break;
+            case R.id.ll_setting_integration:
+                IntegrationActivity.startActivity(getContext());
+                break;
+            case R.id.ll_setting_mission:
+                MissionActivity.startActivity(getContext());
+                break;
+            case R.id.ll_setting_set:
+                SetActivity.startActivity(getContext());
+                break;
+            case R.id.ll_setting_mall:
+                CreditActivity.startActivity(getContext());
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (userMsgRequest == null) userMsgRequest = new UserMsgRequest(getContext());
+        userMsgRequest.getUserMsg(new SimpleDataBase(getContext()).getToken(), new UserMsgRequest.OnUserListener() {
+            @Override
+            public void onSucess(User user) {
+                tv_userName.setText(user.getUserName());
+                tv_phoneNum.setText("+86 " + user.getPhoneNum());
+            }
+
+            @Override
+            public void onError(String error) {
+                Toast.makeText(getContext(), "获取用户信息失败" + error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                v.setBackgroundColor(0xffe8e8e8);
+                break;
+            case MotionEvent.ACTION_UP:
+                v.setBackgroundColor(0x00000000);
+                onClick(v);
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+}

@@ -1,0 +1,84 @@
+package com.fujinbang.internet;
+
+import android.content.Context;
+
+import com.fujinbang.helplist.HelpMsg;
+import com.fujinbang.internet.InternetRequest;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by Administrator on 2016/5/7.
+ */
+public class HelpListRequest extends InternetRequest {
+
+    public final static String TAG = "InternetRequest";
+
+    public HelpListRequest(Context context) {
+        super(context);
+    }
+
+    public void getHelpList(float lat, float lng, int size, OnHelpListRequestListener listener) {
+        String url = "http://120.24.240.199:6789/help?x=" + lat + "&y=" + lng + "&limit=" + size;
+        get(url, listener);
+    }
+
+    private final void get(String url, final OnHelpListRequestListener listener) {
+        getJsonObject(url, null, new InternetRequest.OnResponseListener<JSONObject>() {
+            @Override
+            public void onSuccess(JSONObject jsonObject) {
+                if (listener != null) {
+                    listener.onSuccess(parseJson(jsonObject));
+                }
+            }
+
+            @Override
+            public void onError(String desc, int statusCode) {
+                if (listener != null) {
+                    listener.onError(statusCode + ": " + desc);
+                }
+            }
+        });
+    }
+
+    public interface OnHelpListRequestListener {
+        void onSuccess(List<HelpMsg> list);
+
+        void onError(String desc);
+    }
+
+    protected static List<HelpMsg> parseJson(JSONObject object) {
+        List<HelpMsg> helpMsgList = new ArrayList<>();
+        JSONArray array = object.optJSONArray("data");
+        if (array != null) {
+            for (int i = 0; i < array.length(); i++) {
+                HelpMsg helpMsg = new HelpMsg();
+                JSONObject jsonHelp = array.optJSONObject(i);
+                if (jsonHelp != null) {
+                    helpMsg.setId(jsonHelp.optInt("id"));
+                    helpMsg.setIntegration(jsonHelp.optInt("bonus"));
+                    helpMsg.setStartTime(jsonHelp.optString("start_time"));
+                    helpMsg.setEndTime(jsonHelp.optString("end_time"));
+                    helpMsg.setNeederId(jsonHelp.optInt("neederid"));
+                    helpMsg.setNeedPeopleNum(jsonHelp.optInt("needPeopleNum"));
+                    helpMsg.setDescription(jsonHelp.optString("desc"));
+
+                    JSONObject location = jsonHelp.optJSONObject("location");
+                    if (location != null) {
+                        helpMsg.setX((float) location.optDouble("x"));
+                        helpMsg.setY((float) location.optDouble("y"));
+                    }
+                }//if jsonHelp != null
+
+                helpMsgList.add(helpMsg);
+            }//for(JSONObject:array)
+        }//if array != null
+        return helpMsgList;
+    }
+}
+
+

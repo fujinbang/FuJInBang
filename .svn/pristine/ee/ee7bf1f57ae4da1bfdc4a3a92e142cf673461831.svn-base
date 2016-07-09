@@ -1,0 +1,244 @@
+package com.fujinbang.conversation;
+
+import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.fujinbang.R;
+import com.fujinbang.global.TimeCalculator;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConversation;
+import com.hyphenate.easeui.EaseConstant;
+import com.hyphenate.easeui.utils.EaseCommonUtils;
+
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.List;
+
+
+/**
+ * Created by VITO on 2016/5/12.
+ * 正在进行的任务，列表适配器
+ */
+public class ConversationListAdapter extends BaseExpandableListAdapter {
+
+    private LayoutInflater mLayoutInflater;
+    private ExpandableListView mListView;
+    private List<HashMap<String,Object>> mMission;
+    public boolean timeTaskFinished = false;
+
+    public ConversationListAdapter(Context context, ExpandableListView listView, List<HashMap<String,Object>> mMission) {
+        mLayoutInflater = LayoutInflater.from(context);
+        this.mListView = listView;
+        this.mMission = mMission;
+    }
+
+    @Override
+    public Object getChild(int groupPosition, int childPosition) {
+        return mMission.get(groupPosition);
+    }
+
+    @Override
+    public long getChildId(int groupPosition, int childPosition) {
+        return groupPosition;
+    }
+
+    @Override
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView,
+                             ViewGroup parent) {
+        ChildViewHolder childViewHolder;
+        View view = convertView;
+        if (view == null) {
+            childViewHolder = new ChildViewHolder();
+            view = mLayoutInflater.inflate(R.layout.item_now_child, null);
+            childViewHolder.desc = (TextView) view.findViewById(R.id.item_now_child_desc);
+            childViewHolder.time = (TextView) view.findViewById(R.id.item_now_child_time);
+            childViewHolder.bonus = (TextView) view.findViewById(R.id.item_now_child_bonus);
+            view.setTag(childViewHolder);
+        } else {
+            childViewHolder = (ChildViewHolder) view.getTag();
+        }
+        childViewHolder.desc.setText(mMission.get(groupPosition).get("desc").toString());
+        childViewHolder.time.setText(mMission.get(groupPosition).get("start_time").toString() +
+                "至" +
+                mMission.get(groupPosition).get("end_time").toString());
+        childViewHolder.bonus.setText(mMission.get(groupPosition).get("bonus").toString() + "积分");
+
+        return view;
+    }
+
+    class ChildViewHolder {
+        TextView desc;
+        TextView time;
+        TextView bonus;
+    }
+
+    @Override
+    public int getChildrenCount(int groupPosition) {
+        return 1;
+    }
+
+    @Override
+    public HashMap<String,Object> getGroup(int groupPosition) {
+        if (groupPosition < mMission.size()) {
+            return mMission.get(groupPosition);
+        }
+        return null;
+    }
+
+    @Override
+    public int getGroupCount() {
+        return mMission.size();
+    }
+
+    @Override
+    public long getGroupId(int groupPosition) {
+        return groupPosition;
+    }
+
+    @Override
+    public View getGroupView(final int groupPosition,final boolean isExpanded, View convertView, ViewGroup parent) {
+        final GroupViewHolder groupViewHolder;
+        if (convertView == null) {
+            convertView = mLayoutInflater.inflate(R.layout.item_mission, null);
+            groupViewHolder = new GroupViewHolder();
+            groupViewHolder.unreadLabel = (TextView) convertView.findViewById(R.id.item_mission_unread);
+            groupViewHolder.avatar = (ImageView) convertView.findViewById(R.id.item_mission_avatar);
+            groupViewHolder.expandBtn = (ImageView) convertView.findViewById(R.id.item_mission_btn);
+            groupViewHolder.time = (TextView) convertView.findViewById(R.id.item_mission_time);
+
+            convertView.setTag(groupViewHolder);
+        } else {
+            groupViewHolder = (GroupViewHolder) convertView.getTag();
+        }
+
+        if (mMission.get(groupPosition).containsKey("restTime")){
+            groupViewHolder.time.setText(mMission.get(groupPosition).get("restTime").toString());
+        }
+
+        groupViewHolder.expandBtn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if (!isExpanded) {
+                            //未展开
+                            groupViewHolder.expandBtn.setBackgroundResource(R.drawable.expanded);
+                            mListView.expandGroup(groupPosition);
+                        } else {
+                            groupViewHolder.expandBtn.setBackgroundResource(R.drawable.unexpanded);
+                            mListView.collapseGroup(groupPosition);
+                        }
+                        break;
+                    default:
+                        break;
+
+                }
+                return true;
+            }
+        });
+
+        // 获取与此用户/群组的会话
+        String groupid = mMission.get(groupPosition).get("chatgroupid").toString();
+        Log.e("groupid", groupid);
+        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(groupid,
+                EaseCommonUtils.getConversationType(EaseConstant.CHATTYPE_GROUP),
+                true);
+
+
+        /*
+        if (conversation.getType() == EMConversation.EMConversationType.GroupChat) {
+            // 群聊消息，显示群聊头像
+            groupViewHolder.avatar.setImageResource(com.hyphenate.easeui.R.drawable.ease_group_icon);
+        }*/
+
+        if (conversation.getUnreadMsgCount() > 0) {
+            // 显示与此用户的消息未读数
+            groupViewHolder.unreadLabel.setText(String.valueOf(conversation.getUnreadMsgCount()));
+            groupViewHolder.unreadLabel.setVisibility(View.VISIBLE);
+        } else {
+            groupViewHolder.unreadLabel.setVisibility(View.INVISIBLE);
+        }
+        return convertView;
+    }
+
+
+
+
+    @Override
+    public boolean hasStableIds() {
+        return false;
+    }
+
+    @Override
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        return true;
+    }
+
+
+    public static class GroupViewHolder {
+        /**
+         * 用户头像
+         */
+        ImageView avatar;
+        /**
+         * 任务剩余时间
+         */
+        TextView time;
+        /**
+         * 消息未读数
+         */
+        TextView unreadLabel;
+        /**
+         * 下拉列表按钮
+         */
+        ImageView expandBtn;
+    }
+
+    int result = 0;
+    private Thread thread;
+    public void start() {
+        thread = new Thread() {
+            public void run() {
+                while (true) {
+                    try {
+                        if (mMission == null || result == mMission.size()) {
+                            timeTaskFinished = true;
+                            break;
+                        }
+                        sleep(1000);
+                        for (int i = 0;i<mMission.size();i++){
+                            if (mMission.get(i).containsKey("restTime")&&mMission.get(i).get("restTime").toString().equals("0:00:00")){
+                                result++;
+                                continue;
+                            }
+                            long second = TimeCalculator.getRestTime(mMission.get(i).get("end_time").toString());
+                            long hour = second / 3600;
+                            long minute = second % 3600 / 60;
+                            long realSecond = second % 3600 % 60;
+                            String m = new DecimalFormat("00").format(minute);
+                            String s = new DecimalFormat("00").format(realSecond);
+                            mMission.get(i).put("restTime", hour + ":" + m + ":" + s);
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        thread.start();
+    }
+
+    public boolean isTimeTaskFinished(){
+        return timeTaskFinished;
+    }
+}

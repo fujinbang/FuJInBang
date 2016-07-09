@@ -1,0 +1,60 @@
+package com.fujinbang.internet;
+
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+/**
+ * Created by VITO on 2016/3/9.
+ * 网络请求
+ */
+public class HttpConnRequest {
+    /**
+     * @param httpUrl
+     *            :请求接口
+     * @param httpArg
+     *            :请求方法
+     * @param obj
+     *            :上传参数
+     */
+
+    public static String request(String httpUrl, String httpArg, JSONObject obj) {
+        BufferedReader reader = null;
+        String result = null;
+        StringBuffer sbf = new StringBuffer();
+        try {
+            URL url = new URL(httpUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setDoOutput(true);
+            connection.setUseCaches(false);
+            connection.setRequestMethod(httpArg);
+            connection.connect();
+
+            DataOutputStream out = new DataOutputStream(connection.getOutputStream());
+            out.writeBytes(obj.toString());
+            out.flush();
+            out.close();
+
+            InputStream is = connection.getInputStream();
+            reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            String strRead = null;
+            while ((strRead = reader.readLine()) != null) {
+                sbf.append(strRead);
+                sbf.append("\r\n");
+            }
+            result = sbf.toString();
+            reader.close();
+            connection.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+}

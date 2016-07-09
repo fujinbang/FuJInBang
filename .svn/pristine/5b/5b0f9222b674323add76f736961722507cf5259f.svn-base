@@ -1,0 +1,42 @@
+package com.fujinbang.presenter;
+
+import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.fujinbang.activity.iactivity.ISettingView;
+import com.fujinbang.global.SimpleDataBase;
+import com.fujinbang.internet.UserMsgUpload;
+import com.fujinbang.presenter.ipresenter.ISettingPresenter;
+
+/**
+ * Created by Administrator on 2016/5/29.
+ */
+public class SettingPresenter implements ISettingPresenter {
+
+    private Context context;
+    private ISettingView view;
+    private UserMsgUpload userMsgUpload;
+
+    public SettingPresenter(ISettingView view) {
+        Context context = view.getActivityContext();
+        userMsgUpload = new UserMsgUpload(context);
+    }
+
+    @Override
+    public void uploadUserName(String userName) {
+        userMsgUpload.uploadName(new SimpleDataBase(context).getToken(), userName, new UserMsgUpload.OnUserUploadListener() {
+            @Override
+            public void OnSuccess(String desc) {
+                view.showToast("更新信息成功！");
+                view.finishActivity();
+            }
+
+            @Override
+            public void OnError(String desc) {
+                Log.e("zy", "save UserName error:" + desc);
+                view.showToast("更新信息失败!");
+            }
+        });
+    }
+}

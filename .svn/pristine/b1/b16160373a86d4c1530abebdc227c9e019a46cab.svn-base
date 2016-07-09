@@ -1,0 +1,152 @@
+package com.fujinbang.activity;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.fujinbang.R;
+import com.fujinbang.activity.iactivity.IIntegrationView;
+import com.fujinbang.global.SimpleDataBase;
+import com.fujinbang.global.StatusBarCompat;
+import com.fujinbang.presenter.IntegrationPresenter;
+
+public class IntegrationActivity extends BaseActivity implements View.OnTouchListener, IIntegrationView {
+
+    private LinearLayout ll_integration_record, ll_integration_rule, ll_integration_security, ll_integration_recharge, ll_integration_withdrawals;
+    private TextView tv_setting_mall, tv_setting_integration;
+    private ImageView iv_back;
+    private IntegrationPresenter presenter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_integration);
+        initPresenter();
+        initView();
+    }
+
+    private final void initView() {
+        ll_integration_record = (LinearLayout) findViewById(R.id.ll_integration_record);
+        ll_integration_record.setOnTouchListener(this);
+
+        ll_integration_rule = (LinearLayout) findViewById(R.id.ll_integration_rule);
+        ll_integration_rule.setOnTouchListener(this);
+
+        ll_integration_security = (LinearLayout) findViewById(R.id.ll_integration_security);
+        ll_integration_security.setOnTouchListener(this);
+
+        tv_setting_mall = (TextView) findViewById(R.id.tv_setting_mall);
+        tv_setting_mall.setOnTouchListener(this);
+
+        tv_setting_integration = (TextView) findViewById(R.id.tv_integration);
+        tv_setting_integration.setText(new SimpleDataBase(this).getIntegration() + "");
+
+        ll_integration_recharge = (LinearLayout) findViewById(R.id.ll_integration_recharge);
+        ll_integration_recharge.setOnTouchListener(pay);
+
+        ll_integration_withdrawals = (LinearLayout) findViewById(R.id.ll_integration_withdrawals);
+        ll_integration_withdrawals.setOnTouchListener(pay);
+
+        iv_back = (ImageView) findViewById(R.id.iv_back);
+        iv_back.setOnTouchListener(this);
+    }
+
+    private final void initPresenter() {
+        presenter = new IntegrationPresenter(this);
+    }
+
+    private final void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_back:
+                finish();
+                break;
+            case R.id.tv_setting_mall:
+                finish();
+                MissionActivity.startActivity(this);
+                break;
+            case R.id.ll_integration_security:
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                v.setBackgroundColor(0xffe8e8e8);
+                break;
+            case MotionEvent.ACTION_UP:
+                v.setBackgroundColor(0xffffffff);
+                onClick(v);
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        presenter.updateIntegration();
+    }
+
+    @Override
+    public Context getActivityContext() {
+        return this;
+    }
+
+    @Override
+    public void showToast(String str) {
+        Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void setIntegration(int integration) {
+        tv_setting_integration.setText(integration + "");
+    }
+
+    public static void startActivity(Context context) {
+        Intent intent = new Intent(context, IntegrationActivity.class);
+        context.startActivity(intent);
+    }
+
+    View.OnTouchListener pay = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    v.setBackgroundColor(0xffe8e8e8);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    v.setBackground(getResources().getDrawable(R.drawable.zy_linearlayout_bg));
+                    this.onClick(v);
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        }
+
+        private final void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.ll_integration_withdrawals:
+                    break;
+                case R.id.ll_integration_recharge:
+                    RechargeActivity.startActivity(IntegrationActivity.this);
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+}

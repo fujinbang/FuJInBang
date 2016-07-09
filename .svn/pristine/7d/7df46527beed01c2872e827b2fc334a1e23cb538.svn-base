@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".activity.MissionRuleActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/colorFuJinBang">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="说明"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="@drawable/zy_textview_bg_xml"
+                android:inputType="textMultiLine"
+                android:padding="10dp"
+                android:text="积分充值
+            \n用户能够通过微信，支付宝进行充值，首次充值有积分赠送
+            \n（1）充5元得50积分；
+            \n（2）充10元得100积分；（首充10元得105）
+            \n（3）充20元得200积分；（首充20元得210）
+            \n（3）充50元得500积分；（首充50元得520）
+            \n（4）充150元得1500积分。（首充150元得1530）
+            \n\n积分提现
+            \n允许用户提现的下限为500积分，即不满500积分不允许用户提现。
+            \n提现选项：
+            \n（1）500积分提现50元；
+            \n（2）700积分提现70元；
+            \n（3）900积分提现90元；
+            \n（4）1000积分提现100元。
+            \n不允许用户充值后未使用积分（包含奖励积分）就提现，即充值后要先使用账号内积分。
+            \n积分签到领取
+            \n来APP签到，签到第一天可领取1积分，连续签到5天后，每天增加5积分，即：
+            \n第一天：1积分
+            \n第二天：2积分
+            \n第三天：3积分
+            \n第四天：4积分
+            \n第五天：5积分
+            \n第六天：5积分
+            \n第七天：5积分
+            \n注：连续签到5天后如果中断领取，又会从1开始；用户每次完成任务都会送取积分。
+            \n"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

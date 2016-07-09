@@ -1,0 +1,88 @@
+package com.fujinbang.internet;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.util.Log;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONObject;
+
+/**
+ * Created by Administrator on 2016/5/6.
+ */
+public abstract class InternetRequest {
+
+    private final static String TAG = "InternetRequest";
+
+    private RequestQueue mRequestQueue;
+
+    public InternetRequest(Context context) {
+        mRequestQueue = Volley.newRequestQueue(context);
+    }
+
+    /**
+     * 从网络上获取一段json
+     *
+     * @param url
+     * @param listener
+     */
+    protected final void getJsonObject(String url, final OnResponseListener<JSONObject> listener) {
+        JsonObjectRequest request = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                if (jsonObject != null)
+                    Log.i(TAG, jsonObject.toString());
+                if (listener != null && jsonObject != null) {
+                    listener.onSuccess(jsonObject);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if (listener != null && volleyError != null) {
+                    listener.onError(volleyError.toString(), 0);
+                }
+            }
+        });
+        mRequestQueue.add(request);
+    }
+
+    /**
+     * 从网络上获取一张图片
+     *
+     * @param url
+     * @param maxWidth  图片最大宽度
+     * @param maxHeight 图片最大长度
+     * @param listener
+     */
+    protected final void getBitmap(String url, int maxWidth, int maxHeight, final OnResponseListener<Bitmap> listener) {
+        ImageRequest request = new ImageRequest(url, new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap bitmap) {
+                if (listener != null && bitmap != null) {
+                    listener.onSuccess(bitmap);
+                }
+            }
+        }, maxWidth, maxHeight, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if (listener != null && volleyError != null) {
+                    listener.onError(volleyError.toString(), volleyError.networkResponse.statusCode);
+                }
+            }
+        });
+        mRequestQueue.add(request);
+    }
+
+    public interface OnResponseListener<T> {
+        void onSuccess(T object);
+
+        void onError(String desc, int statusCode);
+    }
+}

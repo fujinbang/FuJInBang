@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="D:\Android Studio\project\FuJInBang\lib\pingpp\assets"><file name="data.bin" path="D:\Android Studio\project\FuJInBang\lib\pingpp\assets\data.bin"/><file name="pingpp_web.html" path="D:\Android Studio\project\FuJInBang\lib\pingpp\assets\pingpp_web.html"/></source></dataSet><dataSet config="release"><source path="D:\Android Studio\project\FuJInBang\lib\pingpp\src\release\assets"/></dataSet></merger>

@@ -8,7 +8,7 @@ android {
         config {
             keyAlias 'fujinbang'
             keyPassword '3.1415@fujinbang'
-            storeFile file('F:/fujinbang.jks')
+            storeFile file('D:/androidSDK/fujinbang.jks')
             storePassword '3.1415@fujinbang'
         }
     }

@@ -1,0 +1,278 @@
+package com.fujinbang.activity;
+
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.SimpleAdapter;
+import android.widget.Toast;
+
+import com.clipimageview.ClipImageActivity;
+import com.fujinbang.R;
+import com.fujinbang.global.SimpleDataBase;
+import com.fujinbang.setting.SettingAdapter;
+import com.fujinbang.setting.User;
+import com.fujinbang.internet.UserMsgRequest;
+import com.fujinbang.internet.UserMsgUpload;
+import com.fujinbang.view.TagFlowLayout;
+
+import java.io.FileNotFoundException;
+
+public class SettingActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+
+    private ListView lv_setting_message;
+    private SettingAdapter mAdapter;
+
+    private TagFlowLayout tfl_tag;
+
+    private ImageView iv_back;
+
+    private UserMsgUpload mUpload;
+
+    private SimpleDataBase db;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_setting);
+
+        initListView();
+        initBack();
+        initTag();
+    }
+
+    public final void initListView() {
+        mAdapter = new SettingAdapter(this);
+
+        lv_setting_message = (ListView) findViewById(R.id.lv_setting_message);
+        lv_setting_message.setAdapter(mAdapter);
+        lv_setting_message.setOnItemClickListener(this);
+
+        db = new SimpleDataBase(this);
+    }
+
+    public final void initTag() {
+        tfl_tag = (TagFlowLayout) findViewById(R.id.tfl_tag);
+        tfl_tag.setMode(TagFlowLayout.MODE_NORMAL);
+        tfl_tag.addTag("+");
+        tfl_tag.addTag("作业");
+        tfl_tag.addTag("陪聊");
+        tfl_tag.addTag("快递");
+        tfl_tag.addTag("占位");
+        tfl_tag.addTag("抢课");
+        tfl_tag.addTag("跑腿");
+        tfl_tag.setOnClickTagViewListener(new TagFlowLayout.onClickTagViewListener() {
+            @Override
+            public void onClick(View v, String TagName) {
+                if (TagName == "+") {
+                    TagActivity.startActivity(SettingActivity.this);
+                }
+            }
+        });
+    }
+
+    private final void initBack() {
+        iv_back = (ImageView) findViewById(R.id.iv_back);
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SettingActivity.this.finish();
+            }
+        });
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String property = mAdapter.getPropertyByPosition(position);
+        switch (property) {
+            case "头像":
+                getAvatarFromLocal();
+                break;
+            case "昵称":
+                UserNameSettingActivity.startActivity(this, mAdapter.getUserName());
+                break;
+            case "性别":
+                showSexSelectWindow();
+                break;
+            case "邮箱":
+                EmailSettingActivity.startActivity(this, mAdapter.getEmail());
+                break;
+            case "手机号":
+                PhoneNumSettingActivity.startActivity(this, mAdapter.getPhoneNum());
+                break;
+            case "地区":
+                break;
+            default:
+                break;
+        }
+    }
+
+    private final void showSexSelectWindow() {
+        View view = LayoutInflater.from(this).inflate(R.layout.popupwindow_setting_select_sex, null);
+        RadioGroup sex = (RadioGroup) view.findViewById(R.id.rg_sex);
+        RadioButton male = (RadioButton) view.findViewById(R.id.rb_male);
+        RadioButton female = (RadioButton) view.findViewById(R.id.rb_female);
+
+        if (mAdapter.getSex().equals("男")) {
+            male.setChecked(true);
+        } else {
+            female.setChecked(true);
+        }
+
+        sex.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, final int checkedId) {
+                if (mUpload == null) mUpload = new UserMsgUpload(SettingActivity.this);
+
+                UserMsgUpload.OnUserUploadListener onUserUploadListener = new UserMsgUpload.OnUserUploadListener() {
+                    @Override
+                    public void OnSuccess(String desc) {
+                        Toast.makeText(getApplicationContext(), "信息更新成功！", Toast.LENGTH_SHORT).show();
+                        mAdapter.setSex(checkedId == R.id.rb_male);
+                    }
+
+                    @Override
+                    public void OnError(String desc) {
+                        Log.e("zy", "upload sex error:" + desc);
+                        Toast.makeText(getApplicationContext(), "信息更新失败!", Toast.LENGTH_SHORT).show();
+                    }
+                };
+
+                if (checkedId == R.id.rb_male) {
+                    mUpload.uploadSex(db.getToken(), true, onUserUploadListener);
+                } else {
+                    mUpload.uploadSex(db.getToken(), false, onUserUploadListener);
+                }
+            }
+        });
+
+        new AlertDialog.Builder(this).setView(view).setCancelable(true).show();
+    }
+
+    private static final int GET_AVATAR = 1;
+    private static final int GET_CROP_RESULT = 2;
+
+    private void getAvatarFromLocal() {
+        try {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            intent.putExtra("return-data", true);
+            startActivityForResult(intent, GET_AVATAR);
+        } catch (ActivityNotFoundException e) {
+            Intent intent = new Intent(Intent.ACTION_PICK, null);
+            intent.setDataAndType(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+            startActivityForResult(intent, GET_AVATAR);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //从本地获取当前用户的信息并显示在页面上
+        updateUserMsgFromLocal();
+        //从网络上获取当前用户的信息并显示在页面上
+        updateUserMsg();
+    }
+
+    /**
+     * 从本地获取当前用户的信息并显示在页面上
+     */
+    private void updateUserMsgFromLocal() {
+        mAdapter.setPhoneNum(db.getPhoneNum());
+    }
+
+    /**
+     * 从网络上获取当前用户的信息并显示在页面上
+     */
+    private void updateUserMsg() {
+        new UserMsgRequest(this).getUserMsg(db.getToken(), new UserMsgRequest.OnUserListener() {
+            @Override
+            public void onSucess(User user) {
+                mAdapter.setUserName(user.getUserName());
+                mAdapter.setSex(user.isMan());
+                mAdapter.setPhoneNum(user.getPhoneNum());
+                mAdapter.setEmail(user.getEmail());
+                mAdapter.setArea(user.getArea());
+            }
+
+            @Override
+            public void onError(String error) {
+                Toast.makeText(SettingActivity.this, "用户信息获取失败:" + error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == GET_AVATAR && data != null) {
+            ClipImageActivity.startActivityForResult(this, getFilePath(data.getData()), GET_CROP_RESULT);
+        } else if (requestCode == GET_CROP_RESULT && data != null) {
+            Bitmap avatar = ClipImageActivity.getClipBitmap(data);
+            uploadAvatar(avatar);
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private final void uploadAvatar(final Bitmap avatar) {
+        if (mUpload == null) mUpload = new UserMsgUpload(this);
+        mUpload.uploadAvatar(db.getToken(), avatar, new UserMsgUpload.OnUserUploadListener() {
+            @Override
+            public void OnSuccess(String desc) {
+                Toast.makeText(getApplicationContext(), "修改头像成功！", Toast.LENGTH_SHORT).show();
+                mAdapter.setAvatar(avatar);
+            }
+
+            @Override
+            public void OnError(String desc) {
+                Log.e("zy", "SettingActivity upload avatar error:" + desc);
+                Toast.makeText(getApplicationContext(), "上传头像失败！", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * 通过uri获取文件路径
+     *
+     * @param mUri
+     * @return
+     */
+    public String getFilePath(Uri mUri) {
+        try {
+            if (mUri.getScheme().equals("file")) {
+                return mUri.getPath();
+            } else {
+                return getFilePathByUri(mUri);
+            }
+        } catch (FileNotFoundException ex) {
+            return null;
+        }
+    }
+
+    // 获取文件路径通过url
+    private String getFilePathByUri(Uri mUri) throws FileNotFoundException {
+        Cursor cursor = getContentResolver()
+                .query(mUri, null, null, null, null);
+        cursor.moveToFirst();
+        return cursor.getString(1);
+    }
+
+    public static void startActivity(Context context) {
+        Intent intent = new Intent(context, SettingActivity.class);
+        context.startActivity(intent);
+    }
+}

@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "D:\\androidSDK\\zhangyuLib\\ping++pay\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\tips_bg.9.png",
+        "source": "D:\\androidSDK\\zhangyuLib\\ping++pay\\lib\\pingpp_one\\build\\intermediates\\exploded-aar\\ping++pay.lib\\pingpp\\unspecified\\res\\drawable-hdpi-v4\\tips_bg.9.png"
+    },
+    {
+        "merged": "D:\\androidSDK\\zhangyuLib\\ping++pay\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\pingpp_back.png",
+        "source": "D:\\androidSDK\\zhangyuLib\\ping++pay\\lib\\pingpp_one\\build\\intermediates\\exploded-aar\\ping++pay.lib\\pingpp\\unspecified\\res\\drawable-hdpi-v4\\pingpp_back.png"
+    }
+]

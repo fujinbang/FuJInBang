@@ -1,0 +1,103 @@
+package com.fujinbang.global;
+
+import android.os.AsyncTask;
+
+import com.fujinbang.internet.HttpConnRequest;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
+/**
+ * Created by VITO on 2016/5/19.
+ *
+ */
+public class MissionDetail {
+    private static MissionDetail missionDetail;
+    private HashMap<String, HashMap<String, Object>> mission = new HashMap<>();
+    HttpConnRequest httpConnRequest;
+
+    private MissionDetail() {
+    }
+
+    public static MissionDetail getInstance() {
+        if (null == missionDetail) {
+            synchronized (MissionDetail.class) {
+                if (null == missionDetail) {
+                    missionDetail = new MissionDetail();
+                }
+            }
+        }
+        return missionDetail;
+    }
+
+    public void initialize(String userId) {
+        new AsyncTask<String, Integer, String>() {
+            @Override
+            protected String doInBackground(String... params) {
+                try {
+                    JSONObject object = new JSONObject();
+                    object.put("phonenum", params[0]);
+                    return httpConnRequest.request("http://120.24.240.199:6789/helpquery", "POST",object);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                if (result != null) {
+                    mission.clear();
+                    try {
+                        JSONObject object = new JSONObject(result);
+                        JSONArray attend = object.getJSONArray("attend");
+                        for (int i = 0;i<attend.length();i++){
+                            JSONObject attendMisson = attend.getJSONObject(i);
+                            HashMap<String,Object> hashMap = new HashMap<>();
+                            hashMap.put("bonus",attendMisson.getInt("bonus"));
+                            hashMap.put("chatgroupid",attendMisson.getString("chatgroupid"));
+                            hashMap.put("start_time",attendMisson.getString("start_time"));
+                            hashMap.put("end_time",attendMisson.getString("end_time"));
+                            hashMap.put("neederid",attendMisson.getInt("neederid"));
+                            hashMap.put("desc",attendMisson.getString("desc"));
+                            addMission(attendMisson.getString("chatgroupid"), hashMap);
+                        }
+                        JSONArray post = object.getJSONArray("post");
+                        for (int i = 0;i<post.length();i++){
+                            JSONObject postMisson = post.getJSONObject(i);
+                            HashMap<String,Object> hashMap = new HashMap<>();
+                            hashMap.put("bonus",postMisson.getInt("bonus"));
+                            hashMap.put("chatgroupid",postMisson.getString("chatgroupid"));
+                            hashMap.put("start_time",postMisson.getString("start_time"));
+                            hashMap.put("end_time",postMisson.getString("end_time"));
+                            hashMap.put("neederid",postMisson.getInt("neederid"));
+                            hashMap.put("desc", postMisson.getString("desc"));
+                            addMission(postMisson.getString("chatgroupid"), hashMap);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.execute(userId);
+    }
+
+    public HashMap<String, HashMap<String, Object>> getMissionList() {
+        return mission;
+    }
+
+    public HashMap<String, Object> getMission(String missionId) {
+        return mission.get(missionId);
+    }
+
+
+    public void addMission(String missionId, HashMap<String, Object> hashMap) {
+        mission.put(missionId, hashMap);
+    }
+
+    public void removeMission(String missionId) {
+        mission.remove(missionId);
+    }
+}

@@ -1,0 +1,40 @@
+package com.fujinbang.mission;
+
+/**
+ * Created by Administrator on 2016/5/18.
+ */
+public class Mission {
+    private String desc;
+    private int intergration;
+    private boolean isComplete;
+
+    public Mission(String desc, int intergration, boolean isComplete) {
+        this.desc = desc;
+        this.intergration = intergration;
+        this.isComplete = isComplete;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public int getIntergration() {
+        return intergration;
+    }
+
+    public void setIntergration(int intergration) {
+        this.intergration = intergration;
+    }
+
+    public boolean isComplete() {
+        return isComplete;
+    }
+
+    public void setIsComplete(boolean isComplete) {
+        this.isComplete = isComplete;
+    }
+}

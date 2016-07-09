@@ -1,0 +1,51 @@
+package com.fujinbang.activity;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.view.View;
+
+import com.fujinbang.R;
+import com.fujinbang.global.MissionDetail;
+import com.fujinbang.global.StatusBarCompat;
+import com.hyphenate.easeui.EaseConstant;
+import com.hyphenate.easeui.ui.EaseChatFragment;
+
+import cn.sharesdk.onekeyshare.themes.classic.PRTHeader;
+
+
+/**
+ * Created by VITO on 2016/5/13.
+ * 聊天界面
+ */
+public class ChatActivity extends FragmentActivity {
+    private int groupPosition;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_chat);
+        StatusBarCompat.compat(this);
+        Intent it = this.getIntent();
+        this.groupPosition = it.getExtras().getInt("groupPosition");
+        EaseChatFragment chatFragment = new EaseChatFragment();
+        chatFragment.setMyMissionClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MissionDetailActivity.startActivity(ChatActivity.this, groupPosition);
+            }
+        });
+        Bundle args = new Bundle();
+        args.putInt(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_GROUP);
+        args.putString(EaseConstant.EXTRA_USER_ID, MissionDetail.getInstance().getMission(groupPosition).get("chatgroupid").toString());
+        chatFragment.setArguments(args);
+        getSupportFragmentManager().beginTransaction().add(R.id.chat_contain, chatFragment).commit();
+    }
+
+    public static void startActivity(Context context, int groupPosition) {
+        Intent intent = new Intent(context, ChatActivity.class);
+        intent.putExtra("groupPosition", groupPosition);
+        context.startActivity(intent);
+    }
+}

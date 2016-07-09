@@ -1,0 +1,115 @@
+package com.fujinbang.view;
+
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.os.Build;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.widget.EditText;
+
+import com.fujinbang.global.SimpleDataBase;
+
+/**
+ * Created by Administrator on 2016/7/6.
+ */
+public class PasswordEditText extends EditText {
+    /**
+     * 密码的位数
+     */
+    private final static int password_bit_num = 6;
+    /**
+     * 已输入密码的位数
+     */
+    private int password_num;
+
+    private PayDialog.OnPasswordFinish mListener;
+
+    public PasswordEditText(Context context) {
+        super(context);
+        init(context);
+    }
+
+    public PasswordEditText(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(context);
+    }
+
+    public PasswordEditText(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init(context);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public PasswordEditText(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init(context);
+    }
+
+    private final void init(final Context context) {
+        addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                password_num = s.length();
+                String psw = s.toString();
+                boolean correctOrNull = false;
+
+                String psd = new SimpleDataBase(context).getPayPassword();
+                if (psd == "" || psd.equals(psw)) {
+                    correctOrNull = true;
+                }
+
+                if (s.length() >= password_bit_num) {
+                    if (mListener != null)
+                        mListener.onFinish(correctOrNull, psw);
+                }
+            }
+        });
+    }
+
+    public void setOnFinishListener(PayDialog.OnPasswordFinish listener) {
+        mListener = listener;
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        int width = getMeasuredWidth();
+        int height = getMeasuredHeight();
+        int cellWidth = width / password_bit_num;
+
+            /*把前景涂白*/
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(0xffffffff);
+        for (int i = 0; i < password_bit_num; i++)
+            canvas.drawRect(new RectF(i * cellWidth, 0, (i + 1) * cellWidth, height), paint);
+            /*描上边框*/
+        paint.setStrokeWidth(2.0f);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(0xff8E8E8E);
+        for (int i = 0; i < password_bit_num; i++)
+            canvas.drawRect(new RectF(i * cellWidth, 0, (i + 1) * cellWidth, height), paint);
+            /*根据输入密码的位数来画圆点*/
+        int offsetX = cellWidth / 2;
+        int offsetY = height / 2;
+        paint.reset();
+        paint.setColor(0xff000000);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        for (int i = 0; i < password_num; i++)
+            canvas.drawCircle(i * cellWidth + offsetX, offsetY, 15, paint);
+    }
+}

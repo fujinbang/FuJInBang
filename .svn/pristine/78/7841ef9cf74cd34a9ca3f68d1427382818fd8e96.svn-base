@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "C:\\Users\\VITO\\AndroidStudioProjects\\fujinbang\\FuJinBang\\lib_dateTimePicker\\build\\intermediates\\res\\merged\\release\\color\\abc_search_url_text_holo.xml",
+        "source": "C:\\Users\\VITO\\AndroidStudioProjects\\fujinbang\\FuJinBang\\lib_dateTimePicker\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\18.0.0\\res\\color\\abc_search_url_text_holo.xml"
+    },
+    {
+        "merged": "C:\\Users\\VITO\\AndroidStudioProjects\\fujinbang\\FuJinBang\\lib_dateTimePicker\\build\\intermediates\\res\\merged\\release\\color\\date_picker_year_selector.xml",
+        "source": "C:\\Users\\VITO\\AndroidStudioProjects\\fujinbang\\FuJinBang\\lib_dateTimePicker\\src\\main\\res\\color\\date_picker_year_selector.xml"
+    },
+    {
+        "merged": "C:\\Users\\VITO\\AndroidStudioProjects\\fujinbang\\FuJinBang\\lib_dateTimePicker\\build\\intermediates\\res\\merged\\release\\color\\done_text_color.xml",
+        "source": "C:\\Users\\VITO\\AndroidStudioProjects\\fujinbang\\FuJinBang\\lib_dateTimePicker\\src\\main\\res\\color\\done_text_color.xml"
+    },
+    {
+        "merged": "C:\\Users\\VITO\\AndroidStudioProjects\\fujinbang\\FuJinBang\\lib_dateTimePicker\\build\\intermediates\\res\\merged\\release\\color\\date_picker_selector.xml",
+        "source": "C:\\Users\\VITO\\AndroidStudioProjects\\fujinbang\\FuJinBang\\lib_dateTimePicker\\src\\main\\res\\color\\date_picker_selector.xml"
+    }
+]

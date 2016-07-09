@@ -1,0 +1,24 @@
+package com.fujinbang.activity.iactivity;
+
+import com.sleepbot.datetimepicker.time.TimePickerDialog;
+
+/**
+ * Created by Administrator on 2016/6/2.
+ */
+public interface IQuietView {
+    /**
+     * 显示选择时间的窗口
+     * @param listener 选择时间后的回调
+     */
+    void showTimePickDialog(TimePickerDialog.OnTimeSetListener listener);
+
+    /**
+     * 是否是勿扰模式
+     * @param isQuiet
+     */
+    void setQuietMode(boolean isQuiet);
+
+    void showStartTime(String time);
+
+    void showEndTime(String time);
+}

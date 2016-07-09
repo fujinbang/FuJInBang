@@ -1,0 +1,25 @@
+package com.fujinbang.internet.IRequest;
+
+
+import java.util.HashMap;
+import java.util.List;
+
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Query;
+import rx.Observable;
+
+/**
+ * Created by Administrator on 2016/6/1.
+ */
+public interface IHelpListRequest {
+    @GET("/help")
+    Observable<HashMap<String,Object>> getHelpList(@Query("x") float x, @Query("y") float y, @Query("limit") int limit);
+
+    @POST("/helpquery")
+    Observable<HashMap<String,Object>> getUserHelpList(@Body String phoneNum);
+
+    @POST("/user/queryuserinfo")
+    Observable<HashMap<String,Object>> getUserMsg(@Body int id);
+}

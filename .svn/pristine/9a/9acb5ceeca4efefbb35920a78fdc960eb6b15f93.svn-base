@@ -1,0 +1,208 @@
+package com.fujinbang.activity;
+
+import android.content.Context;
+import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ExpandableListView;
+import android.widget.Toast;
+
+import com.fujinbang.R;
+import com.fujinbang.conversation.ConversationListAdapter;
+import com.fujinbang.conversation.HelpListAdapter;
+import com.fujinbang.conversation.SystemMsgAdapter;
+import com.fujinbang.global.MissionDetail;
+import com.fujinbang.seekhelp.MediaManager;
+import com.fujinbang.view.SlideListView;
+import com.hyphenate.EMConnectionListener;
+import com.hyphenate.EMError;
+import com.hyphenate.chat.EMClient;
+
+/**
+ * Created by VITO on 2016/4/24.
+ * 消息界面
+ */
+public class ConversationFragment extends Fragment {
+    Context mContext;
+    ExpandableListView expandListView;
+    SlideListView helpListView, sysMsgListView;
+
+    public ConversationListAdapter conversationListAdapter;
+    public HelpListAdapter helpListAdapter;
+    SystemMsgAdapter systemMsgAdapter;
+
+    protected boolean isConflict;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_conversation, container, false);
+        mContext = this.getContext();
+
+        expandListView = (ExpandableListView) view.findViewById(R.id.expand_listview);
+        expandListView.setGroupIndicator(null);
+        conversationListAdapter = new ConversationListAdapter(mContext, expandListView);
+        expandListView.setAdapter(conversationListAdapter);
+        expandListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                ChatActivity.startActivity(mContext, groupPosition);
+                return true;
+            }
+        });
+
+        helpListView = (SlideListView) view.findViewById(R.id.help_listview);
+        helpListAdapter = new HelpListAdapter(mContext);
+        helpListAdapter.setDelBtnOnClickListener(new HelpListAdapter.DeleteBtnListener() {
+            @Override
+            public void onBtnClick(int position) {
+                MissionDetail.getInstance().getInvitedMissionList().remove(position);
+                helpListAdapter.notifyDataSetChanged();
+                helpListView.turnToNormal();
+                ((MainActivity) getActivity()).setUnreadCount(EMClient.getInstance().chatManager().getUnreadMsgsCount()
+                        + MissionDetail.getInstance().getInvitedMissionList().size());
+            }
+        });
+        helpListView.setAdapter(helpListAdapter);
+        helpListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (helpListView.canClick()) {
+                    PersonalHelpActivity.startActivity(mContext, position);
+                }
+            }
+        });
+
+        sysMsgListView = (SlideListView) view.findViewById(R.id.sys_listview);
+        systemMsgAdapter = new SystemMsgAdapter(mContext, sysMsgListView);
+        sysMsgListView.setAdapter(systemMsgAdapter);
+        sysMsgListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (sysMsgListView.canClick()) {
+                    ChatRobotActivity.startActivity(mContext);
+                }
+            }
+        });
+
+        EMClient.getInstance().addConnectionListener(connectionListener);
+
+        return view;
+    }
+
+    protected EMConnectionListener connectionListener = new EMConnectionListener() {
+        @Override
+        public void onDisconnected(int error) {
+            if (error == EMError.USER_REMOVED || error == EMError.USER_LOGIN_ANOTHER_DEVICE) {
+                isConflict = true;
+            } else {
+                handler.sendEmptyMessage(0);
+            }
+        }
+
+        @Override
+        public void onConnected() {
+            handler.sendEmptyMessage(1);
+        }
+    };
+
+    protected boolean pauseTimeHandler;
+    private Handler timehandler = new Handler(){
+        @Override
+        public void handleMessage(android.os.Message msg) {
+            if (conversationListAdapter!=null){
+                conversationListAdapter.notifyDataSetChanged();
+            }
+            if (!pauseTimeHandler){
+                timehandler.sendEmptyMessageDelayed(0, 1000);
+            }
+        }
+    };
+
+    protected Handler handler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            switch (msg.what) {
+                case 0:
+                    onConnectionDisconnected();
+                    break;
+                case 1:
+                    onConnectionConnected();
+                    break;
+
+                case 2: {
+                    Log.e("cc","刷新了listview");
+                    if (conversationListAdapter!= null){
+                        conversationListAdapter.notifyDataSetChanged();
+                    }
+                    if (helpListAdapter != null){
+                        helpListAdapter.notifyDataSetChanged();
+                    }
+                    if (systemMsgAdapter != null){
+                        systemMsgAdapter.notifyDataSetChanged();
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    };
+
+    /**
+     * 连接到服务器
+     */
+    protected void onConnectionConnected() {
+        //已连接
+    }
+
+    /**
+     * 连接断开
+     */
+    protected void onConnectionDisconnected() {
+        Toast.makeText(mContext, "未连接到服务器", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 刷新页面
+     */
+    public void refresh() {
+        if (!handler.hasMessages(2)) {
+            handler.sendEmptyMessage(2);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        pauseTimeHandler = false;
+        timehandler.sendEmptyMessageDelayed(0, 0);
+        refresh();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        pauseTimeHandler = true;
+        MediaManager.pause();
+        MediaManager.release();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        timehandler.removeCallbacksAndMessages(null);
+        EMClient.getInstance().removeConnectionListener(connectionListener);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (isConflict) {
+            outState.putBoolean("isConflict", true);
+        }
+    }
+}

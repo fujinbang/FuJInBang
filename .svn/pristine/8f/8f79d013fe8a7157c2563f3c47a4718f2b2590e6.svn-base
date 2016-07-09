@@ -1,0 +1,84 @@
+package com.fujinbang.presenter;
+
+import android.util.Log;
+
+import com.fujinbang.activity.PayActivity;
+import com.fujinbang.internet.MD5;
+import com.fujinbang.internet.PayRequest;
+import com.tencent.mm.sdk.modelpay.PayReq;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
+
+import java.util.Calendar;
+import java.util.Random;
+
+/**
+ * Created by Administrator on 2016/6/12.
+ */
+public class PayPresenter {
+
+    private PayActivity view;
+    private PayRequest request;
+
+    public static final int ALIPAY = 1;
+    public static final int WEIXINPAY = 2;
+
+    public PayPresenter(PayActivity view) {
+        this.view = view;
+        this.request = new PayRequest(view.getActivityContext());
+    }
+
+    public void pay(int way) {
+        int fee = view.getFee();
+        String desc = view.getGoodsDescription();
+        if (way == ALIPAY) {
+
+        } else if (way == WEIXINPAY) {
+            request.getPrepareId(fee, desc, new PayRequest.OnPayListener() {
+                @Override
+                public void onSuccess(String prepareId) {
+                    //商户APP工程中引入微信JAR包，调用API前，需要先向微信注册您的APPID，代码如下：
+                    final IWXAPI api = WXAPIFactory.createWXAPI(view.getActivityContext(), null);
+                    // 将该app注册到微信
+                    api.registerApp("wx282a9e2c1a981f0b");
+                    PayReq request = new PayReq();
+                    request.appId = "wx282a9e2c1a981f0b";
+                    request.partnerId = "1344200601";
+                    request.prepayId = prepareId;
+                    request.packageValue = "Sign=WXPay";
+                    request.nonceStr = getRandomString(30);
+                    request.timeStamp = String.valueOf(Calendar.getInstance().getTimeInMillis() / 1000);
+
+                    String A = "appId="+request.appId
+                            +"&nonceStr=" + request.nonceStr
+                            +"&packageValue="+request.packageValue
+                            +"&partnerId="+request.partnerId
+                            +"&prepayId="+request.prepayId
+                            +"&timeStamp="+request.timeStamp
+                            +"&key=8F02318C8DDCE7CE8622158B71E999CE";
+                    request.sign = MD5.getMD5(A).toUpperCase();
+                    api.sendReq(request);
+                }
+
+                @Override
+                public void onError(String desc) {
+                    Log.e("zy", desc);
+                    view.showToast("网络异常");
+                }
+            });
+        }
+    }
+
+    public static String getRandomString(int length) {
+        String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random random = new Random();
+        StringBuffer sb = new StringBuffer();
+
+        for (int i = 0; i < length; ++i) {
+            int number = random.nextInt(62);//[0,62)
+
+            sb.append(str.charAt(number));
+        }
+        return sb.toString();
+    }
+}

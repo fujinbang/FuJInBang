@@ -1,0 +1,97 @@
+package com.fujinbang.checkin;
+
+import android.view.View;
+
+import com.fujinbang.view.CheckInButton;
+
+import java.util.Calendar;
+
+/**
+ * Created by Administrator on 2016/4/23.
+ */
+public class CheckInManager {
+
+    private CheckInButton mCheckInButton;
+
+    private int mDays = 0;
+
+    private int mIntegration = 1;
+
+    private CheckInManager(CheckInButton button) {
+        mCheckInButton = button;
+
+        if (isCheckInToday()) {
+            mCheckInButton.setCheck(true);
+            mCheckInButton.setIntegration(mIntegration);
+        } else if (isCheckInYesterday()) {
+            mCheckInButton.setCheck(false);
+            mCheckInButton.setDays(mDays);
+        } else {
+            mCheckInButton.setCheck(false);
+            mCheckInButton.setDays(0);
+        }
+
+        mCheckInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mCheckInButton.isChecked()) {
+                    checkIn();
+                }
+            }
+        });
+    }
+
+    private final boolean isCheckInToday() {
+        Calendar theLastDay = Calendar.getInstance();
+        theLastDay.setTimeInMillis(getLastDateWithCheckIn());
+
+        Calendar today = Calendar.getInstance();
+
+        int year1 = theLastDay.get(Calendar.YEAR);
+        int year2 = today.get(Calendar.YEAR);
+
+        if (year1 == year2) {
+            int day1 = theLastDay.get(Calendar.DAY_OF_YEAR);
+            int day2 = theLastDay.get(Calendar.DAY_OF_YEAR);
+            return day1 == day2;
+        }
+
+        return false;
+    }
+
+    private final boolean isCheckInYesterday() {
+        Calendar theLastDay = Calendar.getInstance();
+        theLastDay.setTimeInMillis(getLastDateWithCheckIn());
+
+        Calendar today = Calendar.getInstance();
+
+        int year1 = theLastDay.get(Calendar.YEAR);
+        int year2 = today.get(Calendar.YEAR);
+
+        if (year1 == year2) {//是否是同一年的相邻两天
+            int day1 = theLastDay.get(Calendar.DAY_OF_YEAR);
+            int day2 = theLastDay.get(Calendar.DAY_OF_YEAR);
+            return day2 - day1 == 1;
+
+        } else if (year2 - year1 == 1) {//是否刚好是下一年的第一天
+            return theLastDay.get(Calendar.DAY_OF_YEAR) == theLastDay.getActualMaximum(Calendar.DAY_OF_YEAR)
+                    && today.get(Calendar.DAY_OF_YEAR) == 1;
+        }
+        return false;
+    }
+
+    public long getLastDateWithCheckIn() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.getTimeInMillis();
+    }
+
+    public static CheckInManager init(CheckInButton button) {
+        return new CheckInManager(button);
+    }
+
+    public void checkIn() {
+        mIntegration = (mDays + 1 > 7) ? 7 : mDays + 1;
+        mCheckInButton.setIntegration(mIntegration);
+        mCheckInButton.setCheck(true);
+    }
+}

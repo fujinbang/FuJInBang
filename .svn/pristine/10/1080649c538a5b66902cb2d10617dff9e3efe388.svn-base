@@ -1,0 +1,67 @@
+package com.fujinbang.global;
+
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+/**
+ * Created by VITO on 2016/5/23.
+ *
+ */
+public class TimeCalculator {
+    private String t1;
+    private int year,month,day,hour,minute,second;
+    public static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    DecimalFormat decimalFormat = new DecimalFormat("00");
+
+    public TimeCalculator(String t1){
+        this.t1 = t1;
+        init();
+    }
+    private void init(){
+        try {
+            Date date = format.parse(t1);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            year = calendar.get(Calendar.YEAR);
+            month = calendar.get(Calendar.MONTH);
+            day = calendar.get(Calendar.DAY_OF_MONTH);
+            hour = calendar.get(Calendar.HOUR_OF_DAY);
+            minute = calendar.get(Calendar.MINUTE);
+            second = calendar.get(Calendar.SECOND);
+        } catch (Exception e) {e.printStackTrace();}
+    }
+
+    public String getHourMin(){
+        return (hour+":"+decimalFormat.format(minute));
+    }
+    public String getMonthDay(){
+        return ((month+1)+"-"+day);
+    }
+    public String getYearMonth(){
+        return (year+"-"+(month+1));
+    }
+
+    public boolean isSameDate(){
+        boolean isSame = false;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(System.currentTimeMillis()));
+        if (year == calendar.get(Calendar.YEAR))
+            if (month == calendar.get(Calendar.MONTH))
+                if (day == calendar.get(Calendar.DAY_OF_MONTH))
+                    isSame = true;
+        return isSame;
+    }
+    public static long getRestTime(String t1){
+        try{
+            Date d1 = format.parse(t1);
+            Date d2 = format.parse(format.format(new Date(System.currentTimeMillis())));
+            if (d1.compareTo(d2) >= 0){
+                //long day = (d1.getTime() - d2.getTime())/(1000*60*60*24);
+                return (d1.getTime() - d2.getTime())/1000;
+            }
+        }catch (Exception e){e.printStackTrace();}
+        return 0;
+    }
+}

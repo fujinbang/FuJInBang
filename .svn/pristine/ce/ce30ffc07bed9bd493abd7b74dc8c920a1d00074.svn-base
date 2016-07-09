@@ -1,0 +1,88 @@
+package com.fujinbang.helplist;
+
+/**
+ * Created by Administrator on 2016/5/7.
+ */
+public class HelpMsg{
+    private int id;
+    private int integration;
+    private float x;
+    private float y;
+    private String description;
+    private int neederId;
+    private String startTime;
+    private int needPeopleNum;
+    private String endTime;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getIntegration() {
+        return integration;
+    }
+
+    public void setIntegration(int integration) {
+        this.integration = integration;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getNeederId() {
+        return neederId;
+    }
+
+    public void setNeederId(int neederId) {
+        this.neederId = neederId;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public int getNeedPeopleNum() {
+        return needPeopleNum;
+    }
+
+    public void setNeedPeopleNum(int needPeopleNum) {
+        this.needPeopleNum = needPeopleNum;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+}

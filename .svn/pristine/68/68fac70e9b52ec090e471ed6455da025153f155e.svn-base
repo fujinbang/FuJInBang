@@ -1,0 +1,137 @@
+package com.fujinbang.conversation;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.fujinbang.R;
+
+/**
+ * Created by VITO on 2016/5/19.
+ */
+public class FakeCoversationListAdapter extends BaseExpandableListAdapter {
+    private LayoutInflater mLayoutInflater;
+
+    public FakeCoversationListAdapter (Context context){
+        mLayoutInflater = LayoutInflater.from(context);
+    }
+
+    @Override
+    public int getGroupCount() {
+        return 1;
+    }
+
+    @Override
+    public int getChildrenCount(int groupPosition) {
+        return 1;
+    }
+
+    @Override
+    public Object getGroup(int groupPosition) {
+        return null;
+    }
+
+    @Override
+    public Object getChild(int groupPosition, int childPosition) {
+        return null;
+    }
+
+    @Override
+    public long getGroupId(int groupPosition) {
+        return 0;
+    }
+
+    @Override
+    public long getChildId(int groupPosition, int childPosition) {
+        return 0;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return false;
+    }
+
+    @Override
+    public View getGroupView(final int groupPosition, final boolean isExpanded, View convertView, ViewGroup parent) {
+        final GroupViewHolder groupViewHolder;
+        if (convertView == null) {
+            convertView = mLayoutInflater.inflate(R.layout.item_now, null);
+
+            groupViewHolder = new GroupViewHolder();
+            /*得到各个控件的对象*/
+            groupViewHolder.unreadLabel = (TextView) convertView.findViewById(R.id.unread_msg_number);
+            groupViewHolder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
+            groupViewHolder.list_itease_layout = (RelativeLayout) convertView.findViewById(R.id.list_itease_layout);
+            groupViewHolder.expandBtn = (ImageButton) convertView.findViewById(R.id.item_now_btn);
+            groupViewHolder.time = (TextView) convertView.findViewById(R.id.item_now_time);
+
+            convertView.setTag(groupViewHolder);//绑定ViewHolder对象
+        }else{
+            groupViewHolder = (GroupViewHolder)convertView.getTag();
+        }
+
+        groupViewHolder.expandBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isExpanded) {
+                    //未展开
+                    onGroupExpanded(groupPosition);
+                    groupViewHolder.expandBtn.setImageResource(R.drawable.expanded);
+                } else {
+                    onGroupCollapsed(groupPosition);
+                    groupViewHolder.expandBtn.setImageResource(R.drawable.unexpanded);
+                }
+            }
+        });
+        return convertView;
+    }
+    public static class GroupViewHolder{
+        /** 用户头像 */
+        ImageView avatar;
+        /** 任务剩余时间 */
+        TextView time;
+        /** 整个list中每一行总布局 */
+        RelativeLayout list_itease_layout;
+        /** 消息未读数 */
+        TextView unreadLabel;
+        /** 下拉列表按钮 */
+        ImageButton expandBtn;
+    }
+
+    @Override
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        ChildViewHolder childViewHolder;
+        View view = convertView;
+        if (view == null) {
+            childViewHolder = new ChildViewHolder();
+            view = mLayoutInflater.inflate(R.layout.item_now_child, null);
+            childViewHolder.desc = (TextView) view.findViewById(R.id.item_now_child_desc);
+            childViewHolder.time = (TextView) view.findViewById(R.id.item_now_child_time);
+            childViewHolder.bonus = (TextView) view.findViewById(R.id.item_now_child_bonus);
+            view.setTag(childViewHolder);
+        }else {
+            childViewHolder = (ChildViewHolder)view.getTag();
+        }
+        childViewHolder.desc.setText("任务简述："+"帮我去拿个外卖");
+        childViewHolder.time.setText("12-13 15:10"+"至"+"12-13 15:15");
+        childViewHolder.bonus.setText("200积分");
+
+        return view;
+    }
+    class ChildViewHolder{
+        TextView desc;
+        TextView time;
+        TextView bonus;
+    }
+
+    @Override
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        return false;
+    }
+}

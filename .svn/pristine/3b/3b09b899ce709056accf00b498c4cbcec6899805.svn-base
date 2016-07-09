@@ -1,0 +1,113 @@
+package com.fujinbang.presenter;
+
+import android.util.Log;
+
+import com.fujinbang.activity.iactivity.IHelpListFragment;
+import com.fujinbang.helplist.HelpMsg;
+import com.fujinbang.internet.IRequest.HelpListRequest;
+import com.fujinbang.presenter.ipresenter.IHelpListPresenter;
+import com.google.gson.internal.LinkedTreeMap;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Observer;
+import rx.Subscriber;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+
+/**
+ * Created by Administrator on 2016/6/1.
+ */
+public class HelpListPresenter implements IHelpListPresenter {
+
+    private IHelpListFragment view;
+
+    public HelpListPresenter(IHelpListFragment view) {
+        this.view = view;
+    }
+
+    @Override
+    public void joinHelpList(String token, int helpId) {
+
+    }
+
+    /**
+     * 获取坐标（x，y）附近的求助列表，数量为limited
+     *
+     * 1.获取x，y附近的所有求助信息 all_list
+     * 2.获取自己参与和自己发布的求助信息 attend_list 和 post_list
+     * 3.取差集：list = all_list - attend_list - post_list
+     * 4.获取用户的姓名 for id in list -> name
+     * 5.获取用户的头像 for id in list -> avatar.png
+     * 6.在主线程显示出来
+     *
+     * @param x       经度
+     * @param y       纬度
+     * @param limited 求助信息数量
+     */
+    @Override
+    public void getHelpList(float x, float y, int limited) {
+        Log.i("zy", x + " , " + y + " , " + limited);
+        getRetrofit().create(HelpListRequest.class)
+                .getHelpList(x, y, limited)
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<HashMap<String, Object>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("zy", "get helpList error:" + e.toString());
+                    }
+
+                    @Override
+                    public void onNext(HashMap<String, Object> hashMap) {
+                        parseHashMap(hashMap);
+                    }
+                });
+    }
+
+    private final Retrofit getRetrofit() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://120.24.240.199:6789")
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
+        return retrofit;
+    }
+
+    private final void parseHashMap(HashMap<String, Object> map) {
+        try {
+            ArrayList<LinkedTreeMap<String, Object>> list = (ArrayList<LinkedTreeMap<String, Object>>) map.get("data");
+            for (LinkedTreeMap<String, Object> helpMsg : list) {
+                double bounus = (double) helpMsg.get("bonus");
+                String chatgroupid = (String) helpMsg.get("chatgroupid");
+                String start_time = (String) helpMsg.get("start_time");
+                String regDate = (String) helpMsg.get("regDate");
+                double neederid = (double) helpMsg.get("neederid");
+                String location = (String) helpMsg.get("location");
+                double needPeopleNum = (double) helpMsg.get("needPeopleNum");
+                String desc = (String) helpMsg.get("desc");
+                double id = (double) helpMsg.get("id");
+                String end_time = (String) helpMsg.get("end_time");
+                Log.i("zy", "helpMsg:" + id + " " + desc + " " + start_time + " " + end_time + " " + neederid + " " + needPeopleNum + " " + location);
+            }
+        } catch (RuntimeException e) {
+            Log.e("zy", "parse response" + e.toString());
+        }
+    }
+}

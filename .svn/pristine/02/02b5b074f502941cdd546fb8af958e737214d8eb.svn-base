@@ -1,0 +1,87 @@
+package com.fujinbang.activity;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.fujinbang.R;
+import com.fujinbang.global.StatusBarCompat;
+
+public class IntegrationActivity extends Activity implements View.OnTouchListener {
+
+    private LinearLayout ll_integration_record, ll_integration_rule, ll_integration_security, ll_integration_recharge, ll_integration_withdrawals;
+    private TextView tv_setting_mall;
+    private ImageView iv_back;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_integration);
+        StatusBarCompat.compat(this);
+        initView();
+    }
+
+    private final void initView() {
+        ll_integration_record = (LinearLayout) findViewById(R.id.ll_integration_record);
+        ll_integration_record.setOnTouchListener(this);
+
+        ll_integration_rule = (LinearLayout) findViewById(R.id.ll_integration_rule);
+        ll_integration_rule.setOnTouchListener(this);
+
+        ll_integration_security = (LinearLayout) findViewById(R.id.ll_integration_security);
+        ll_integration_security.setOnTouchListener(this);
+
+        tv_setting_mall = (TextView) findViewById(R.id.tv_setting_mall);
+        tv_setting_mall.setOnTouchListener(this);
+
+        ll_integration_recharge = (LinearLayout) findViewById(R.id.ll_integration_recharge);
+        ll_integration_recharge.setOnTouchListener(this);
+
+        ll_integration_withdrawals = (LinearLayout) findViewById(R.id.ll_integration_withdrawals);
+        ll_integration_withdrawals.setOnTouchListener(this);
+
+        iv_back = (ImageView) findViewById(R.id.iv_back);
+        iv_back.setOnTouchListener(this);
+    }
+
+    private final void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_back:
+                finish();
+                break;
+            case R.id.tv_setting_mall:
+                finish();
+                MissionActivity.startActivity(this);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                v.setBackgroundColor(0xffe8e8e8);
+                break;
+            case MotionEvent.ACTION_UP:
+                v.setBackgroundColor(0x00000000);
+                onClick(v);
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    public static void startActivity(Context context) {
+        Intent intent = new Intent(context, IntegrationActivity.class);
+        context.startActivity(intent);
+    }
+}

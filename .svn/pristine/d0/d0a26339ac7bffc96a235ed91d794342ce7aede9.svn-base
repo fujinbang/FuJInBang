@@ -1,0 +1,24 @@
+package com.fujinbang.presenter.ipresenter;
+
+import com.fujinbang.internet.UserMsgUpload;
+
+/**
+ * Created by Administrator on 2016/6/10.
+ */
+public interface ISetPresenter {
+    void authenticate(String psd, UserMsgUpload.OnUserUploadListener listener);
+
+    void uploadPassword(String psd, UserMsgUpload.OnUserUploadListener listener);
+
+    void uploadRange(int range);
+
+    int getRange();
+
+    void uploadAlert(boolean isAlert);
+
+    void uploadVibrate(boolean isVibrate);
+
+    boolean isAlert();
+
+    boolean isVibrate();
+}

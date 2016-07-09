@@ -1,0 +1,71 @@
+package com.fujinbang.activity;
+
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.os.Bundle;
+
+import com.fujinbang.R;
+import com.fujinbang.global.StatusBarCompat;
+import com.fujinbang.global.TempFragment;
+import com.fujinbang.view.NeibourTabView;
+
+public class MainActivity extends FragmentActivity {
+
+    private NeibourTabView tabView;
+    private Fragment[] mFragments = new Fragment[4];
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_main);
+
+        StatusBarCompat.compat(this);
+
+        initTabView();
+        initContain();
+    }
+
+    private final void initContain() {
+        mFragments[0] = new NeibourFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.contain, mFragments[0]);
+        transaction.commit();
+    }
+
+    private final void initTabView() {
+        tabView = (NeibourTabView) findViewById(R.id.tabView);
+        tabView.setOnClickTabListener(new NeibourTabView.onClickTabListener() {
+            @Override
+            public void onClick(int tabNum, String tabName) {
+                if (mFragments[tabNum] == null) {
+                    switch (tabNum) {
+                        case 0:
+                            mFragments[tabNum] = new NeibourFragment();
+                            break;
+                        case 1:
+                            mFragments[tabNum] = new TempFragment();
+                            break;
+                        case 2:
+                            mFragments[tabNum] = new TempFragment();
+                            break;
+                        case 3:
+                            mFragments[tabNum] = new TempFragment();
+                            break;
+                    }
+                }
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.contain, mFragments[tabNum]);
+                transaction.commit();
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+}

@@ -1,0 +1,50 @@
+package com.fujinbang.global;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+
+/**
+ * Created by VITO on 2016/5/18.
+ * SharePreferences类
+ */
+public class SimpleDataBase{
+    SharedPreferences sharedPreferences;
+    public SimpleDataBase(Context context){
+        this.sharedPreferences = context.getSharedPreferences("data",Context.MODE_PRIVATE);
+    }
+
+    public void putToken(String value){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("token",value);
+        editor.commit();
+    }
+    public void putClientId(int value){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("clientId",value);
+        editor.commit();
+    }
+    public void putLoginDate(String value){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("loginDate",value);
+        editor.commit();
+    }
+    public void putPhoneNum(String value){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("phoneNum",value);
+        editor.commit();
+    }
+
+    public String getToken(){
+        return sharedPreferences.getString("token",null);
+    }
+    public int getClientId(){
+        return sharedPreferences.getInt("clientId",0);
+    }
+    public String getLoginDate(){
+        return sharedPreferences.getString("loginDate",null);
+    }
+    public String getPhoneNum(){
+        return sharedPreferences.getString("phoneNum",null);
+    }
+
+}

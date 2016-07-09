@@ -1,0 +1,169 @@
+package com.fujinbang.ui.activity;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.baidu.mapapi.model.LatLng;
+import com.fujinbang.R;
+import com.fujinbang.baidumap.PoiManager;
+
+/**
+ * Created by VITO on 2016/5/18.
+ * 群体求助信息界面
+ */
+public class GroupHelpActivity extends BaseActivity {
+    private ImageView iv_back;
+    private FrameLayout play_sound;
+    private View animView;
+    private TextView reqDesc, record_time, starttime, endtime, textbonus, neednum, sex, location;
+    private Button helpBtn;
+
+    private int mMinWidth; //最小的item宽度
+    private int mMaxWidth; //最大的item宽度
+
+    public static final int resultCode = 22;
+    private int helpId;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_group_help);
+        initView();
+    }
+
+    private final void initView() {
+        iv_back = (ImageView) GroupHelpActivity.this.findViewById(R.id.group_help_back);
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GroupHelpActivity.this.finish();
+            }
+        });
+
+        reqDesc = (TextView) findViewById(R.id.grouphelp_reqdes);
+        starttime = (TextView) findViewById(R.id.group_help_starttime);
+        endtime = (TextView) findViewById(R.id.group_help_endtime);
+        textbonus = (TextView) findViewById(R.id.group_help_textbonus);
+        neednum = (TextView) findViewById(R.id.group_help_num);
+        sex = (TextView) findViewById(R.id.group_help_sex);
+        location = (TextView) findViewById(R.id.group_help_location);
+        helpBtn = (Button) findViewById(R.id.group_help_helpbtn);
+        helpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("isJoin", true);
+                intent.putExtra("helpId", helpId);
+                setResult(resultCode, intent);
+                finish();
+            }
+        });
+
+        record_time = (TextView) findViewById(R.id.group_help_recoder_time);
+        record_time.setText("" + "\"");
+        play_sound = (FrameLayout) findViewById(R.id.group_help_recoder_lenght);
+        animView = findViewById(R.id.group_help_recoder_anim);
+        //获取屏幕的宽度
+        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(outMetrics);
+        mMaxWidth = (int) (outMetrics.widthPixels * 0.4f);
+        mMinWidth = (int) (outMetrics.widthPixels * 0.15f);
+        ViewGroup.LayoutParams lp = play_sound.getLayoutParams();
+        //lp.width = (int) (mMinWidth + (mMaxWidth / 60f)* seconds);//对话框长度
+        play_sound.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //播放帧动画
+                animView.setBackgroundResource(R.drawable.play_anim);
+                AnimationDrawable animation = (AnimationDrawable) animView.getBackground();
+                animation.start();
+                //播放录音
+//                MediaManager.playSound(fpath, new MediaPlayer.OnCompletionListener() {
+//
+//                    public void onCompletion(MediaPlayer mp) {
+//                        //停止播放帧动画
+//                        animView.setBackgroundResource(R.drawable.adj);
+//                    }
+//                });
+            }
+        });
+
+        Bundle bundle;
+        if ((bundle = getIntent().getExtras()) != null) {
+            reqDesc.setText(bundle.getString("desc"));
+            starttime.setText(bundle.getString("startTime"));
+            endtime.setText(bundle.getString("endTime"));
+            textbonus.setText(bundle.getString("integration"));
+            neednum.setText(bundle.getString("peopleNum"));
+            sex.setText(bundle.getString("sex"));
+            double x = bundle.getDouble("x");
+            double y = bundle.getDouble("y");
+            PoiManager.getPoi(new LatLng(x, y), new PoiManager.OnPoiSearchListener() {
+                @Override
+                public void onGetPoi(String poiName) {
+                    if (location != null)
+                        location.setText(poiName);
+                }
+            });
+            location.setText("正在获取位置");
+            helpId = bundle.getInt("helpId");
+        }
+    }
+
+    public static boolean isJoin(int code, Intent intent) {
+        if (code == resultCode) {
+            return intent.getBooleanExtra("isJoin", false);
+        }
+        return false;
+    }
+
+    public static int getHelpId(Intent intent) {
+        return intent.getIntExtra("helpId", -1);
+    }
+
+    public static void startActivity(Context context, String desc, String startTime, String endTime, int integration, int peopleNum, String sex, double x, double y, int helpId) {
+        Intent intent = new Intent(context, GroupHelpActivity.class);
+        intent.putExtra("desc", desc);
+        intent.putExtra("startTime", startTime);
+        intent.putExtra("endTime", endTime);
+        intent.putExtra("integration", String.valueOf(integration));
+        intent.putExtra("peopleNum", String.valueOf(peopleNum));
+        intent.putExtra("sex", sex);
+        intent.putExtra("x", x);
+        intent.putExtra("y", y);
+        intent.putExtra("helpId", helpId);
+        ((Activity) context).startActivityForResult(intent, 100);
+    }
+
+    public static void startActivity(Fragment fragment,String desc, String startTime, String endTime, int integration, int peopleNum, String sex, double x, double y, int helpId){
+        Intent intent = new Intent(fragment.getContext(), GroupHelpActivity.class);
+        intent.putExtra("desc", desc);
+        intent.putExtra("startTime", startTime);
+        intent.putExtra("endTime", endTime);
+        intent.putExtra("integration", String.valueOf(integration));
+        intent.putExtra("peopleNum", String.valueOf(peopleNum));
+        intent.putExtra("sex", sex);
+        intent.putExtra("x", x);
+        intent.putExtra("y", y);
+        intent.putExtra("helpId", helpId);
+        fragment.startActivityForResult(intent,100);
+    }
+
+    public static void startActivity(Context context) {
+        Intent intent = new Intent(context, GroupHelpActivity.class);
+        context.startActivity(intent);
+    }
+}

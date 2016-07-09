@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp">
+        <com.fujinbang.view.CircleImageView
+            android:id="@+id/item_information_img"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/integration"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="6dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/item_information_img"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:text="你是猪"/>
+    </RelativeLayout>
+
+</LinearLayout>

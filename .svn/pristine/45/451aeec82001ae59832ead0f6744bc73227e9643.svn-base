@@ -1,0 +1,64 @@
+package com.fujinbang.activity;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import com.fujinbang.R;
+import com.fujinbang.global.NeibourApplication;
+import com.fujinbang.helplist.HelpListAdapter;
+import com.fujinbang.helplist.HelpListRequest;
+import com.fujinbang.helplist.HelpMsg;
+
+import java.util.List;
+
+public class HelpListFragment extends Fragment {
+    public final static String TAG = "HelpListFragment";
+    private ListView mHelpList;
+    private HelpListAdapter mAdapter;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_help_list, container, false);
+
+        initListView(view);
+
+        return view;
+    }
+
+    private final void initListView(View view) {
+
+        NeibourApplication app = NeibourApplication.getInstance();
+        float x = 0f, y = 0f;
+        if (app != null) {
+            x = app.getX();
+            y = app.getY();
+        }
+
+        refreshData(x, y, 10);
+
+        mAdapter = new HelpListAdapter(getContext());
+        mHelpList = (ListView) view.findViewById(R.id.lv_list_for_help);
+        mHelpList.setAdapter(mAdapter);
+    }
+
+    private final void refreshData(final float x, final float y, final int dataSize) {
+        new HelpListRequest(getContext()).getHelpList(x, y, dataSize, new HelpListRequest.OnHelpListRequestListener() {
+            @Override
+            public void onSuccess(List<HelpMsg> list) {
+                mAdapter.updateList(list);
+            }
+
+            @Override
+            public void onError(String desc) {
+                Log.e(TAG, desc);
+                Toast.makeText(getContext(), desc, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+}

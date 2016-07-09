@@ -1,0 +1,34 @@
+package com.fujinbang.internet;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+
+/**
+ * Created by Administrator on 2016/5/23.
+ */
+public class AvatarRequest extends InternetRequest {
+    public AvatarRequest(Context context) {
+        super(context);
+    }
+
+    public void getAvatar(int id, int width, int height, final OnAvatorListener listener) {
+        String url = "http://o73gf55zi.bkt.clouddn.com/" + id + ".png";
+        getBitmap(url, width, height, new OnResponseListener<Bitmap>() {
+            @Override
+            public void onSuccess(Bitmap object) {
+                if (listener != null) listener.onSucess(object);
+            }
+
+            @Override
+            public void onError(String desc, int statusCode) {
+                if (listener != null) listener.onError(desc + statusCode);
+            }
+        });
+    }
+
+    public interface OnAvatorListener {
+        void onSucess(Bitmap avatar);
+
+        void onError(String desc);
+    }
+}

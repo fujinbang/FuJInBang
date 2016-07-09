@@ -1,11 +1,27 @@
 [
     {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\release\\layout\\pingpp_pay_channel_item.xml",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\res\\layout\\pingpp_pay_channel_item.xml"
+    },
+    {
         "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\release\\layout\\activity_pingpp_payment.xml",
         "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\exploded-aar\\FuJInBang.lib\\pingpp\\unspecified\\res\\layout\\activity_pingpp_payment.xml"
     },
     {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\release\\layout\\activity_pingpp_payment.xml",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\exploded-aar\\FuJInBang.lib\\pingpp\\unspecified\\res\\layout\\activity_pingpp_payment.xml"
+    },
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\release\\layout\\fragment_pay_way_dialog.xml",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\res\\layout\\fragment_pay_way_dialog.xml"
+    },
+    {
         "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\release\\layout\\fragment_pay_way_dialog.xml",
         "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\res\\layout\\fragment_pay_way_dialog.xml"
+    },
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\release\\layout\\pingpp_activity_pay.xml",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\res\\layout\\pingpp_activity_pay.xml"
     },
     {
         "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\release\\layout\\pingpp_activity_pay.xml",
@@ -18,5 +34,9 @@
     {
         "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\release\\layout\\pingpp_pay_channel_item.xml",
         "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\lib\\pingpp_one\\res\\layout\\pingpp_pay_channel_item.xml"
+    },
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\build\\intermediates\\res\\merged\\release\\layout\\pingpp_activity_pay_successed.xml",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\lib\\pingpp_one\\res\\layout\\pingpp_activity_pay_successed.xml"
     }
 ]

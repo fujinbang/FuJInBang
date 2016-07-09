@@ -1,0 +1,364 @@
+package com.fujinbang.activity;
+
+import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
+import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.fourmob.datetimepicker.date.DatePickerDialog;
+import com.fourmob.datetimepicker.date.DatePickerDialog.OnDateSetListener;
+import com.fujinbang.R;
+import com.fujinbang.global.SimpleDataBase;
+import com.fujinbang.internet.HttpConnRequest;
+import com.fujinbang.seekhelp.DialogManager;
+import com.fujinbang.seekhelp.MediaManager;
+import com.sleepbot.datetimepicker.time.RadialPickerLayout;
+import com.sleepbot.datetimepicker.time.TimePickerDialog;
+
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.Calendar;
+
+
+/**
+ * Created by VITO on 2016/3/19.
+ *求助界面
+ */
+public class SeekHelpFragment extends Fragment implements OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+    private LinearLayout timepicker1,timepicker2;
+    private TextView textCount,timepicker1_date,timepicker1_time,timepicker2_date,timepicker2_time,textbonus;
+    DatePickerDialog datePickerDialog;
+    TimePickerDialog timePickerDialog;
+
+    private Spinner sexspinner;
+    private ArrayAdapter<CharSequence> adaptersex = null;
+
+    private Button addnum,minusnum,helpbtn;
+    private ImageButton microphone;
+    private EditText reqDes,numofpeople;
+
+    String token = null;
+    String starttime = null;
+    String endtime = null;
+    String location = null;
+
+    String helpUrl = "http://120.24.240.199：6789/help";
+    HttpConnRequest request = new HttpConnRequest();
+    private AsyncTask<String,Integer,String> task = null;//访问api异步处理任务
+
+    private DialogManager mDialogManager;
+    private View animView;
+    private FrameLayout play_sound;
+    private TextView record_time;
+    private int mMinWidth; //最小的item宽度
+    private int mMaxWidth; //最大的item宽度
+    float sec;
+    String fpath;
+    boolean isVoiceReq = false;
+
+    int code;
+    int bonus;
+    String end_time;
+    int id;
+    int needPeopleNum;
+    int neederid;
+    String regDate;
+    String start_time;
+    String desc;
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view =inflater.inflate(R.layout.fragment_seekhelp, container, false);
+
+        textCount = (TextView)view.findViewById(R.id.seekhelp_textcount);
+        reqDes = (EditText)view.findViewById(R.id.seekhelp_reqdes);
+        reqDes.addTextChangedListener(mTextWatcher);
+
+        SimpleDataBase simpleDataBase = new SimpleDataBase(getContext());
+        token = simpleDataBase.getToken();
+
+        //获取屏幕的宽度
+        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(outMetrics);
+        mMaxWidth = (int) (outMetrics.widthPixels * 0.4f);
+        mMinWidth = (int) (outMetrics.widthPixels * 0.15f);
+
+        record_time = (TextView)view.findViewById(R.id.id_recoder_time);
+        microphone = (ImageButton)view.findViewById(R.id.seekhelp_microphone);
+        microphone.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 显示對話框在开始录音以后
+                isVoiceReq = true;
+                reqDes.setVisibility(View.GONE);
+                textCount.setVisibility(View.GONE);
+                mDialogManager = new DialogManager(getContext());
+                mDialogManager.setAudioFinishRecorderListener(new DialogManager.AudioFinishRecorderListener() {
+
+                    public void onFinish(float seconds, String filePath) {
+                        sec = seconds;
+                        fpath = filePath;
+                        record_time.setText(Math.round(seconds) + "\"");//显示语音时间
+                        ViewGroup.LayoutParams lp = play_sound.getLayoutParams();
+                        lp.width = (int) (mMinWidth + (mMaxWidth / 60f)* seconds);//对话框长度
+                        play_sound.setVisibility(View.VISIBLE);
+                        record_time.setVisibility(View.VISIBLE);
+                    }
+                });
+                mDialogManager.showRecordingDialog();
+            }
+        });
+        play_sound = (FrameLayout)view.findViewById(R.id.id_recoder_lenght);
+        animView = view.findViewById(R.id.id_recoder_anim);
+        play_sound.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //播放帧动画
+                animView.setBackgroundResource(R.drawable.play_anim);
+                AnimationDrawable animation = (AnimationDrawable) animView.getBackground();
+                animation.start();
+                //播放录音
+                MediaManager.playSound(fpath, new MediaPlayer.OnCompletionListener() {
+
+                    public void onCompletion(MediaPlayer mp) {
+                        //停止播放帧动画
+                        animView.setBackgroundResource(R.drawable.adj);
+                    }
+                });
+            }
+        });
+
+        final Calendar calendar = Calendar.getInstance();
+        datePickerDialog = DatePickerDialog.newInstance(this,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH),
+                false);
+
+        timePickerDialog = TimePickerDialog.newInstance(this,
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),
+                false, false);//最后两个参数，是否是24小时制，是否抖动。推荐false，false
+
+        timepicker1 = (LinearLayout)view.findViewById(R.id.seekhelp_timepicker1);
+        timepicker2 = (LinearLayout)view.findViewById(R.id.seekhelp_timepicker2);
+        timepicker1.setOnClickListener(mListener);
+        timepicker2.setOnClickListener(mListener);
+        timepicker1_date = (TextView)view.findViewById(R.id.seekhelp_timepicker1_date);
+        timepicker1_time = (TextView)view.findViewById(R.id.seekhelp_timepicker1_time);
+        timepicker2_date = (TextView)view.findViewById(R.id.seekhelp_timepicker2_date);
+        timepicker2_time = (TextView)view.findViewById(R.id.seekhelp_timepicker2_time);
+
+        textbonus = (TextView)view.findViewById(R.id.seekhelp_textbonus);
+        textbonus.addTextChangedListener(mTextWatcher);
+
+        addnum = (Button)view.findViewById(R.id.seekhelp_addnum);
+        minusnum = (Button)view.findViewById(R.id.seekhelp_minusnum);
+        numofpeople = (EditText)view.findViewById(R.id.seekhelp_numofpeople);
+        addnum.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int num = Integer.parseInt(numofpeople.getText().toString());
+                numofpeople.setText(String.valueOf(num+1));
+            }
+        });
+        minusnum.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int num = Integer.parseInt(numofpeople.getText().toString());
+                if (num>1){
+                    num -= 1;
+                    numofpeople.setText(String.valueOf(num));
+                }
+            }
+        });
+
+        sexspinner = (Spinner)view.findViewById(R.id.seekhelp_sexspinner);
+        this.adaptersex = new ArrayAdapter<CharSequence>(getContext(),R.layout.spinner_item,new String[]{"无所谓","男","女"});
+        this.adaptersex.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sexspinner.setAdapter(this.adaptersex);
+        sexspinner.setSelection(0);
+
+        helpbtn = (Button)view.findViewById(R.id.seekhelp_helpbtn);
+        helpbtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+                    task.cancel(true);
+                }
+                task = new helpTask();
+                task.execute(
+                        token,
+                        textbonus.getText().toString(),
+                        starttime,
+                        endtime,
+                        location,//这里有问题
+                        numofpeople.getText().toString(),
+                        reqDes.getText().toString());
+            }
+        });
+        return view;
+    }
+
+    TextWatcher mTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (!isVoiceReq){
+                textCount.setText(reqDes.getText().length() + "/100");
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (timepicker1_date.getText().length()>0
+                    & timepicker2_date.getText().length()>0
+                    & textbonus.getText().length()>0){
+                if ((!isVoiceReq&reqDes.getText().length()>0)||isVoiceReq){
+                    helpbtn.setClickable(true);
+                    helpbtn.setBackgroundResource(R.drawable.login_btn);
+                    helpbtn.setTextColor(getResources().getColor(android.R.color.white));
+                }
+            }
+            else {
+                helpbtn.setClickable(false);
+                helpbtn.setBackgroundResource(R.drawable.register_btn2);
+            }
+        }
+    };
+
+    OnClickListener mListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            datePickerDialog.setVibrate(false);//是否抖动
+            datePickerDialog.setYearRange(1985, 2028);//设置年份区间
+            datePickerDialog.setCloseOnSingleTapDay(false);//选择后是否消失
+            datePickerDialog.show(getFragmentManager(), v.getId() == R.id.seekhelp_timepicker1?"time1":"time2");//展示dialog，传一个tag参数
+        }
+    };
+
+    @Override
+    public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
+        if (datePickerDialog.getTag().equals("time1")){
+            timepicker1_date.setText((month+1)+"-"+day);
+            starttime = year + "-" + month + "-" + day;
+        }else{
+            timepicker2_date.setText((month+1)+"-"+day);
+            endtime = year + "-" + month + "-" + day;
+        }
+        //启动时间选择器
+        timePickerDialog.setVibrate(false);//是否抖动
+        timePickerDialog.setCloseOnSingleTapMinute(false);//选择后是否消失
+        timePickerDialog.show(getFragmentManager(), datePickerDialog.getTag());//展示dialog，传一个tag参数
+    }
+
+    @Override
+    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
+        if (timePickerDialog.getTag().equals("time1")){
+            timepicker1_time.setText(hourOfDay+":"+minute);
+            starttime += " "+hourOfDay + ":" + minute + ":00";
+        }else{
+            timepicker2_time.setText(hourOfDay+":"+minute);
+            endtime += " "+hourOfDay + ":" + minute + ":00";
+        }
+    }
+
+    class helpTask extends AsyncTask<String,Integer,String> {
+        protected String doInBackground(String...params){
+            try{
+                JSONObject obj = new JSONObject();
+                obj.put("token",params[0]);
+                obj.put("bonus",params[1]);
+                obj.put("starttime",params[2]);
+                obj.put("endtime",params[3]);
+                JSONObject location = new JSONObject();
+                location.put("x","");
+                location.put("y","");
+                obj.put("location",location);
+                obj.put("needpeoplenum",params[5]);
+                if (isVoiceReq){
+                    JSONObject desc = new JSONObject(fpath);
+                    obj.put("desc",desc);
+                }else {
+                    obj.put("desc",params[6]);
+                }
+                return request.request(
+                        helpUrl,
+                        obj);
+            }catch (Exception e){e.printStackTrace();}
+            return null;
+        }
+        protected void onPostExecute(String result){//在主线程中执行，方法参数为任务执行结果
+            if(result==null){
+                Toast.makeText(getContext(),"网络未连接，请检查网络连接后重新登录", Toast.LENGTH_LONG).show();
+            }
+            else{
+                getJsonData(result);
+            }
+        }
+    }
+    private void getJsonData(String jsonResult){
+        try{
+            JSONObject Obj = new JSONObject(jsonResult);
+            code = Obj.getInt("code");
+            if (code == 1){
+                JSONObject data = Obj.getJSONObject("data");
+                bonus = data.getInt("bonus");
+                end_time = data.getString("end_time");
+                id = data.getInt("id");
+                needPeopleNum = data.getInt("needPeopleNum");
+                neederid = data.getInt("neederid");
+                regDate = data.getString("regDate");
+                start_time = data.getString("start_time");
+                desc = Obj.getString("desc");
+            }
+        }catch (Exception e){e.printStackTrace();}
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        MediaManager.pause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MediaManager.resume();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        MediaManager.release();
+    }
+
+}

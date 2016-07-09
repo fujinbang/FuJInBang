@@ -1,0 +1,89 @@
+package com.fujinbang.activity;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+
+import com.fujinbang.R;
+import com.fujinbang.global.StatusBarCompat;
+
+public class SetActivity extends Activity implements View.OnTouchListener {
+
+    private LinearLayout ll_set_about, ll_set_feedback, ll_set_msg_alert, ll_set_cooperation, ll_set_exit, ll_set_secret, ll_set_security;
+    private RelativeLayout rl_set_range;
+    private ImageView iv_back;
+
+    private SwitchCompat switchCompat;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_set);
+        StatusBarCompat.compat(this);
+        initView();
+    }
+
+    private final void initView() {
+        ll_set_about = (LinearLayout) findViewById(R.id.ll_set_about);
+        ll_set_feedback = (LinearLayout) findViewById(R.id.ll_set_feedback);
+        ll_set_cooperation = (LinearLayout) findViewById(R.id.ll_set_cooperation);
+        ll_set_msg_alert = (LinearLayout) findViewById(R.id.ll_set_msg_alert);
+        ll_set_exit = (LinearLayout) findViewById(R.id.ll_set_exit);
+        ll_set_secret = (LinearLayout) findViewById(R.id.ll_set_secret);
+        ll_set_security = (LinearLayout) findViewById(R.id.ll_set_security);
+        rl_set_range = (RelativeLayout) findViewById(R.id.rl_set_range);
+        iv_back = (ImageView) findViewById(R.id.iv_back);
+
+        ll_set_about.setOnTouchListener(this);
+        ll_set_feedback.setOnTouchListener(this);
+        ll_set_cooperation.setOnTouchListener(this);
+        ll_set_msg_alert.setOnTouchListener(this);
+        ll_set_exit.setOnTouchListener(this);
+        ll_set_secret.setOnTouchListener(this);
+        ll_set_security.setOnTouchListener(this);
+        rl_set_range.setOnTouchListener(this);
+        iv_back.setOnTouchListener(this);
+
+        switchCompat = (SwitchCompat) findViewById(R.id.sc_quiet);
+    }
+
+    private final void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_back:
+                SetActivity.this.finish();
+                break;
+            case R.id.ll_set_about:
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                v.setBackgroundColor(0xffe8e8e8);
+                break;
+            case MotionEvent.ACTION_UP:
+                v.setBackgroundColor(0x00000000);
+                onClick(v);
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    public static void startActivity(Context context) {
+        Intent intent = new Intent(context, SetActivity.class);
+        context.startActivity(intent);
+    }
+}

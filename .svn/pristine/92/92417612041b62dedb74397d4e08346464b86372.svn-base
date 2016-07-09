@@ -1,0 +1,96 @@
+package com.fujinbang.helplist;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.fujinbang.R;
+import com.fujinbang.view.CircleImageView;
+
+import java.util.List;
+
+/**
+ * Created by Administrator on 2016/5/6.
+ */
+public class HelpListAdapter extends BaseAdapter {
+
+    private List<HelpMsg> list;
+    private Context mContext;
+
+    public HelpListAdapter(Context context, List<HelpMsg> list) {
+        this.list = list;
+        this.mContext = context;
+    }
+
+    public HelpListAdapter(Context context) {
+        mContext = context;
+    }
+
+    public void updateList(List<HelpMsg> list) {
+        this.list = list;
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public int getCount() {
+        if (list != null)
+            return list.size();
+        return 0;
+    }
+
+    @Override
+    public Object getItem(int position) {
+        if (list != null)
+            return list.get(position);
+        return null;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View view = convertView;
+        ViewHolder holder = new ViewHolder();
+
+        if (view == null) {
+            view = LayoutInflater.from(mContext).inflate(R.layout.listview_item_helplist, null);
+
+            holder.tv_name = (TextView) view.findViewById(R.id.tv_helplist_name);
+            holder.tv_desc = (TextView) view.findViewById(R.id.tv_helplist_description);
+            holder.tv_distance = (TextView) view.findViewById(R.id.tv_helplist_distance);
+            holder.tv_intergration = (TextView) view.findViewById(R.id.tv_helplist_integration);
+            holder.tv_needNum = (TextView) view.findViewById(R.id.tv_helplist_needNum);
+            holder.tv_time = (TextView) view.findViewById(R.id.tv_helplist_time);
+            holder.civ_avatar = (CircleImageView) view.findViewById(R.id.civ_helplist_avatar);
+            holder.btn_accept = (Button) view.findViewById(R.id.btn_helplist_accept);
+            view.setTag(holder);
+        } else {
+            holder = (ViewHolder) view.getTag();
+        }
+
+        if (list != null) {
+            HelpMsg helpMsg = list.get(position);
+
+            holder.tv_name.setText(helpMsg.getNeederId() + "");
+            holder.tv_time.setText(helpMsg.getStartTime() + " 至 " + helpMsg.getEndTime());
+            holder.tv_intergration.setText(helpMsg.getIntegration() + "");
+            holder.tv_distance.setText(helpMsg.getX() + "," + helpMsg.getY());
+            holder.tv_needNum.setText(helpMsg.getNeedPeopleNum() + "");
+            holder.tv_desc.setText(helpMsg.getDescription());
+        }
+        return view;
+    }
+
+    static class ViewHolder {
+        CircleImageView civ_avatar;
+        TextView tv_name, tv_distance, tv_needNum, tv_time, tv_desc, tv_intergration;
+        Button btn_accept;
+    }
+}

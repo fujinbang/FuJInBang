@@ -1,0 +1,70 @@
+package com.fujinbang.global;
+
+import android.os.AsyncTask;
+import android.widget.Toast;
+
+import com.fujinbang.internet.HttpConnRequest;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
+/**
+ * Created by VITO on 2016/5/19.
+ *
+ */
+public class MissionDetail {
+    private static MissionDetail missionDetail;
+    private HashMap<String,HashMap<String,Object>> mission;
+    HttpConnRequest httpConnRequest;
+
+    private MissionDetail(){
+    }
+    public static MissionDetail getInstance(){
+        if (null == missionDetail){
+            missionDetail = new MissionDetail();
+            return missionDetail;
+        }
+        return missionDetail;
+    }
+
+    public void initialize(String userId){
+        new AsyncTask<String,Integer,String>(){
+            @Override
+            protected String doInBackground(String... params) {
+                try {
+                    JSONObject object = new JSONObject();
+                    object.put("userId",params[0]);
+                    return httpConnRequest.request("",object);
+                }catch (Exception e){e.printStackTrace();}
+                return null;
+            }
+            @Override
+            protected void onPostExecute(String result){
+                if (result!=null){
+                    try {
+                        JSONObject object = new JSONObject(result);
+
+                    }catch (Exception e){e.printStackTrace();}
+                }
+            }
+        }.execute(userId);
+    }
+
+    public HashMap<String,HashMap<String,Object>> getMissionList(){
+        return mission;
+    }
+
+    public HashMap<String,Object> getMission(String missionId){
+        return mission.get(missionId);
+    }
+
+
+
+    public void addMission(String missionId, HashMap<String,Object> hashMap){
+        mission.put(missionId,hashMap);
+    }
+    public void removeMission(String missionId){
+        mission.remove(missionId);
+    }
+}

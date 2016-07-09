@@ -1,0 +1,177 @@
+package com.fujinbang.activity;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.GridLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.fujinbang.R;
+import com.fujinbang.global.MissionDetail;
+import com.fujinbang.global.StatusBarCompat;
+import com.fujinbang.internet.HttpConnRequest;
+import com.fujinbang.seekhelp.MediaManager;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.w3c.dom.Text;
+
+import java.util.HashMap;
+
+/**
+ * Created by VITO on 2016/5/18.
+ * 任务详情界面
+ */
+public class MissionDetailActivity extends BaseActivity {
+    HttpConnRequest httpConnRequest = new HttpConnRequest();
+
+    ImageView mission_detail_back;
+    GridLayout attender_list;
+    TextView txt_desc;
+
+    private View animView;
+    private FrameLayout play_sound;
+    private TextView record_time;
+    private int mMinWidth; //最小的item宽度
+    private int mMaxWidth; //最大的item宽度
+    float sec;
+    String fpath;
+    boolean isVoiceReq = false;
+
+    HashMap<String, Object> mission;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_mission_detail);
+        Intent it = getIntent();
+        mission = MissionDetail.getInstance().getMission(it.getExtras().getString("groupId"));
+        initView();
+    }
+
+    private final void initView() {
+        mission_detail_back = (ImageView) findViewById(R.id.mission_detail_back);
+        mission_detail_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MissionDetailActivity.this.finish();
+            }
+        });
+
+
+        attender_list = (GridLayout)findViewById(R.id.mission_detail_attender_list);
+
+        txt_desc = (TextView) findViewById(R.id.mission_detail_txt_desc);
+
+        record_time = (TextView) findViewById(R.id.mission_detail_recoder_time);
+        record_time.setText("" + "\"");
+        play_sound = (FrameLayout) findViewById(R.id.mission_detail_recoder_lenght);
+        animView = findViewById(R.id.mission_detail_recoder_anim);
+        play_sound.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //播放帧动画
+                animView.setBackgroundResource(R.drawable.play_anim);
+                AnimationDrawable animation = (AnimationDrawable) animView.getBackground();
+                animation.start();
+                //播放录音
+                MediaManager.playSound(fpath, new MediaPlayer.OnCompletionListener() {
+
+                    public void onCompletion(MediaPlayer mp) {
+                        //停止播放帧动画
+                        animView.setBackgroundResource(R.drawable.adj);
+                    }
+                });
+            }
+        });
+
+        //获取屏幕的宽度
+        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(outMetrics);
+        mMaxWidth = (int) (outMetrics.widthPixels * 0.4f);
+        mMinWidth = (int) (outMetrics.widthPixels * 0.15f);
+        ViewGroup.LayoutParams lp = play_sound.getLayoutParams();
+        //lp.width = (int) (mMinWidth + (mMaxWidth / 60f)* seconds);//对话框长度
+
+
+        //加载参与者头像与昵称
+        initAttender();
+    }
+
+    private void initAttender() {
+        new AsyncTask<String, Integer, String>() {
+            @Override
+            protected String doInBackground(String... params) {
+                try {
+                    JSONObject object = new JSONObject();
+                    object.put("helpid", params[0]);
+                    return httpConnRequest.request("http://120.24.240.199:6789/help/queryattenders", "GET",object);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+            @Override
+            protected void onPostExecute(String result){
+                if (result!=null){
+                    try{
+                        JSONObject obj = new JSONObject(result);
+                        JSONArray attenders = obj.getJSONArray("attenders");
+                        for (int i = 0;i<attenders.length();i++){
+                            JSONObject attender = attenders.getJSONObject(i);
+                            View view = View.inflate(MissionDetailActivity.this, R.layout.item_information, null);
+                            TextView txt = (TextView) view.findViewById(R.id.item_information_name);
+                            txt.setText(attender.getString("nickName"));
+                            initAttenderImg(view, attender.getInt("userid"));
+                        }
+                    }catch (Exception e){e.printStackTrace();}
+                }
+            }
+        }.execute(mission.get("mission_id").toString());
+    }
+
+    private void initAttenderImg(View view, int userid) {
+        final View copyView = view;
+        new AsyncTask<String, Integer, String>() {
+            @Override
+            protected String doInBackground(String... params) {
+                try {
+                    JSONObject object = new JSONObject();
+                    object.put("helpid", params[0]);
+                    return httpConnRequest.request("http://120.24.240.199:6789/help/queryattenders", "GET",object);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+            @Override
+            protected void onPostExecute(String result){
+                if (result!=null){
+                    ImageView image = (ImageView) copyView.findViewById(R.id.item_information_img);
+                    image.setBackgroundResource(R.drawable.ic_launcher);
+                    attender_list.addView(copyView);
+                }
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, String.valueOf(userid));
+    }
+
+
+    public static void startActivity(Context context, String groupId) {
+        Intent intent = new Intent(context, MissionDetailActivity.class);
+        intent.putExtra("groupId", groupId);
+        context.startActivity(intent);
+    }
+}

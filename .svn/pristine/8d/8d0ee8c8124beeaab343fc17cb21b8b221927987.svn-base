@@ -1,0 +1,42 @@
+package com.fujinbang.global;
+
+import android.app.Application;
+
+import com.baidu.mapapi.SDKInitializer;
+
+/**
+ * Created by Administrator on 2016/5/6.
+ */
+public class NeibourApplication extends Application {
+
+    private static NeibourApplication instance;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        instance = this;
+        SDKInitializer.initialize(getApplicationContext());//初始化百度SDK账号 必须在使用地图前注册
+    }
+
+    public static NeibourApplication getInstance() {
+        return instance;
+    }
+
+    private float x, y;
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public void getY(float y) {
+        this.y = y;
+    }
+}

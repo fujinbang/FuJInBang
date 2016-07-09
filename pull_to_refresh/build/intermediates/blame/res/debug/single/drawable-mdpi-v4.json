@@ -1,5 +1,9 @@
 [
     {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\default_ptr_rotate.png",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\drawable-mdpi\\default_ptr_rotate.png"
+    },
+    {
         "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\default_ptr_rotate.png",
         "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\drawable-mdpi\\default_ptr_rotate.png"
     },
@@ -10,5 +14,13 @@
     {
         "merged": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\indicator_arrow.png",
         "source": "C:\\Users\\VITO\\Documents\\GitHub\\FuJInBang\\pull_to_refresh\\src\\main\\res\\drawable-mdpi\\indicator_arrow.png"
+    },
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\indicator_arrow.png",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\drawable-mdpi\\indicator_arrow.png"
+    },
+    {
+        "merged": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\default_ptr_flip.png",
+        "source": "D:\\Android Studio\\project\\FuJInBang\\pull_to_refresh\\src\\main\\res\\drawable-mdpi\\default_ptr_flip.png"
     }
 ]
