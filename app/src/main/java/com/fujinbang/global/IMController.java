@@ -4,11 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.fujinbang.R;
-import com.fujinbang.ui.activity.ConversationFragment;
 import com.fujinbang.ui.activity.MainActivity;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
