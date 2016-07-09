@@ -37,4 +37,6 @@ public class UrlConstant {
 
     public static final String qiniu = "http://o73gf55zi.bkt.clouddn.com/";//七牛存储相关
     public static final String qiniuUpload = "http://up.qiniu.com";//七牛上传
+
+    public static final String broadcastSystemMsg = "http://120.24.240.199:6789/msg/broadcast";
 }

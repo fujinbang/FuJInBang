@@ -8,14 +8,13 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             android:layout_marginTop="8dp">
 
             <ImageView
@@ -56,6 +55,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
+                    android:layout_marginRight="5dp"
                     android:layout_toRightOf="@+id/item_else_location_img"
                     android:textColor="#1989FA" />
 
@@ -63,7 +63,6 @@
                     android:id="@+id/item_else_msg"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
                     android:layout_toRightOf="@id/item_else_location_dist"
                     android:singleLine="true"
                     android:text="Someone向你发来求助，点击查看"
@@ -75,6 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
+                android:layout_marginRight="16dp"
                 android:layout_alignParentRight="true"/>
 
             <TextView
@@ -85,6 +85,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:background="@drawable/ease_unread_count_bg"
+                android:layout_marginRight="16dp"
                 android:gravity="center"
                 android:text="1"
                 android:textColor="@android:color/white" />
