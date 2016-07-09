@@ -28,12 +28,14 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.fujinbang.R;
+import com.fujinbang.global.IMController;
 import com.fujinbang.global.MissionDetail;
 import com.fujinbang.global.SimpleDataBase;
 import com.fujinbang.global.TimeCalculator;
 import com.fujinbang.internet.HttpConnRequest;
 import com.fujinbang.internet.UrlConstant;
 import com.fujinbang.seekhelp.MediaManager;
+import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.widget.CircleTransform;
 
 import org.json.JSONObject;
@@ -65,18 +67,16 @@ public class MissionDetailActivity extends BaseActivity implements View.OnClickL
     private String myToken;
 
     HashMap<String, Object> mission;
-    List<String> allNick = new ArrayList<>();
-    List<String> allAvatar = new ArrayList<>();
-    List<Integer> attenderId = new ArrayList<>();
+    String announcer;
+    List<String> attenders = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mission_detail);
         Intent it = this.getIntent();
-        allNick = it.getExtras().getStringArrayList("allNick");
-        allAvatar = it.getExtras().getStringArrayList("allAvatar");
-        attenderId = it.getExtras().getIntegerArrayList("attenderId");
+        announcer = it.getExtras().getString("announcer");
+        attenders = it.getExtras().getStringArrayList("attenders");
         mission = MissionDetail.getInstance().getMission(it.getExtras().getInt("groupPosition"));
         isAnnouncer = mission.containsKey("isAnnouncer");
         SimpleDataBase simpleDataBase = new SimpleDataBase(this);
@@ -188,21 +188,23 @@ public class MissionDetailActivity extends BaseActivity implements View.OnClickL
     }
 
     private void initNickAndAvatar() {
-        if (!allAvatar.isEmpty() && !allNick.isEmpty()){
-            announcer_name.setText(allNick.get(0));
-            initAvatar(allAvatar.get(0), announcer_img);
-            for (int i = 1;i<allAvatar.size();i++){
-                addViewToGridLayout(allNick.get(i), allAvatar.get(i));
-            }
+        EaseUser easeUser = IMController.getInstance().getUserInfo(announcer);
+        announcer_name.setText(easeUser.getNick());
+        initAvatar(easeUser.getAvatar(), announcer_img);
+        for (int i = 0;i < attenders.size();i++){
+            EaseUser easeAttender = IMController.getInstance().getUserInfo(attenders.get(i));
+            addViewToGridLayout(easeAttender.getNick(), easeAttender.getAvatar());
         }
     }
 
-    public static void startActivity(Context context, int groupPosition, ArrayList<String> allNick, ArrayList<String> allAvatar, ArrayList<Integer> attenderId) {
+    public static void startActivity(Context context, int groupPosition, String announcer, ArrayList<String> attenders) {
         Intent intent = new Intent(context, MissionDetailActivity.class);
         intent.putExtra("groupPosition", groupPosition);
-        intent.putStringArrayListExtra("allNick", allNick);
-        intent.putStringArrayListExtra("allAvatar", allAvatar);
-        intent.putIntegerArrayListExtra("attenderId", attenderId);
+        intent.putExtra("announcer", announcer);
+        intent.putStringArrayListExtra("attenders", attenders);
+        //intent.putStringArrayListExtra("allNick", allNick);
+        //intent.putStringArrayListExtra("allAvatar", allAvatar);
+        //intent.putIntegerArrayListExtra("attenderId", attenderId);
         context.startActivity(intent);
     }
 
@@ -214,9 +216,9 @@ public class MissionDetailActivity extends BaseActivity implements View.OnClickL
                 break;
             case R.id.mission_detail_urge:
                 //催促接单者
-                for (int i = 1;i<attenderId.size();i++){
-                    urgeAttender(attenderId.get(i).toString());
-                }
+                //for (int i = 1;i<attenderId.size();i++){
+                //    urgeAttender(attenderId.get(i).toString());
+                //}
                 break;
             case R.id.mission_detail_add_bonus:
                 //追加奖励
@@ -383,9 +385,9 @@ public class MissionDetailActivity extends BaseActivity implements View.OnClickL
                         if (obj.has("code") && obj.getInt("code") == 1){
                             urgeCount++;
                             Toast.makeText(MissionDetailActivity.this,"已催促"+ urgeCount +"位接单者",Toast.LENGTH_SHORT).show();
-                            if (urgeCount == attenderId.size()){
-                                urgeCount = 0;
-                            }
+                            //if (urgeCount == attenderId.size()){
+                            //    urgeCount = 0;
+                            //}
                         }
                     }catch (Exception e){e.printStackTrace();}
                 }

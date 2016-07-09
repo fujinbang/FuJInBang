@@ -1,8 +1,13 @@
 package com.fujinbang.global;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.view.LayoutInflater;
+import android.view.View;
 
+import com.fujinbang.R;
 import com.fujinbang.internet.HttpConnRequest;
 import com.fujinbang.internet.UrlConstant;
 import com.hyphenate.chat.EMClient;
@@ -279,6 +284,15 @@ public class MissionDetail {
 
     public interface OnLoadNeederNickName{
         void onSucceed();
+    }
+
+    public void showConfirmDialog(Context context){
+        AlertDialog dialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AudioDialog);
+        View viewDia= LayoutInflater.from(context).inflate(R.layout.dialog_add_bonus, null);
+        builder.setView(viewDia);
+        builder.create();
+        dialog = builder.show();
     }
 
 }
