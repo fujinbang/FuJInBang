@@ -15,6 +15,8 @@ import android.widget.Toast;
 import com.fujinbang.R;
 import com.fujinbang.presenter.FeedBackPresenter;
 
+import rx.Observable;
+
 public class FeedbackOnlineActivity extends BaseActivity implements View.OnTouchListener {
 
     private FeedBackPresenter presenter;

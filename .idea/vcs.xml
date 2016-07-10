@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/app" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/clipimageview" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/easeui" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/lib" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/lib_dateTimePicker" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/onekeyshare" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/pull_to_refresh" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/sharesdk" vcs="svn" />
+  </component>
+</project>

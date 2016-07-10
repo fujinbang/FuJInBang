@@ -15,8 +15,13 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 
 import com.fujinbang.R;
+import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
+import com.hyphenate.easeui.utils.EaseSmileUtils;
+import com.hyphenate.util.DateUtils;
+
+import java.util.Date;
 
 /**
  * Created by VITO on 2016/5/17.
@@ -63,6 +68,7 @@ public class SystemMsgAdapter extends BaseAdapter {
             holder.img = (ImageView) convertView.findViewById(R.id.item_else_img);
             holder.delBtn = (RelativeLayout) convertView.findViewById(R.id.item_else_delete_button);
             holder.locationImg = (ImageView) convertView.findViewById(R.id.item_else_location_img);
+            holder.locationTxt = (TextView) convertView.findViewById(R.id.item_else_location_dist);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -72,10 +78,21 @@ public class SystemMsgAdapter extends BaseAdapter {
         holder.name.setTextColor(0xffffaf00);
         holder.img.setImageResource(R.drawable.integration);
         holder.locationImg.setVisibility(View.GONE);
+<<<<<<< HEAD
         if (SysMsg.getLastMessage() != null) {
             holder.msg.setText(SysMsg.getLastMessage().toString());
             holder.time.setText(String.valueOf(SysMsg.getLastMessage().getMsgTime()));
             if (SysMsg.getUnreadMsgCount() > 0) {
+=======
+        holder.locationTxt.setVisibility(View.GONE);
+
+        if (SysMsg.getAllMsgCount() != 0){
+            EMMessage lastMessage = SysMsg.getLastMessage();
+            holder.msg.setText(EaseSmileUtils.getSmiledText(mInflater.getContext(), EaseCommonUtils.getMessageDigest(lastMessage, (mInflater.getContext()))),
+                    TextView.BufferType.SPANNABLE);
+            holder.time.setText(DateUtils.getTimestampString(new Date(lastMessage.getMsgTime())));
+            if (SysMsg.getUnreadMsgCount() >0 ){
+>>>>>>> 8c85c7ee21969e18a4fd687e088c4d35e5ae585b
                 mListView.setVisibility(View.VISIBLE);
                 holder.msgNum.setText(SysMsg.getUnreadMsgCount() + "");
                 holder.msgNum.setVisibility(View.VISIBLE);
@@ -105,5 +122,6 @@ public class SystemMsgAdapter extends BaseAdapter {
         ImageView img;
         RelativeLayout delBtn;
         ImageView locationImg;
+        TextView locationTxt;
     }
 }
