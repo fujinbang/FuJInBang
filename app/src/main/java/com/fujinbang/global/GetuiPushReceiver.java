@@ -20,7 +20,7 @@ public class GetuiPushReceiver extends BroadcastReceiver {
     /**
      * 应用未启动, 个推 service已经被唤醒,保存在该时间段内离线消息
      */
-    public static StringBuilder payloadData = new StringBuilder();
+    //public static StringBuilder payloadData = new StringBuilder();
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -41,12 +41,16 @@ public class GetuiPushReceiver extends BroadcastReceiver {
 
                 if (payload != null) {
                     String data = new String(payload);
-
                     Log.d("GetuiSdkDemo", "receiver payload : " + data);
+                    String[] message = data.split(",");
+                    Intent it = new Intent(context, MissionService.class);
+                    it.putExtra("type", message[0]);
+                    it.putExtra("helpinfoid", message[1]);
+                    it.putExtra("userid", message[2]);
+                    context.startService(it);
 
-                    payloadData.append(data);
-                    payloadData.append("\n");
-
+                    //payloadData.append(data);
+                    //payloadData.append("\n");
                 }
                 break;
 

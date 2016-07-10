@@ -4,8 +4,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fujinbang.R;
 import com.fujinbang.internet.HttpConnRequest;
@@ -286,13 +291,87 @@ public class MissionDetail {
         void onSucceed();
     }
 
-    public void showConfirmDialog(Context context){
-        AlertDialog dialog;
+    public static AlertDialog dialog;
+    public void showConfirmDialog(Context context, String content, final String url, final String jsonString){
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AudioDialog);
-        View viewDia= LayoutInflater.from(context).inflate(R.layout.dialog_add_bonus, null);
+        View viewDia= LayoutInflater.from(context).inflate(R.layout.dialog_mission_confirm, null);
+        TextView msg = (TextView)viewDia.findViewById(R.id.dialog_mission_confirm_msg);
+        Button yes = (Button)viewDia.findViewById(R.id.dialog_mission_confirm_yes);
+        Button no = (Button)viewDia.findViewById(R.id.dialog_mission_confirm_no);
+        msg.setText(content);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //missionOperation(url, jsonString);
+            }
+        });
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dialog != null && dialog.isShowing()) dialog.dismiss();
+            }
+        });
         builder.setView(viewDia);
         builder.create();
         dialog = builder.show();
+    }
+
+    public static void missionFinished(String token, String helpinfoid, String userid){
+        new AsyncTask<String, Integer, String>() {
+            @Override
+            protected String doInBackground(String... params) {
+                String result = null;
+                try{
+                    JSONObject obj = new JSONObject();
+                    obj.put("token", params[0]);
+                    obj.put("helpinfoid", Integer.parseInt(params[1]));
+                    obj.put("finisherid", Integer.parseInt(params[2]));
+                    result = HttpConnRequest.request(UrlConstant.finishMission, "POST", obj);
+                }catch (Exception e){e.printStackTrace();}
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(String result){
+                if (result!=null){
+                    try{
+                        JSONObject obj = new JSONObject(result);
+                        if (obj.getInt("code") == 1){
+                            Log.e("MissionDetail", "已确认任务");
+                        }
+                    }catch (Exception e){e.printStackTrace();}
+                }
+            }
+        }.execute(token, helpinfoid, userid);
+    }
+
+    public static void missionDrop(String token, String helpinfoid, String userid){
+        new AsyncTask<String, Integer, String>() {
+            @Override
+            protected String doInBackground(String... params) {
+                String result = null;
+                try{
+                    JSONObject obj = new JSONObject();
+                    obj.put("token", params[0]);
+                    obj.put("helpinfoid", Integer.parseInt(params[1]));
+                    obj.put("dropuserid", Integer.parseInt(params[2]));
+                    result = HttpConnRequest.request(UrlConstant.dropMission, "POST", obj);
+                }catch (Exception e){e.printStackTrace();}
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(String result){
+                if (result!=null){
+                    try{
+                        JSONObject obj = new JSONObject(result);
+                        if (obj.getInt("code") == 1){
+                            Log.e("MissionDetail", "已确认放弃任务");
+                        }
+                    }catch (Exception e){e.printStackTrace();}
+                }
+            }
+        }.execute(token, helpinfoid, userid);
     }
 
 }
