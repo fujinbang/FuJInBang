@@ -32,9 +32,10 @@ import java.util.Map;
  */
 public class ChatActivity extends FragmentActivity {
     private int groupPosition;
-    protected ArrayList<String> allNick = new ArrayList<>();
-    protected ArrayList<String> allAvatar = new ArrayList<>();
-    protected ArrayList<Integer> attenderId = new ArrayList<>();
+    protected ArrayList<String> attendersPhoneNum = new ArrayList<>();
+    protected ArrayList<Integer> attendersId = new ArrayList<>();
+    protected String announcerId;
+    protected String announcerPhoneNum = "";
     EaseChatFragment chatFragment = new EaseChatFragment();
 
     @Override
@@ -44,13 +45,14 @@ public class ChatActivity extends FragmentActivity {
         StatusBarCompat.compat(this);
         Intent it = this.getIntent();
         this.groupPosition = it.getExtras().getInt("groupPosition");
+        announcerId = MissionDetail.getInstance().getMission(groupPosition).get("neederid").toString();
 
         initAllUser();
 
         chatFragment.setMyMissionClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MissionDetailActivity.startActivity(ChatActivity.this, groupPosition, allNick, allAvatar, attenderId);
+                MissionDetailActivity.startActivity(ChatActivity.this, groupPosition, announcerPhoneNum, attendersPhoneNum, attendersId, announcerId);
             }
         });
         Bundle args = new Bundle();
@@ -86,22 +88,23 @@ public class ChatActivity extends FragmentActivity {
                 try {
                     JSONObject object = new JSONObject(result);
                     if (object.has("attenders")){
+                        attendersPhoneNum.clear();
+                        attendersId.clear();
                         JSONArray attenders = object.getJSONArray("attenders");
                         for (int i = 0;i<attenders.length();i++){
                             JSONObject attender = attenders.getJSONObject(i);
                             if (attender.getInt("status") != 3 && attender.getInt("status") != 5){
                                 EaseUser user = new EaseUser(attender.getString("phoneNum"));
-                                attenderId.add(attender.getInt("id"));
                                 String avatar = "http://o73gf55zi.bkt.clouddn.com/" + attender.getInt("id") + ".png";
                                 user.setAvatar(avatar);
-                                IMController.userMap.put(user.getUsername(), user);
                                 if (attender.has("nickname") && !attender.getString("nickname").equals("")){
                                     user.setNick(attender.getString("nickname"));
-                                    allNick.add(attender.getString("nickname"));
                                 } else {
-                                    allNick.add(" ");
+                                    user.setNick("");
                                 }
-                                allAvatar.add(avatar);
+                                IMController.userMap.put(user.getUsername(), user);
+                                attendersPhoneNum.add(attender.getString("phoneNum"));
+                                attendersId.add(attender.getInt("id"));
                             }
                         }
                         chatFragment.refresh();
@@ -135,8 +138,7 @@ public class ChatActivity extends FragmentActivity {
                             String avatar = "http://o73gf55zi.bkt.clouddn.com/" + data.getInt("id") + ".png";
                             user.setAvatar(avatar);
                             IMController.userMap.put(user.getUsername(), user);
-                            allNick.add(0,data.getString("nickName"));
-                            allAvatar.add(0,avatar);
+                            announcerPhoneNum = data.getString("phoneNum");
                             chatFragment.refresh();
                         }
                     }

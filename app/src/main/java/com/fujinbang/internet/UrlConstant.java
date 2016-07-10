@@ -41,4 +41,5 @@ public class UrlConstant {
     public static final String qiniuUpload = "http://up.qiniu.com";//七牛上传
 
     public static final String broadcastSystemMsg = "http://120.24.240.199:6789/msg/broadcast";
+    public static final String transMission = "http://120.24.240.199:6789/msg/transmission";
 }

@@ -397,7 +397,7 @@
             android:name="com.igexin.getuiext.service.GetuiExtService"
             android:process=":pushservice" />
 
-        <!-- 配置第三方Receiver -->
+        <!-- 配置个推第三方Receiver -->
         <receiver
             android:name=".global.GetuiPushReceiver"
             android:exported="false">
@@ -405,6 +405,7 @@
                 <action android:name="com.igexin.sdk.action.HG4knDO4UZ9fZcCOeDabq" />
             </intent-filter>
         </receiver>
+        <service android:name=".global.MissionService" />
 
         <!-- Ping++ sdk -->
         <activity

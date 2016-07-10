@@ -196,7 +196,7 @@ public class IMController {
         EMClient.getInstance().chatManager().addMessageListener(messageListener);
     }
 
-    protected EaseUser getUserInfo(String username) {
+    public EaseUser getUserInfo(String username) {
         if (userMap.containsKey(username)){
             return userMap.get(username);
         }
